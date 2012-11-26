@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:noNamespaceSchemaLocation="http://xsd.mouf-php.com/packages.xsd">
+	<displayName>EvoluGrid Widget</displayName>
+	<shortDescription>This package contains the EvoluGrid widget. This is an HTML/Ajax datagrid that can be used to display data. It's main difference with other datagrids is that you can chage the set of columns dynamically depending on the paginated results you are looking at.</shortDescription>
+	<docUrl></docUrl>
+	<dependencies>
+		<dependency>
+			<group>html</group>
+			<name>htmlelement</name>
+			<version>&gt;=1.0</version>
+		</dependency>
+	</dependencies>
+	<requires>
+		<require>src/Mouf/Html/Widgets/EvoluGrid/EvoluColumn.php</require>
+		<require>src/Mouf/Html/Widgets/EvoluGrid/EvoluGrid.php</require>
+	</requires>
+	<install>
+		<file>install.php</file>
+	</install>
+</package>
