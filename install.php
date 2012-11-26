@@ -1,8 +1,9 @@
 <?php
-// First, let's request the install utilities
-require_once '../../../../../mouf/actions/InstallUtils.php';
+require_once __DIR__."/../../autoload.php";
+use Mouf\MoufManager;
 
-// Let's init Mouf
+use Mouf\Actions\InstallUtils;
+
 InstallUtils::init(InstallUtils::$INIT_APP);
 
 // Let's create the instance
@@ -11,12 +12,11 @@ $moufManager = MoufManager::getMoufManager();
 if ($moufManager->instanceExists("evolugridLibrary")) {
 	$evolugridLib = $moufManager->getInstanceDescriptor("evolugridLibrary");
 } else {
-	$evolugridLib = $moufManager->createInstance("WebLibrary");
+	$evolugridLib = $moufManager->createInstance("Mouf\\Html\\Utils\\WebLibraryManager\\WebLibrary");
 	$evolugridLib->setName("evolugridLibrary");
 }
-$evolugridLib->getProperty("jsFiles")->setValue(array(
-	'plugins/html/widgets/evolugrid/1.0/js/evolugrid.js'
-));
+$evolugridLib->getProperty("jsFiles")->setValue(array('vendor/mouf/html.widgets.evolugrid/js/evolugrid.js'));
+
 $renderer = $moufManager->getInstanceDescriptor('defaultWebLibraryRenderer');
 $evolugridLib->getProperty("renderer")->setValue($renderer);
 $evolugridLib->getProperty("dependencies")->setValue(array($moufManager->getInstanceDescriptor('jQueryLibrary')));
