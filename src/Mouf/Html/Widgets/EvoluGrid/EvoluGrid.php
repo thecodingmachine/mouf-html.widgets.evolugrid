@@ -7,7 +7,9 @@ namespace Mouf\Html\Widgets\EvoluGrid;
  * @author David Negrier
  * @Component
  */
-class EvoluGrid implements \HtmlElementInterface {
+use Mouf\Html\HtmlElement\HtmlElementInterface;
+
+class EvoluGrid implements HtmlElementInterface{
 	
 	/**
 	 * @var string
