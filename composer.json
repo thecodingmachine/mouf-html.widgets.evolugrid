@@ -1,7 +1,7 @@
 {
     "name": "mouf/html.widgets.evolugrid",
     "description": "This package contains the EvoluGrid widget. This is an HTML/Ajax datagrid that can be used to display data. It's main difference with other datagrids is that you can chage the set of columns dynamically depending on the paginated results you are looking at.",
-    "keywords": ["html", "widget", "evolugrid", "datagrid", "data"],
+    "keywords": ["html", "widget", "evolugrid", "datagrid", "data", "javscript"],
     "homepage": "https://github.com/thecodingmachine/database.tdbm",
     "type": "mouf-library",
     "license": "MIT",
