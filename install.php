@@ -6,7 +6,7 @@ use Mouf\Actions\InstallUtils;
 
 InstallUtils::init(InstallUtils::$INIT_APP);
 
-// Let's create the instance
+// Let's create the instances
 $moufManager = MoufManager::getMoufManager();
 
 if ($moufManager->instanceExists("evolugridLibrary")) {
