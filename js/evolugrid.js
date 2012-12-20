@@ -15,6 +15,7 @@ var sorryAboutThis = false;
  *  export_csv: true // Whether we can export to CSV or not,
  *  loadOnInit: true // Whether we should start loading the table (true) or wait for the user to submit the search form (false),
  *  rowCssClass: "key" // If set, for each row, we will look in the dataset for the row, for the "key" passed in parameter. The associated value will be used as a class of the tr row. 
+ *  loaderImgDiv: "selector", // A jQuery selector pointing to a div that contains a ajax loader gif
  * }
  * 
  * Any parameter (except URL) can be dynamically passed from the server side.
@@ -105,6 +106,13 @@ var sorryAboutThis = false;
 	    },
 	    refresh : function( noPage, filters ) {
 	    	var descriptor=$(this).data('descriptor');
+	    	
+	    	//If there is a loader image
+	    	//We replace the table by the image
+	    	if (descriptor.loaderImgDiv) {
+	    		$(this).hide();
+	    		descriptor.loaderImgDiv.show();
+	    	}
 	    	
 	    	// While refreshing, let's make sure noone touches the buttons!
 	    	// FIXME: we should check which are already disabled and not reenable them later.... 
@@ -217,7 +225,13 @@ var sorryAboutThis = false;
 		    		$(descriptor.filterForm).find("button").attr("disabled", false);
 		    		$(descriptor.filterForm).find("input[type=button]").attr("disabled", false);
 		    	}
-	    		
+		    	
+		    	//If there is a loader image
+		    	//We replace the image by the results table
+		    	if (descriptor.loaderImgDiv) {
+		    		descriptor.loaderImgDiv.hide();
+		    		$this.show();
+		    	}
 	    	},
 	    	error : function(err,status) { 
 	    		console.error("Error on ajax callback: "+status);
