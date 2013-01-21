@@ -6,7 +6,12 @@ var sorryAboutThis = false;
  * {
  *  filterForm: "selector", // A jQuery selector pointing to the form containing the filters (if any)
  *  filterFormSubmitButton: "selector", // A jQuery selector pointing to the button that will trigger search. This is optional, and can only be used if the filterForm option is used. If not passed, any submit button on the form will trigger a search.
- * 	filterCallback: function, // A function taking 0 arguments and returning a map of filters (passed as arguments to the Ajax URL). This is applied before the filterForm
+ * 	filterCallback: function, // A function taking 0 arguments and returning a map of filters (passed as arguments to the Ajax URL). This is applied before the filterForm.
+ * 				Returned parameters must match this format:
+ * 				[{
+					"name": "param1",
+					"value": "paramValue" 
+				}]
  *  url: url, // The Ajax URL
  *  tableClasses : "table", // The CSS class of the table
  *  limit  : 100, // The maximum number of rows to be returned in one page
