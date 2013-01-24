@@ -8,6 +8,7 @@ namespace Mouf\Html\Widgets\EvoluGrid;
  * @Component
  */
 use Mouf\Html\HtmlElement\HtmlElementInterface;
+use Mouf\Database\DataSource\DataSourceInterface\DataSourceInterface;
 
 class EvoluGrid implements HtmlElementInterface{
 	
@@ -35,6 +36,11 @@ class EvoluGrid implements HtmlElementInterface{
 	 * @var string
 	 */
 	private $url;
+	
+	/**
+	 * @var string
+	 */
+	private $formSelector;
 	
 	/**
 	 * @var \DynamicDataSource
@@ -110,6 +116,16 @@ class EvoluGrid implements HtmlElementInterface{
 	public function setUrl($url) {
 		$this->url = ROOT_URL.$url;
 	}
+	
+	/**
+	 * Form selector of the controller to filter data.
+	 * 
+	 * @Property
+	 * @param string $formSelector
+	 */
+	public function setFormSelector($formSelector) {
+		$this->formSelector = $formSelector;
+	}
 
 	/**
 	 * Add a new column to the grid.
@@ -155,9 +171,9 @@ class EvoluGrid implements HtmlElementInterface{
 	 *
 	 * @Property
 	 * @Compulsory 
-	 * @param \DataSourceInterface $ds
+	 * @param DataSourceInterface $ds
 	 */
-	public function setDataSource(\DataSourceInterface $ds) {
+	public function setDataSource(DataSourceInterface $ds) {
 		$this->datasource = $ds;
 	}
 	
@@ -274,6 +290,7 @@ class EvoluGrid implements HtmlElementInterface{
 			<script type="text/javascript">
 				$(document).ready(function() {
 				    var descriptor = {
+				    	filterForm: $("'.$this->formSelector.'"),
 				        url: "'.$this->url.'",
 				        tableClasses : "'.$this->class.'",
 				        export_csv: '.json_encode($this->exportCSV).',
