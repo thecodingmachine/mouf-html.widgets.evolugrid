@@ -285,17 +285,24 @@ class EvoluGrid implements HtmlElementInterface{
 	 *
 	 */
 	public function toHtml() {
+		$descriptor = new \stdClass();
+		$descriptor->url = $this->url;
+		$descriptor->tableClasses = $this->class;
+		$descriptor->export_csv = $this->exportCSV;
+		$descriptor->limit = $this->limit;
+		
+		if ($this->formSelector){
+			$descriptor->filterForm = $this->formSelector;
+		}
+		
+		$descriptorJSON = json_encode($descriptor);
+	
+		
 		echo '
 			<div id="'.$this->id.'"></div>
 			<script type="text/javascript">
 				$(document).ready(function() {
-				    var descriptor = {
-				    	filterForm: $("'.$this->formSelector.'"),
-				        url: "'.$this->url.'",
-				        tableClasses : "'.$this->class.'",
-				        export_csv: '.json_encode($this->exportCSV).',
-				        limit: '.$this->limit.'
-				    };
+				    var descriptor = '.$descriptorJSON.';
 				    $("#'.$this->id.'").evolugrid(descriptor);
 				});
 			</script> 

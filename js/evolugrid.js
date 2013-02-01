@@ -128,7 +128,7 @@ var sorryAboutThis = false;
 	    		$(descriptor.filterForm).find("input[type=button]").attr("disabled", true);
 	    	}
 	    	
-	    	$this=$(this);
+	    	var $this=$(this);
 	    	filters = _getFilters(descriptor, filters);
 	    	filters.push({"name":"offset", "value": noPage*descriptor.limit});
 	    	filters.push({"name":"limit", "value": descriptor.limit});
@@ -140,9 +140,9 @@ var sorryAboutThis = false;
 
 	    		//Display Count
 	    		if(!extendedDescriptor.countTarget){
-	    			countTarget = "#count";
+	    			var countTarget = "#count";
 	    		} else {
-	    			countTarget=extendedDescriptor.countTarget
+	    			var countTarget=extendedDescriptor.countTarget
 	    		}
 	    		$(countTarget).html(data.count);
 	    		//construct th
