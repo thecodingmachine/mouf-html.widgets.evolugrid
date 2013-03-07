@@ -240,7 +240,7 @@ var sorryAboutThis = false;
 	    	},
 	    	error : function(err,status) { 
 	    		console.error("Error on ajax callback: "+status);
-	    		alert("An error occurred while displaying table.");
+	    		//alert("An error occurred while displaying table.");
 	    	}
 	    	
 	    	})
