@@ -16,11 +16,11 @@ var sorryAboutThis = false;
  *  tableClasses : "table", // The CSS class of the table
  *  limit  : 100, // The maximum number of rows to be returned in one page
  *  pagerId : 'listePager' // The ID of the pager,
- *  columns: [...] // A list of columns,
- *  export_csv: true // Whether we can export to CSV or not,
- *  loadOnInit: true // Whether we should start loading the table (true) or wait for the user to submit the search form (false),
- *  rowCssClass: "key" // If set, for each row, we will look in the dataset for the row, for the "key" passed in parameter. The associated value will be used as a class of the tr row. 
- *  loaderImgDiv: "selector", // A jQuery selector pointing to a div that contains a ajax loader gif
+ *  columns: [...], // A list of columns,
+ *  export_csv: true, // Whether we can export to CSV or not,
+ *  loadOnInit: true, // Whether we should start loading the table (true) or wait for the user to submit the search form (false),
+ *  rowCssClass: "key", // If set, for each row, we will look in the dataset for the row, for the "key" passed in parameter. The associated value will be used as a class of the tr row. 
+ *  loaderImgDiv: "selector" // A jQuery selector pointing to a div that contains a ajax loader gif
  * }
  * 
  * Any parameter (except URL) can be dynamically passed from the server side.
@@ -212,7 +212,7 @@ var sorryAboutThis = false;
 		    		var pagerText = "Page "+(noPage+1);
 		    		
 		    		if (data.count != null) {
-		    			pagerText += " de "+(pageCount+1);
+		    			pagerText += " / "+(pageCount+1);
 		    		}
 		    		pager.append($('<span>').text(pagerText));
 		    		
