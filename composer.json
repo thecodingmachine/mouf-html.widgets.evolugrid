@@ -16,7 +16,8 @@
     	"php": ">=5.3.0",
     	"mouf/html.htmlelement": ">=2.0-dev,<3.0",
     	"mouf/html.utils.weblibrarymanager": ">=2.0-dev,<3.0",
-    	"mouf/javascript.jquery.jquery": ">=1.7.2-dev,<2.0"
+    	"mouf/javascript.jquery.jquery": ">=1.7.2-dev,<2.0",
+        "mouf/database.datasource.datasource-interface": "3.*"
     },
     "autoload": {
         "psr-0": {
