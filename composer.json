@@ -31,6 +31,23 @@
 				"type": "file",
 	    		"file": "install.php"
 			}
+			],
+			"doc": [
+			    {
+			        "title": "Javascript stand-alone mode",
+                    "url": "doc/evolugrid_js.md",
+                    "children": [
+                        {
+                        	"title": "Evolugrid options",
+                        	"url": "doc/options.md"
+                        }
+                    ]
+			    },
+			    {
+			        "title": "PHP mode",
+                    "url": "doc/evolugrid_php.md"
+			    }
+			    
 			]
 		}
     }

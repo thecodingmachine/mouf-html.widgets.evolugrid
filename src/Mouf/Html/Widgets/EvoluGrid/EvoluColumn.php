@@ -27,7 +27,7 @@ class EvoluColumn {
 	/**
 	 * If set, this JS function will be used to render the cell.
 	 * Here is a sample to display a link:
-	 * 	function(row) { return $("<a/>").text(row["name"]).attr("href", "/mylink.php?id="+row.idclient) }
+	 * 	function(row) { return $("&lt;a/&gt;").text(row["name"]).attr("href", "/mylink.php?id="+row.idclient) }
 	 * 
 	 * @Property
 	 * @var string
