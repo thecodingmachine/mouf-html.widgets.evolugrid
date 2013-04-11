@@ -11,7 +11,7 @@ class EvoluColumn {
 	/**
 	 * The title of the column to display
 	 * 
-	 * @Property
+	 * @Important
 	 * @var string
 	 */
 	public $title;
@@ -19,7 +19,7 @@ class EvoluColumn {
 	/**
 	 * Get the key to map to in the datagrid.
 	 * 
-	 * @Property
+	 * @Important
 	 * @var string
 	 */
 	public $key;
@@ -29,11 +29,15 @@ class EvoluColumn {
 	 * Here is a sample to display a link:
 	 * 	function(row) { return $("&lt;a/&gt;").text(row["name"]).attr("href", "/mylink.php?id="+row.idclient) }
 	 * 
-	 * @Property
 	 * @var string
 	 */
 	public $jsrenderer;
 	
+	/**
+	 * 
+	 * @param string $title The title of the column to display
+	 * @param string $key Get the key to map to in the datagrid.
+	 */
 	public function __construct($title = null, $key=null) {
 		$this->title = $title;
 		$this->key = $key;
