@@ -60,6 +60,40 @@ class EvoluGrid implements HtmlElementInterface{
 	private $rows = array();
 
 	private $count = null;
+
+
+	/**
+	 * URL that will be called in Ajax and return the data to display.
+	 *
+	 * @Property
+	 * @param string $url
+	 */
+	public function setUrl($url) {
+		$this->url = ROOT_URL.$url;
+	}
+
+	/**
+	 * The list of columns displayed in the grid.
+	 * 
+	 * @Property
+	 * @param array<EvoluColumn> $columns
+	 */
+	public function setColumns($columns) {
+		$this->columns = $columns;
+	}
+
+	/**
+	 * Maximum number of rows displayed before pagination.
+	 *
+	 * @Property
+	 * @param int $limit
+	 */
+	public function setLimit($limit) {
+		if($limit)
+			$this->limit = $limit;
+		else
+			$this->limit = 100;
+	}
 	
 	private static $nbGridCount = 0;
 	
@@ -91,29 +125,6 @@ class EvoluGrid implements HtmlElementInterface{
 	 */
 	public function setExportCSV($exportCSV) {
 		$this->exportCSV = $exportCSV;
-	}
-	
-	/**
-	 * Limit of the grid before pagination.
-	 * 
-	 * @Property
-	 * @param int $limit
-	 */
-	public function setLimit($limit) {
-		if($limit)
-			$this->limit = $limit;
-		else
-			$this->limit = 100;
-	}
-	
-	/**
-	 * URL of the controller to load data.
-	 * 
-	 * @Property
-	 * @param string $url
-	 */
-	public function setUrl($url) {
-		$this->url = ROOT_URL.$url;
 	}
 	
 	/**
@@ -153,13 +164,6 @@ class EvoluGrid implements HtmlElementInterface{
 		$this->rows[] = $row;
 	}
 
-	/**
-	 * @Property
-	 * @param array<EvoluColumn> $columns
-	 */
-	public function setColumns($columns) {
-		$this->columns = $columns;
-	}
 
 	public function addColumns($columns) {
 		$this->columns[] = $columns;

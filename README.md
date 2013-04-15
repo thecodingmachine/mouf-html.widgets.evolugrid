@@ -37,5 +37,5 @@ Documentation
 
 There are 2 ways to use Evolugrid:
 
-- The [JS only way](docs/evolugrid_js.md)
-- The [PHP way](docs/evolugrid_php.md)
+- The [JS only way](doc/evolugrid_js.md)
+- The [PHP way](doc/evolugrid_php.md)
