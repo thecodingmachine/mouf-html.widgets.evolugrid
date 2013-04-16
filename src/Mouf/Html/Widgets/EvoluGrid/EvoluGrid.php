@@ -95,6 +95,8 @@ class EvoluGrid implements HtmlElementInterface{
 			$this->limit = 100;
 	}
 	
+	private static $nbGridCount = 0;
+	
 	/**
 	 * The id of the evolugrid.
 	 * 
@@ -102,10 +104,7 @@ class EvoluGrid implements HtmlElementInterface{
 	 * @param string $id
 	 */
 	public function setId($id) {
-		if($id != '')
-			$this->id = $id;
-		else
-			$this->id = 'evolugrid__id__'.rand(100000,999999);
+		$this->id = $id;
 	}
 	
 	/**
@@ -301,13 +300,19 @@ class EvoluGrid implements HtmlElementInterface{
 		
 		$descriptorJSON = json_encode($descriptor);
 	
+		$id = $this->id;
+		if ($id == null) {
+			$id = "evolugrid_number_".self::$nbGridCount;
+			self::$nbGridCount++;
+		}
+		
 		
 		echo '
-			<div id="'.$this->id.'"></div>
+			<div id="'.$id.'"></div>
 			<script type="text/javascript">
 				$(document).ready(function() {
 				    var descriptor = '.$descriptorJSON.';
-				    $("#'.$this->id.'").evolugrid(descriptor);
+				    $("#'.$id.'").evolugrid(descriptor);
 				});
 			</script> 
 		';
