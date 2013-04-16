@@ -70,7 +70,7 @@ If you select the exportCSV feature, an export button will appear in the grid.
 Evolugrid can help you generate the CSV for almost no additional cost.
 All you have to do it pass 2 more arguments to the "output" method:
 
-``php
+```php
 // This will trigger a CSV file download when the user clicks the export button in Evolugrid.
 $evoluGrid->output($_GET['output'], 'filename.csv');
 ```
@@ -78,4 +78,51 @@ $evoluGrid->output($_GET['output'], 'filename.csv');
 
 Using Evolugrid with Mouf
 -------------------------
+
+If you are using Mouf (you should!), you can configure most of the grid graphically.
+Here is a sample instance:
+
+![Instance image](images/sample_instance.png)
+
+As you can see, you can directly configure the columns, the Ajax callback, whether or not you want CSV exports, etc...
+
+###Inserting an evolugrid declared in Mouf in your code
+
+Inserting an evolugrid declared in Mouf in your code is a simple line of code:
+
+```php
+Mouf::getMyEvoluGrid->toHtml();
+```
+
+This will render the evolugrid in your page.
+
+###Implementing the Ajax response
+
+Assuming you are using the Splash MVC framework, your controller would look like this:
+
+```php
+class MyController extends Controller {
+
+	...
+
+	/**
+	 * @URL /userlist
+	 */
+	public function userlist($limit=null, $offset=null, $output="json") {
+		// Retrieve the rows in database
+		$rows = $this->getData($limit, $offset);
+		
+		$evoluGrid = Mouf::getMyEvoluGrid();
+		
+		// You should return only the pages to be displayed.
+		$evoluGrid->setRows($obj);
+		
+		// The second parameter is the download name of the file generated (should the user
+		// click on the "export" button).
+		// The output method can generate the JSON or the CSV output.
+		$evoluGrid->output($output, "filename.csv");
+	}
+}
+```
+
 

@@ -32,6 +32,8 @@ Evolugrid will add automatically those GET parameters:
 - **offset**: The place in the dataset where we should start
 - **output**: This is either "json", or "csv" (in case the user requested an Excel/CSV export)
 
+Note: evolugrid can add additional parameters (see [search filters](searcj_filters.md) for more information)
+
 ```js
 {
 	'descriptor': {

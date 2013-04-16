@@ -47,6 +47,10 @@
 			    {
 			        "title": "PHP mode",
                     "url": "doc/evolugrid_php.md"
+			    },
+			    {
+			        "title": "Search filters",
+                    "url": "doc/search_filters.md"
 			    }
 			    
 			]
