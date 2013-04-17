@@ -1,4 +1,3 @@
-var sorryAboutThis = false;
 /**
  * A flexible datagrid that refreshes with Ajax and can export to CSV.
  * 
@@ -72,17 +71,12 @@ var sorryAboutThis = false;
 	                	});
                 	} else {
 	                	$(descriptor.filterForm).submit(function(event) {
-	                		// FIXME: What the hell is this?
-	                		if (sorryAboutThis){
-	                			return true;
-	                		}else{
-	                			try {
-	                				$this.evolugrid('refresh', 0);
-	                			} catch (e) {
-	                				console.error(e);
-	                			}
-	                			return false;
-	                		}
+                			try {
+                				$this.evolugrid('refresh', 0);
+                			} catch (e) {
+                				console.error(e);
+                			}
+                			return false;
 	                	});
                 	}
             	}
@@ -197,7 +191,10 @@ var sorryAboutThis = false;
 	    		
 	    		    		
 	    		if (extendedDescriptor.export_csv) {
-	    			pager.append($('<i>').addClass('icon-file pointer export-csv').text("Export to CSV").click(function(){$this.evolugrid('csvExport');}));
+	    			var span = $('<span/>').click(function(){$this.evolugrid('csvExport');});
+	    			span.append($('<i/>').addClass('icon-file pointer export-csv'));
+	    			span.append("Export to CSV");
+	    			pager.append(span);
 	    		}
 	    		
 	    		var pageCount = null;
