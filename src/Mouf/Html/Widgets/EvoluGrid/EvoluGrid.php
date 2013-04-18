@@ -242,7 +242,7 @@ class EvoluGrid implements HtmlElementInterface{
 
 			$this->outputCsv($fp);
 		} else {
-			throw new Exception("The output format '".$format."' is not supported");
+			throw new \Exception("The output format '".$format."' is not supported");
 		}
 	}
 
