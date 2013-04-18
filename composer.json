@@ -27,6 +27,7 @@
     "minimum-stability": "dev",
     "extra": {
 	     "mouf": {
+			"logo": "logo.png",
 			"install": [
 			{
 				"type": "file",
