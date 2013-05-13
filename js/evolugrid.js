@@ -20,6 +20,7 @@
  *  loadOnInit: true, // Whether we should start loading the table (true) or wait for the user to submit the search form (false),
  *  rowCssClass: "key", // If set, for each row, we will look in the dataset for the row, for the "key" passed in parameter. The associated value will be used as a class of the tr row. 
  *  loaderImgDiv: "selector" // A jQuery selector pointing to a div that contains a ajax loader gif
+ *  infiniteScroll: boolean // To set a infinite scroll instead of a pager
  * }
  * 
  * Any parameter (except URL) can be dynamically passed from the server side.
@@ -28,8 +29,14 @@
 	var defaultOptions = {
 			"loadOnInit": true,
 			"export_csv": true,
-			"limit": 100
+			"limit": 100,
+			"infiniteScroll": false
 	}
+	
+	//Only use for the infinite scroll
+	var scrollOffset; 
+	var scrollReady;
+	var scrollNoMoreResults;
 	
 	/**
 	 * Returns the list of filters to be applied to the query.
@@ -47,10 +54,10 @@
    		if (descriptor.filterForm) {
    			return $(descriptor.filterForm).serializeArray();
     	}
-	
+   			
 		return [];
 	};
-	
+		
 	var methods = {
 	    init : function( options ) {
 	    	var descriptor = $.extend(true, {}, defaultOptions, options);
@@ -59,11 +66,38 @@
                 $(this).data('descriptor', descriptor);
                 
                 var $this = $(this);
+                if (descriptor.infiniteScroll) {               	
+                	// We initialise the infinite scroll
+                	scrollReady = true;
+                	scrollOffset = 0;
+                	scrollNoMoreResults = false;
+                	
+                	$(window).scroll(function() {                		
+                		// We test if we have not make a request
+                		if (scrollReady == false) return;
+                		 
+                		if(($(window).scrollTop() + $(window).height()) == $(document).height())	{
+                			if ( scrollNoMoreResults == true) {
+                    			$this.find('div.noResults').show();
+                    			return;
+                    		}
+                			scrollReady = false;
+                			$this.evolugrid('scroll', false);
+                		}
+                	});
+                }
                 if (descriptor.filterForm) {
                 	if (descriptor.filterFormSubmitButton) {
                 		$(descriptor.filterFormSubmitButton).click(function(event) {
                 			try {
-                				$this.evolugrid('refresh', 0);
+                				 if (descriptor.infiniteScroll) {
+                					 scrollOffset = 0;
+                					 scrollNoMoreResults = false;
+                					 scrollReady = false;
+                					 $this.evolugrid('scroll', true);
+                				} else {
+                					$this.evolugrid('refresh', 0);
+                				}
                 			} catch (e) {
                 				console.error(e);
                 			}
@@ -72,7 +106,14 @@
                 	} else {
 	                	$(descriptor.filterForm).submit(function(event) {
                 			try {
-                				$this.evolugrid('refresh', 0);
+                				if (descriptor.infiniteScroll) {
+                					scrollOffset = 0;
+                					scrollNoMoreResults = false;
+                					scrollReady = false;
+               					 	$this.evolugrid('scroll', true);
+                				} else {
+                					$this.evolugrid('refresh', 0);
+                				}
                 			} catch (e) {
                 				console.error(e);
                 			}
@@ -81,9 +122,14 @@
                 	}
             	}
                 if (descriptor.loadOnInit) {
-                	$(this).evolugrid('refresh',0);
+                	if (descriptor.infiniteScroll) {
+                		scrollReady = false;
+                		$this.evolugrid('scroll', true);
+    				} else {
+    					$this.evolugrid('refresh', 0);
+    				}
                 }
-	        });
+ 	        });
 	    },
 	    csvExport : function(filters) {
 	    	var descriptor=$(this).data('descriptor');
@@ -237,15 +283,111 @@
 	    	},
 	    	error : function(err,status) { 
 	    		console.error("Error on ajax callback: "+status);
-	    		//alert("An error occurred while displaying table.");
 	    	}
 	    	
 	    	})
+	    },	    
+	    scroll : function(init) {
+	    	var descriptor=$(this).data('descriptor');
+	    	    		    	
+	    	// While refreshing, let's make sure noone touches the buttons!
+	    	// FIXME: we should check which are already disabled and not reenable them later.... 
+	    	if (descriptor.filterFormSubmitButton) {
+	    		$(descriptor.filterFormSubmitButton).attr("disabled", true);
+	    	} else if (descriptor.filterForm) {
+	    		$(descriptor.filterForm).find("button").attr("disabled", true);
+	    		$(descriptor.filterForm).find("input[type=button]").attr("disabled", true);
+	    	}
+	    	
+	    	var $this=$(this);
+	    	filters = _getFilters(descriptor);
+	    	filters.push({"name":"offset", "value": scrollOffset});
+	    	filters.push({"name":"limit", "value": descriptor.limit});
+	    	
+	    	$.ajax({url:descriptor.url, dataType:'json', data : filters,
+		    	success: function(data){
+			    	var extendedDescriptor=$.extend(true, {}, descriptor, data.descriptor)
+			    	
+			    	if (init) {
+			    		//construct th
+			    		$this.html("");
+			    		var table=$('<table>').appendTo($this);
+			    		var tr=$('<tr>');
+			    		table.append(tr);
+			    		table.addClass(extendedDescriptor.tableClasses)
+			    		for(var i=0;i<extendedDescriptor.columns.length;i++){
+			    			tr.append($('<th>').html(extendedDescriptor.columns[i].title))
+			    		}
+			    	}
+		    		
+		    		//construct td
+		    		for (var i=0;i<data.data.length;i++){
+		    			tr=$('<tr>');
+		    			if (extendedDescriptor.rowCssClass) {
+		    				tr.addClass(data.data[i][extendedDescriptor.rowCssClass]);
+		    			}
+		    			$this.find('table').append(tr);
+		    			for(var j=0;j<extendedDescriptor.columns.length;j++){
+		    				var td=$('<td>');
+		    				// jsdisplay is used when the data comes in JSON from the server (and you want js display)
+		    				// if jsdipslay is used, display is ignored.
+		    				var jsdisplay=extendedDescriptor.columns[j].jsdisplay;
+		    				if (jsdisplay) {
+		    					// Let's eval the function (its evil) and let's execute it.
+		    					var myfunc = (new Function("return " + jsdisplay))();
+		    					var html=myfunc(data.data[i]);
+		    				} else {
+			    				var display=extendedDescriptor.columns[j].display;
+			    				if (display) {
+				    				if(typeof display == 'function'){
+				    					var html=display(data.data[i]);
+				    				}else {
+				    					var html=data.data[i][display];
+				    					if (html === 0) {
+				    						html = "0";
+				    					}
+				    				}
+			    				}
+		    				}
+		    				if(html){
+		    					td.html(html);
+			    			}
+		    				tr.append(td);
+			    		}   			
+		    		}
+		    		
+		    		if (init) {
+		    			//construct no more results
+		    			$this.append('<div class="noResults" style="display:none">No more results</div>');
+		    		}
+			    			    		
+		    		// Finally, let's enable buttons again:
+			    	if (descriptor.filterFormSubmitButton) {
+			    		$(descriptor.filterFormSubmitButton).attr("disabled", false);
+			    	} else if (descriptor.filterForm) {
+			    		$(descriptor.filterForm).find("button").attr("disabled", false);
+			    		$(descriptor.filterForm).find("input[type=button]").attr("disabled", false);
+			    	}
+			    	
+			    	// We update the scroll offset
+			    	scrollOffset = scrollOffset + descriptor.limit;
+			    	
+			    	// Enable scroll again
+		    		scrollReady = true;
+			    	
+			    	if (data.count < scrollOffset) {
+			    		// No more results
+			    		scrollNoMoreResults = true;
+			    	} 			    	
+		    	},
+		    	error : function(err,status) { 
+		    		console.error("Error on ajax callback for scroll: "+status);
+		    	}
+		    	})
 	    }
 	  };
 
-	  $.fn.evolugrid = function( method ) {
-	    
+	  $.fn.evolugrid = function( method ) {	    
 	    // Method calling logic
 	    if ( methods[method] ) {
 	      return methods[ method ].apply( this, Array.prototype.slice.call( arguments, 1 ));
@@ -255,9 +397,5 @@
 	      $.error( 'Method ' +  method + ' does not exist on jQuery.evolugrid' );
 	    }    
 	  
-	  };
-	
-
-	
-	
+	  };	
 })(jQuery);
