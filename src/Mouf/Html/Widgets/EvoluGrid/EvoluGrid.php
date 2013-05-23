@@ -32,7 +32,7 @@ class EvoluGrid implements HtmlElementInterface{
 	private $limit = 100;
 	
 	/**
-	 * @var string
+	 * @var UrlInterface|string
 	 */
 	private $url;
 	
@@ -40,6 +40,13 @@ class EvoluGrid implements HtmlElementInterface{
 	 * @var string
 	 */
 	private $formSelector;
+	
+	/**
+	 * Replaces the pagination by an infinite scroll.
+	 * 
+	 * @var bool
+	 */
+	private $infiniteScroll = false;
 	
 	/**
 	 * URL that will be called in Ajax and return the data to display.
@@ -106,6 +113,15 @@ class EvoluGrid implements HtmlElementInterface{
 	public function setFormSelector($formSelector) {
 		$this->formSelector = $formSelector;
 	}
+	
+	/**
+	 * Replaces the pagination by an infinite scroll.
+	 *
+	 * @param bool $infiniteScroll
+	 */
+	public function setInfiniteScroll($infiniteScroll) {
+		$this->infiniteScroll = $infiniteScroll;
+	}
 
 	/**
 	 * Renders the object in HTML.
@@ -125,6 +141,7 @@ class EvoluGrid implements HtmlElementInterface{
 		$descriptor->tableClasses = $this->class;
 		$descriptor->export_csv = $this->exportCSV;
 		$descriptor->limit = $this->limit;
+		$descriptor->infiniteScroll = $this->infiniteScroll;
 		
 		if ($this->formSelector){
 			$descriptor->filterForm = $this->formSelector;
