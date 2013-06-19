@@ -288,6 +288,11 @@ class EvoluGrid implements HtmlElementInterface{
 	 *
 	 */
 	public function toHtml() {
+		echo $this->getHtml();
+	}
+	
+	public function getHtml(){
+		
 		$descriptor = new \stdClass();
 		$descriptor->url = $this->url;
 		$descriptor->tableClasses = $this->class;
@@ -299,15 +304,14 @@ class EvoluGrid implements HtmlElementInterface{
 		}
 		
 		$descriptorJSON = json_encode($descriptor);
-	
+		
 		$id = $this->id;
 		if ($id == null) {
 			$id = "evolugrid_number_".self::$nbGridCount;
 			self::$nbGridCount++;
 		}
 		
-		
-		echo '
+		return '
 			<div id="'.$id.'"></div>
 			<script type="text/javascript">
 				$(document).ready(function() {
