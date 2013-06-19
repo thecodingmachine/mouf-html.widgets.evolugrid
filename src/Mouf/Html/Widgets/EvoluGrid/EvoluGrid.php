@@ -40,6 +40,11 @@ class EvoluGrid implements HtmlElementInterface{
 	/**
 	 * @var string
 	 */
+	private $rowCssClass;
+	
+	/**
+	 * @var string
+	 */
 	private $formSelector;
 	
 	/**
@@ -70,6 +75,15 @@ class EvoluGrid implements HtmlElementInterface{
 	 */
 	public function setUrl($url) {
 		$this->url = ROOT_URL.$url;
+	}
+	
+	/**
+	 * Key that will be looked up in each row to apply the value as a row's class
+	 *
+	 * @param string $rowCssClass
+	 */
+	public function setRowCssClass($rowCssClass) {
+		$this->rowCssClass = $rowCssClass;
 	}
 
 	/**
@@ -298,6 +312,7 @@ class EvoluGrid implements HtmlElementInterface{
 		$descriptor->tableClasses = $this->class;
 		$descriptor->export_csv = $this->exportCSV;
 		$descriptor->limit = $this->limit;
+		$descriptor->rowCssClass = $this->rowCssClass;
 		
 		if ($this->formSelector){
 			$descriptor->filterForm = $this->formSelector;
