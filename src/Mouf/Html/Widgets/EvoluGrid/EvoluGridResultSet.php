@@ -119,7 +119,7 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 	/**
 	 * The format to use to export the data.
 	 * It can be "json" or "csv".
-	 * If non is specified, JSON will be used.
+	 * If none is specified, JSON will be used.
 	 * 
 	 * @param string $format
 	 */
