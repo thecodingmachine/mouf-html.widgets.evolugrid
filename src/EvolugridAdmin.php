@@ -10,7 +10,7 @@ MoufUtils::registerMenuItem('htmlEvolugridCreateInstance', 'Create a new Evolugr
 
 // Controller declaration
 $moufManager = MoufManager::getMoufManager();
-$moufManager->declareComponent('evolugrid', 'Mouf\\Html\\Widgets\\Evolugrid\\Controllers\\EvolugridAdminController', true);
+$moufManager->declareComponent('evolugrid', 'Mouf\\Html\\Widgets\\EvoluGrid\\Controllers\\EvolugridAdminController', true);
 $moufManager->bindComponents('evolugrid', 'template', 'moufTemplate');
 $moufManager->bindComponents('evolugrid', 'content', 'block.content');
 
