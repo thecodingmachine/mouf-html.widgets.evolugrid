@@ -180,7 +180,7 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 				$this->results->paginate($this->limit, $this->offset);
 			}
 			
-			$resultArray = $this->results->val();
+			$resultArray = ValueUtils::val($this->results);
 
 			$resultData = array();
 			$columns = $this->columns;
