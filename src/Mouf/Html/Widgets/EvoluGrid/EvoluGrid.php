@@ -7,6 +7,7 @@ use Mouf\Html\HtmlElement\HtmlElementInterface;
 /**
  * This class represents a grid that can be rendered using the EvoluGrid JS jQuery plugin.
  *
+ * @ExtendedAction {"name":"Generate from SQL", "url":"evolugrid/updateFromSql", "default":false}
  * @author David Negrier
  */
 class EvoluGrid implements HtmlElementInterface{

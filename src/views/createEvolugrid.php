@@ -1,13 +1,21 @@
 <?php
 /* @var $this Mouf\Html\Widgets\EvoluGrid\Controllers\EvolugridAdminController */
+
+if ($this->editMode == false) {
 ?>
 <h1>Create a new Evolugrid</h1>
+<?php } else { ?>
+<h1>Edit evolugrid <em><?php echo $this->instanceName ?></em></h1>
+<?php } ?>
 
 <p>This screen creates a working <code>EvoluGrid</code> that will retrieve data directly from a SQL database.
 This is not the only way to create an <code>EvoluGrid</code>. You should create the <code>EvoluGrid</code> directly
 from the Mouf UI if you need to tap into another datasource.</p>
 
 <form action="doCreateEvolugrid" method="post" class="form-horizontal">
+<?php 
+if ($this->editMode == false) {
+?>
 	<div class="control-group">
 		<label class="control-label">Instance name*: </label>
 		<div class="controls">
@@ -15,6 +23,9 @@ from the Mouf UI if you need to tap into another datasource.</p>
 			<span class="help-block">The name of the <code>EvoluGrid</code> instance that will be created.</span>
 		</div>
 	</div>
+<?php } else { ?>
+	<input type="hidden" name="name" value="<?php echo plainstring_to_htmlprotected($this->instanceName) ?>" required />
+<?php } ?>
 	
 	<div class="control-group">
 		<label class="control-label">SQL query*: </label>
