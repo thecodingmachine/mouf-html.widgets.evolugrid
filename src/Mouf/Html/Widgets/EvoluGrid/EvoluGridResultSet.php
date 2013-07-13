@@ -69,7 +69,9 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 	
 	private $limit;
 	private $offset;
-
+	private $sortKey;
+	private $sortOrder;
+	
 	/**
 	 * Sets the result set to display.
 	 *
@@ -138,7 +140,12 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 		if ($this->limit == null && isset($_GET['limit']) && !empty($_GET['limit'])) {
 			$this->limit = $_GET['limit'];
 		}
-		
+		if ($this->sortKey == null && isset($_GET['sort_key']) && !empty($_GET['sort_key'])) {
+			$this->sortKey = $_GET['sort_key'];
+		}
+		if ($this->sortOrder == null && isset($_GET['sort_order']) && !empty($_GET['sort_order'])) {
+			$this->sortOrder = $_GET['sort_order'];
+		}
 		
 		$this->output($this->format);
 	}
@@ -174,12 +181,13 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 				$jsonMessage['count'] = ValueUtils::val($this->count);
 			}
 
-			// TODO: Build the $autoBuildColumns mechanism!!!!!!
-			
 			if ($this->results instanceof PaginableInterface) {
 				$this->results->paginate($this->limit, $this->offset);
 			}
-			
+			if ($this->results instanceof SortableInterface) {
+				$this->results->sort($this->sortKey, $this->sortOrder);
+			}
+				
 			$resultArray = ValueUtils::val($this->results);
 
 			$resultData = array();
@@ -190,7 +198,7 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 						if (!isset($columnsByKey[$key])) {
 							$columnsByKey[$key] = true;
 							// Let's create a column whose title is the key.
-							$columns[] = new SimpleColumn($key, $key);
+							$columns[] = new SimpleColumn($key, $key, true);
 						}
 					}
 				}
@@ -203,9 +211,8 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 			foreach ($columns as $column) {
 				/* @var $column EvoluColumnInterface */
 				$columnArr = array("title" => $column->getTitle());
-				if ($column instanceof EvoluColumnKeyInterface) {
-					$columnArr['display'] = $column->getKey();
-				}
+				$columnArr['display'] = $column->getKey();
+				$columnArr['sortable'] = $column->isSortable();
 				if ($column instanceof EvoluColumnJsInterface) {
 					$columnArr['jsdisplay'] = $column->getJsRenderer();
 				}
@@ -284,7 +291,7 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 	 *
 	 * @return array<SplashRoute>
 	 */
-	function getUrlsList() {
+	public function getUrlsList() {
 		$instanceName = MoufManager::getMoufManager()->findInstanceName($this);
 	
 		$route = new SplashRoute($this->url, $instanceName, "run", null, "Ajax call by Evolugrid.");

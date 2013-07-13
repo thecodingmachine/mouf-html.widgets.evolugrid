@@ -24,15 +24,24 @@ class JsColumn implements EvoluColumnJsInterface {
 	 * @var string
 	 */
 	private $jsRenderer;
+	
+	/**
+	 * The key to sort upon (or null if the column is not sortable)
+	 *
+	 * @var string
+	 */
+	private $sortKey;
 
 	/**
-	 * 
+	 * @Important
 	 * @param string $title The title of the column to display
 	 * @param string $jsRenderer Returns the JS function to be used to render the cell. Here is a sample to display a link:	function(row) { return $("&lt;a/&gt;").text(row["name"]).attr("href", "/mylink.php?id="+row.id) }
+	 * @param string $sortKey The key to sort upon (or null if the column is not sortable)
 	 */
-	public function __construct($title, $jsRenderer) {
+	public function __construct($title, $jsRenderer, $sortKey = null) {
 		$this->title = $title;
 		$this->jsRenderer = $jsRenderer;
+		$this->sortKey = $sortKey;
 	}
 
 	/**
@@ -47,5 +56,20 @@ class JsColumn implements EvoluColumnJsInterface {
 	public function getJsRenderer() {
 		return $this->jsRenderer;
 	}
-
+	
+	/**
+	 * (non-PHPdoc)
+	 * @see \Mouf\Html\Widgets\EvoluGrid\EvoluColumnKeyInterface::getKey()
+	 */
+	public function getKey() {
+		return $this->sortKey;
+	}
+	
+	/**
+	 * Returns true if the column is sortable, and false otherwise.
+	 */
+	public function isSortable() {
+		return $this->sortKey != null;
+	}
+	
 }

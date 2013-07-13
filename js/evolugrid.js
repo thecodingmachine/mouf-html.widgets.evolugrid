@@ -32,6 +32,9 @@
 			"limit": 100,
 			"infiniteScroll": false
 	}
+
+	var sortKey;
+	var sortOrder;
 	
 	//Only use for the infinite scroll
 	var scrollOffset; 
@@ -57,6 +60,46 @@
    			
 		return [];
 	};
+	
+	var _generateHeaders = function(tr, descriptor, evolugrid) {
+		for(var i=0;i<descriptor.columns.length;i++){
+			var columnDescriptor = descriptor.columns[i];
+			var th = $('<th>').html(columnDescriptor.title);
+			var key = columnDescriptor.display;
+			if (columnDescriptor.sortable) {
+				(function(key) {
+					var sortButtonAsc = $('<a href="#" />').click(function() {
+						sortKey = key;
+						sortOrder = "asc";
+						if (descriptor.infiniteScroll) {
+							evolugrid.evolugrid('scroll', true);
+						} else {
+							evolugrid.evolugrid('refresh', 0);
+						}
+						return false;
+					});
+					sortButtonAsc.append("<i>up</i>");
+					th.append(" ");
+					th.append(sortButtonAsc);
+					
+					var sortButtonDown = $('<a href="#" />').click(function() {
+						sortKey = key;
+						sortOrder = "desc";
+						if (descriptor.infiniteScroll) {
+							evolugrid.evolugrid('scroll', true);
+						} else {
+							evolugrid.evolugrid('refresh', 0);
+						}
+						return false;
+					});
+					sortButtonDown.append("<i>down</i>");
+					th.append(" ");
+					th.append(sortButtonDown);
+				})(key);
+			}
+			tr.append(th);
+		}		
+	}
 		
 	var methods = {
 	    init : function( options ) {
@@ -172,6 +215,8 @@
 	    	filters = _getFilters(descriptor, filters);
 	    	filters.push({"name":"offset", "value": noPage*descriptor.limit});
 	    	filters.push({"name":"limit", "value": descriptor.limit});
+	    	filters.push({"name":"sort_key", "value": sortKey});
+	    	filters.push({"name":"sort_order", "value": sortOrder});
 
 	    	$.ajax({url:descriptor.url, dataType:'json', data : filters,
 	    	success: function(data){
@@ -190,10 +235,8 @@
 	    		var table=$('<table>').appendTo($this);
 	    		var tr=$('<tr>');
 	    		table.append(tr);
-	    		table.addClass(extendedDescriptor.tableClasses)
-	    		for(var i=0;i<extendedDescriptor.columns.length;i++){
-	    			tr.append($('<th>').html(extendedDescriptor.columns[i].title))
-	    		}
+	    		table.addClass(extendedDescriptor.tableClasses);
+	    		_generateHeaders(tr, extendedDescriptor, $this);
 	    		//construct td
 	    		for (var i=0;i<data.data.length;i++){
 	    			tr=$('<tr>');
@@ -299,11 +342,17 @@
 	    		$(descriptor.filterForm).find("input[type=button]").attr("disabled", true);
 	    	}
 	    	
+	    	if (init) {
+	    		scrollOffset = 0;
+	    	}
+	    	
 	    	var $this=$(this);
 	    	filters = _getFilters(descriptor);
 	    	filters.push({"name":"offset", "value": scrollOffset});
 	    	filters.push({"name":"limit", "value": descriptor.limit});
-	    	
+	    	filters.push({"name":"sort_key", "value": sortKey});
+	    	filters.push({"name":"sort_order", "value": sortOrder});
+
 	    	$.ajax({url:descriptor.url, dataType:'json', data : filters,
 		    	success: function(data){
 			    	var extendedDescriptor=$.extend(true, {}, descriptor, data.descriptor)
@@ -315,9 +364,7 @@
 			    		var tr=$('<tr>');
 			    		table.append(tr);
 			    		table.addClass(extendedDescriptor.tableClasses)
-			    		for(var i=0;i<extendedDescriptor.columns.length;i++){
-			    			tr.append($('<th>').html(extendedDescriptor.columns[i].title))
-			    		}
+			    		_generateHeaders(tr, extendedDescriptor, $this);
 			    	}
 		    		
 		    		//construct td

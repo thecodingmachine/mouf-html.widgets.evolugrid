@@ -10,10 +10,5 @@ namespace Mouf\Html\Widgets\EvoluGrid;
  * @author david
  */
 interface EvoluColumnKeyInterface extends EvoluColumnInterface {
-	/**
-	 * Returns the key to map to in the datagrid.
-	 * 
-	 * @return string
-	 */
-	public function getKey();	
+	
 }

@@ -23,14 +23,23 @@ class SimpleColumn implements EvoluColumnKeyInterface {
 	private $key;
 
 	/**
+	 * True if the column is sortable, false otherwise.
+	 * 
+	 * @var bool
+	 */
+	private $sortable;
+	
+	/**
 	 * @Important $title
 	 * @Important $key
 	 * @param string $title The title of the column to display
 	 * @param string $key Get the key to map to in the datagrid.
+	 * @param bool $sortable True if the column is sortable, false otherwise.
 	 */
-	public function __construct($title, $key) {
+	public function __construct($title, $key, $sortable = false) {
 		$this->title = $title;
 		$this->key = $key;
+		$this->sortable = $sortable;
 	}
 
 	/**
@@ -49,4 +58,10 @@ class SimpleColumn implements EvoluColumnKeyInterface {
 		return $this->key;
 	}
 
+	/**
+	 * Returns true if the column is sortable, and false otherwise.
+	 */
+	public function isSortable() {
+		return $this->sortable;
+	}
 }
