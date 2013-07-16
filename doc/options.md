@@ -18,7 +18,8 @@ Here is a sample of all options available. Explanation is below:
 		columns: [
 			{
 				"title": "Name",
-				"key": "name"
+				"key": "name",
+				"sortable": true
 			},
 			{
 				"title": "First name",
@@ -147,7 +148,8 @@ A column descriptor contains:
 	<tr>
 		<td>key</td>
 		<td>Compulsory (if no jsrenderer)</td>
-		<td>The key to map to in the Ajax dataset.</td>
+		<td>The key to map to in the Ajax dataset. This is also the key that will be returned to the Ajax
+		callback when you try to sort on the column (if "sortable" is set)</td>
 	</tr>
 	<tr>
 		<td>jsrenderer</td>
@@ -159,5 +161,16 @@ A column descriptor contains:
 	 	<pre>function(row) {
 	return $("&lt;a/&gt;").text(row["name"]).attr("href", "/mylink.php?id="+row.id)
 }</pre></td>
+	</tr>
+	<tr>
+		<td>sortable</td>
+		<td>Boolean, optionnal</td>
+		<td>Whether we can sort upon this column or not. Defaults to false.</td>
+	</tr>
+	<tr>
+		<td>width</td>
+		<td>Optionnal</td>
+		<td>The width of the column. Just like the CSS width property, you can express it in
+		%, px, em, etc...</td>
 	</tr>
 </table>

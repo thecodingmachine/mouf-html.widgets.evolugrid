@@ -33,15 +33,24 @@ class JsColumn implements EvoluColumnJsInterface {
 	private $sortKey;
 
 	/**
+	 * The width of the column.
+	 *
+	 * @var string
+	 */
+	private $width;
+	
+	/**
 	 * @Important
 	 * @param string $title The title of the column to display
 	 * @param string $jsRenderer Returns the JS function to be used to render the cell. Here is a sample to display a link:	function(row) { return $("&lt;a/&gt;").text(row["name"]).attr("href", "/mylink.php?id="+row.id) }
 	 * @param string $sortKey The key to sort upon (or null if the column is not sortable)
+	 * @param int $width Returns the width of the column. Just like the CSS width property, you can express it in %, px, em, etc... This is optionnal. Leave empty to let the browser decide.
 	 */
-	public function __construct($title, $jsRenderer, $sortKey = null) {
+	public function __construct($title, $jsRenderer, $sortKey = null, $width = null) {
 		$this->title = $title;
 		$this->jsRenderer = $jsRenderer;
 		$this->sortKey = $sortKey;
+		$this->width = $width;
 	}
 
 	/**
@@ -72,4 +81,13 @@ class JsColumn implements EvoluColumnJsInterface {
 		return $this->sortKey != null;
 	}
 	
+	/**
+	 * Returns the width of the column. Just like the CSS width property, you can express it in %, px, em, etc...
+	 * This is optionnal. Leave empty to let the browser decide.
+	 *
+	 * @return string
+	 */
+	public function getWidth() {
+		return $this->width;
+	}
 }

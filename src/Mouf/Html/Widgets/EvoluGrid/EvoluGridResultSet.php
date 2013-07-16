@@ -20,6 +20,7 @@ use Mouf\Utils\Value\ArrayValueInterface;
 use Mouf\Database\QueryWriter\QueryResult;
 
 use Mouf\Utils\Action\ActionInterface;
+use Mouf\Utils\Common\SortableInterface;
 
 /**
  * This class represents the JSON result that can be sent to an evolugrid to display results.
@@ -184,7 +185,7 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 			if ($this->results instanceof PaginableInterface) {
 				$this->results->paginate($this->limit, $this->offset);
 			}
-			if ($this->results instanceof SortableInterface) {
+			if ($this->results instanceof SortableInterface && !empty($this->sortKey)) {
 				$this->results->sort($this->sortKey, $this->sortOrder);
 			}
 				
@@ -213,6 +214,10 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 				$columnArr = array("title" => $column->getTitle());
 				$columnArr['display'] = $column->getKey();
 				$columnArr['sortable'] = $column->isSortable();
+				$width = $column->getWidth();
+				if ($width) {
+					$columnArr['width'] = $width;
+				}
 				if ($column instanceof EvoluColumnJsInterface) {
 					$columnArr['jsdisplay'] = $column->getJsRenderer();
 				}

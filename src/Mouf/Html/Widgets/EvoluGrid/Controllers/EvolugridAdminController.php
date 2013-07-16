@@ -57,7 +57,7 @@ class EvolugridAdminController extends Controller {
 	 * @param string $sql
 	 * @param string $selfedit
 	 */
-	public function doCreateEvolugrid($name, $sql, $url, $selfedit="false") {
+	public function doCreateEvolugrid($name, $sql, $url, $buildSearchForm = 0, $selfedit="false") {
 		if (empty($url)) {
 			$url = "evolugrid/".urlencode($name);
 		}
@@ -90,9 +90,16 @@ class EvolugridAdminController extends Controller {
 		} else {
 			$evolugridInstanceDescriptor = $moufManager->createInstance("Mouf\\Html\\Widgets\\EvoluGrid\\EvoluGrid");
 			$evolugridInstanceDescriptor->setName($name);
-			$evolugridInstanceDescriptor->getProperty("class")->setValue("table");
+			$evolugridInstanceDescriptor->getProperty("class")->setValue("table table-striped table-hover");
 		}
 		$evolugridInstanceDescriptor->getProperty("url")->setValue($evolugridResultSetInstanceDescriptor);
+		
+		if ($buildSearchForm && $evolugridInstanceDescriptor->getProperty('searchForm')->getValue() == null) {
+			$searchFormInstanceDescriptor = $moufManager->createInstance("Mouf\\Html\\HtmlElement\\HtmlFromFile");
+			$searchFormInstanceDescriptor->getProperty('fileName')->setValue('vendor/mouf/html.widgets.evolugrid/src/views/searchForm.php');
+			$searchFormInstanceDescriptor->getProperty('relativeToRootPath')->setValue(true);
+			$evolugridInstanceDescriptor->getProperty('searchForm')->setValue($searchFormInstanceDescriptor);
+		}
 		
 		$parameterInstanceDescriptors = array();
 		foreach ($parameters as $parameter) {

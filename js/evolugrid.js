@@ -65,6 +65,9 @@
 		for(var i=0;i<descriptor.columns.length;i++){
 			var columnDescriptor = descriptor.columns[i];
 			var th = $('<th>').html(columnDescriptor.title);
+			if (columnDescriptor.width) {
+				th.css("width", columnDescriptor.width);
+			}
 			var key = columnDescriptor.display;
 			if (columnDescriptor.sortable) {
 				(function(key) {
@@ -78,7 +81,7 @@
 						}
 						return false;
 					});
-					sortButtonAsc.append("<i>up</i>");
+					sortButtonAsc.append("<i class='icon-chevron-up'></i>");
 					th.append(" ");
 					th.append(sortButtonAsc);
 					
@@ -92,7 +95,7 @@
 						}
 						return false;
 					});
-					sortButtonDown.append("<i>down</i>");
+					sortButtonDown.append("<i class='icon-chevron-down'></i>");
 					th.append(" ");
 					th.append(sortButtonDown);
 				})(key);
@@ -347,7 +350,7 @@
 	    	}
 	    	
 	    	var $this=$(this);
-	    	filters = _getFilters(descriptor);
+	    	var filters = _getFilters(descriptor);
 	    	filters.push({"name":"offset", "value": scrollOffset});
 	    	filters.push({"name":"limit", "value": descriptor.limit});
 	    	filters.push({"name":"sort_key", "value": sortKey});

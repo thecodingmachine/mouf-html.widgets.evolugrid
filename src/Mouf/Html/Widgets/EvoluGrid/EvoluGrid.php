@@ -50,6 +50,17 @@ class EvoluGrid implements HtmlElementInterface{
 	private $infiniteScroll = false;
 	
 	/**
+	 * The search form that will be displayed just before the grid.
+	 * If you want to put the search form somewhere else, you do not have to use this property.
+	 * You can instead ue the formSelector to point to a form anywhere on your page. 
+	 * 
+	 * @var HtmlElementInterface
+	 */
+	private $searchForm;
+	
+	
+	
+	/**
 	 * URL that will be called in Ajax and return the data to display.
 	 *
 	 * @Property
@@ -78,7 +89,6 @@ class EvoluGrid implements HtmlElementInterface{
 	/**
 	 * The id of the evolugrid.
 	 * 
-	 * @Property
 	 * @param string $id
 	 */
 	public function setId($id) {
@@ -88,7 +98,6 @@ class EvoluGrid implements HtmlElementInterface{
 	/**
 	 * The class of the evolugrid.
 	 * 
-	 * @Property
 	 * @param string $class
 	 */
 	public function setClass($class) {
@@ -98,21 +107,10 @@ class EvoluGrid implements HtmlElementInterface{
 	/**
 	 * Export the grid to CSV format.
 	 * 
-	 * @Property
 	 * @param boolean $exportCSV
 	 */
 	public function setExportCSV($exportCSV) {
 		$this->exportCSV = $exportCSV;
-	}
-	
-	/**
-	 * Form selector of the controller to filter data.
-	 * 
-	 * @Property
-	 * @param string $formSelector
-	 */
-	public function setFormSelector($formSelector) {
-		$this->formSelector = $formSelector;
 	}
 	
 	/**
@@ -123,6 +121,29 @@ class EvoluGrid implements HtmlElementInterface{
 	public function setInfiniteScroll($infiniteScroll) {
 		$this->infiniteScroll = $infiniteScroll;
 	}
+	
+	/**
+	 * A CSS form selector that points to the form used to filter data.
+	 * This is optionnal if you are using the formHtmlElement.
+	 *
+	 * @param string $formSelector
+	 */
+	public function setFormSelector($formSelector) {
+		$this->formSelector = $formSelector;
+	}
+	
+	/**
+	 * The search form that will be displayed just before the grid.
+	 * If you want to put the search form somewhere else, you do not have to use this property.
+	 * You can instead ue the formSelector to point to a form anywhere on your page.
+	 *
+	 * @param HtmlElementInterface $searchForm
+	 */
+	public function setSearchForm(HtmlElementInterface $searchForm = null) {
+		$this->searchForm = $searchForm;
+		return $this;
+	}
+	
 
 	/**
 	 * Renders the object in HTML.
@@ -130,6 +151,13 @@ class EvoluGrid implements HtmlElementInterface{
 	 *
 	 */
 	public function toHtml() {
+
+		$id = $this->id;
+		if ($id == null) {
+			$id = "evolugrid_number_".self::$nbGridCount;
+			self::$nbGridCount++;
+		}
+		
 		$descriptor = new \stdClass();
 		
 		if ($this->url instanceof UrlInterface) {
@@ -146,19 +174,24 @@ class EvoluGrid implements HtmlElementInterface{
 		
 		if ($this->formSelector){
 			$descriptor->filterForm = $this->formSelector;
+		} elseif ($this->searchForm) {
+			$descriptor->filterForm = '#'.$id.'__searchform form';
 		}
+		
 		
 		$descriptorJSON = json_encode($descriptor);
-	
-		$id = $this->id;
-		if ($id == null) {
-			$id = "evolugrid_number_".self::$nbGridCount;
-			self::$nbGridCount++;
-		}
-		
-		
+					
 		echo '
-			<div id="'.$id.'"></div>
+			<div id="'.$id.'__evolugrid_holder">
+				';
+		if ($this->searchForm) {
+			echo '<div id="'.$id.'__searchform">';
+			$this->searchForm->toHtml();
+			echo '</div>';
+		}
+		echo '
+				<div id="'.$id.'"></div>
+			</div>
 			<script type="text/javascript">
 				$(document).ready(function() {
 				    var descriptor = '.$descriptorJSON.';
@@ -167,4 +200,5 @@ class EvoluGrid implements HtmlElementInterface{
 			</script> 
 		';
 	}
+	
 }

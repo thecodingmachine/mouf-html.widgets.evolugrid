@@ -49,6 +49,17 @@ if ($this->editMode == false) {
 	
 	<div class="control-group">
 		<div class="controls">
+			<label class="checkbox">
+				<input type="checkbox" id="buildSearchForm" name="buildSearchForm" value="1" /> Add a default search form
+			</label>
+			<span class="help-block">You can decide to add a default full-text search box in your page.
+			In this case, the parameter <code>:search</code> will be passed to your SQL query. Therefore, your
+			SQL query should contain a filter on the <code>:search</code> parameter.</span>
+		</div>
+	</div>
+	
+	<div class="control-group">
+		<div class="controls">
 			<button name="action" value="parse" type="submit" class="btn btn-danger">Create Evolugrid</button>
 		</div>
 	</div>
@@ -56,5 +67,11 @@ if ($this->editMode == false) {
 </form>
 
 <script type="text/javascript">
-$(function () { $("input,select,textarea").not("[type=submit]").jqBootstrapValidation(); } );
+$(function () {
+	$("input,select,textarea").not("[type=submit]").jqBootstrapValidation();
+
+	
+});
+
+
 </script>

@@ -31,6 +31,8 @@ Evolugrid will add automatically those GET parameters:
 - **limit**: The maximum number of rows that should be returned
 - **offset**: The place in the dataset where we should start
 - **output**: This is either "json", or "csv" (in case the user requested an Excel/CSV export)
+- **sort_key**: The key to sort upon (if a sort has been requested on a column)
+- **sort_order**: The sort order (if a sort has been requested on a column). Can be "ASC" or "DESC"
 
 Note: evolugrid can add additional parameters (see [search filters](searcj_filters.md) for more information)
 
@@ -40,7 +42,8 @@ Note: evolugrid can add additional parameters (see [search filters](searcj_filte
 		'columns': [
 			{
 				'title': 'Label',
-				'display': 'label'
+				'display': 'label',
+				'sortable': 'true',
 			},
 			{
 				'title': 'Creation date',
