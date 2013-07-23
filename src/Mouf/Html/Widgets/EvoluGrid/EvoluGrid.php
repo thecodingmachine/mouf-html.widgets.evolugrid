@@ -52,7 +52,7 @@ class EvoluGrid implements HtmlElementInterface{
 	/**
 	 * The search form that will be displayed just before the grid.
 	 * If you want to put the search form somewhere else, you do not have to use this property.
-	 * You can instead ue the formSelector to point to a form anywhere on your page. 
+	 * You can instead use the formSelector to point to a form anywhere on your page. 
 	 * 
 	 * @var HtmlElementInterface
 	 */
@@ -68,6 +68,14 @@ class EvoluGrid implements HtmlElementInterface{
 	 */
 	public function setUrl($url) {
 		$this->url = $url;
+	}
+	
+	/**
+	 * Getter for URL
+	 * @Property
+	 */
+	public function getUrl() {
+		return $this->url;
 	}
 
 	/**

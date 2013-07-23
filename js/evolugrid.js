@@ -420,7 +420,7 @@
 			    	}
 			    	
 			    	// We update the scroll offset
-			    	scrollOffset = scrollOffset + descriptor.limit;
+			    	scrollOffset = scrollOffset + parseInt(descriptor.limit);
 			    	
 			    	// Enable scroll again
 		    		scrollReady = true;

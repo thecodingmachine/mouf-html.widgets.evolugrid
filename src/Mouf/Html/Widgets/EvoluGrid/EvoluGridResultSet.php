@@ -210,18 +210,20 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 
 			$columnsArr = array();
 			foreach ($columns as $column) {
-				/* @var $column EvoluColumnInterface */
-				$columnArr = array("title" => $column->getTitle());
-				$columnArr['display'] = $column->getKey();
-				$columnArr['sortable'] = $column->isSortable();
-				$width = $column->getWidth();
-				if ($width) {
-					$columnArr['width'] = $width;
+				if (!$column->isHidden()) {
+					/* @var $column EvoluColumnInterface */
+					$columnArr = array("title" => $column->getTitle());
+					$columnArr['display'] = $column->getKey();
+					$columnArr['sortable'] = $column->isSortable();
+					$width = $column->getWidth();
+					if ($width) {
+						$columnArr['width'] = $width;
+					}
+					if ($column instanceof EvoluColumnJsInterface) {
+						$columnArr['jsdisplay'] = $column->getJsRenderer();
+					}
+					$columnsArr[] = $columnArr;
 				}
-				if ($column instanceof EvoluColumnJsInterface) {
-					$columnArr['jsdisplay'] = $column->getJsRenderer();
-				}
-				$columnsArr[] = $columnArr;
 			}
 			$descriptor['columns'] = $columnsArr;
 
@@ -296,10 +298,13 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 	 *
 	 * @return array<SplashRoute>
 	 */
-	public function getUrlsList() {
-		$instanceName = MoufManager::getMoufManager()->findInstanceName($this);
-	
-		$route = new SplashRoute($this->url, $instanceName, "run", null, "Ajax call by Evolugrid.");
-		return array($route);
+	public function getUrlsList() {	
+		if ($this->url != null) {
+			$instanceName = MoufManager::getMoufManager()->findInstanceName($this);
+			$route = new SplashRoute($this->url, $instanceName, "run", null, "Ajax call by Evolugrid.");
+			return array($route);
+		} else {
+			return array();
+		}
 	}
 }

@@ -30,6 +30,8 @@ interface EvoluColumnInterface {
 	
 	/**
 	 * Returns true if the column is sortable, and false otherwise.
+	 * 
+	 * @return bool
 	 */
 	public function isSortable();
 	
@@ -40,4 +42,11 @@ interface EvoluColumnInterface {
 	 * @return string
 	 */
 	public function getWidth();
+	
+	/**
+	 * If this function returns true, the column should not be displayed.
+	 *
+	 * @return bool
+	 */
+	public function isHidden();
 }
