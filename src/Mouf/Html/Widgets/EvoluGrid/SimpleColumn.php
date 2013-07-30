@@ -1,14 +1,16 @@
 <?php
 namespace Mouf\Html\Widgets\EvoluGrid;
 
+use Mouf\Utils\Common\Formatters\FormatterInterface;
 use Mouf\Utils\Common\ConditionInterface\ConditionInterface;
+
 
 /**
  * A column of an EvoluGrid that renders a key of the resultset.
  * 
  * @author David Negrier
  */
-class SimpleColumn implements EvoluColumnKeyInterface {
+class SimpleColumn implements EvoluColumnKeyInterface, EvoluColumnFormatterInterface {
 	/**
 	 * The title of the column to display
 	 * 
@@ -49,23 +51,34 @@ class SimpleColumn implements EvoluColumnKeyInterface {
 	private $displayCondition;
 	
 	/**
+	 * Formatter used to format the column output.
+	 * The Formater is optional. If no formater is set, the value will be output directly without being formated.
+	 * 
+	 * @var FormatterInterface
+	 */
+	private $formatter;
+	
+	/**
 	 * @Important $title
 	 * @Important $key
 	 * @Important $sortable
 	 * @Important $width
 	 * @Important $displayCondition
+	 * @Important $formatter
 	 * @param string $title The title of the column to display
 	 * @param string $key Get the key to map to in the datagrid.
 	 * @param bool $sortable True if the column is sortable, false otherwise.
 	 * @param int $width Returns the width of the column. Just like the CSS width property, you can express it in %, px, em, etc... This is optionnal. Leave empty to let the browser decide.
 	 * @param ConditionInterface $displayCondition
+	 * @param FormatterInterface $formatter Formatter used to format the column output (optional).
 	 */
-	public function __construct($title, $key, $sortable = false, $width = null, $displayCondition = null) {
+	public function __construct($title, $key, $sortable = false, $width = null, $displayCondition = null, $formatter = null) {
 		$this->title = $title;
 		$this->key = $key;
 		$this->sortable = $sortable;
 		$this->width = $width;
 		$this->displayCondition = $displayCondition;
+		$this->formatter = $formatter;
 	}
 
 	/**
@@ -111,6 +124,19 @@ class SimpleColumn implements EvoluColumnKeyInterface {
 			return false;
 		}
 		return !$this->displayCondition->isOk();
+	}
+	
+	/**
+	 * This function return the formatter used if any
+	 * 
+	 * @see \Mouf\Html\Widgets\EvoluGrid\EvoluColumnFormatterInterface::getFormatter()
+	 */
+	public function getFormatter() {
+		if (isset($this->formatter)) {
+			return $this->formatter;
+		} else {
+			return null;
+		}
 	}
 	
 }

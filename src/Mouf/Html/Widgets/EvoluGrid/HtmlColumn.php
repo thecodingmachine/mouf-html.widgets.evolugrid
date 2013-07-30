@@ -2,6 +2,7 @@
 namespace Mouf\Html\Widgets\EvoluGrid;
 
 use Mouf\Utils\Common\ConditionInterface\ConditionInterface;
+use Mouf\Utils\Common\Formatters\FormatterInterface;
 
 /**
  * A column of an EvoluGrid that renders HTML
@@ -44,7 +45,7 @@ class HtmlColumn implements EvoluColumnJsInterface {
 	 * @var ConditionInterface
 	 */
 	private $displayCondition;
-	
+		
 	/**
 	 * @Important $title
 	 * @Important $sortKey

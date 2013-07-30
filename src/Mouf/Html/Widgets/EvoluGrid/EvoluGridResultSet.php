@@ -206,8 +206,6 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 				$resultData[] = (array) $rowArray;
 			}
 
-			$jsonMessage['data'] = $resultData;
-
 			$columnsArr = array();
 			foreach ($columns as $column) {
 				if (!$column->isHidden()) {
@@ -223,8 +221,18 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 						$columnArr['jsdisplay'] = $column->getJsRenderer();
 					}
 					$columnsArr[] = $columnArr;
+					
+					if (($column instanceof EvoluColumnFormatterInterface) && ($column->getFormatter() != null)) {
+						foreach ($resultData as $key=>$row) {
+							$formatter = $column->getFormatter();
+							$resultData[$key][$column->getKey()] = $formatter->format($row[$column->getKey()]);
+						}
+					}
 				}
 			}
+
+			$jsonMessage['data'] = $resultData;
+			
 			$descriptor['columns'] = $columnsArr;
 
 			$jsonMessage['descriptor'] = $descriptor;

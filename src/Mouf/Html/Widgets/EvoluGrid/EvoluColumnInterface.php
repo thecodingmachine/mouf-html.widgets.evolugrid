@@ -49,4 +49,5 @@ interface EvoluColumnInterface {
 	 * @return bool
 	 */
 	public function isHidden();
+	
 }
