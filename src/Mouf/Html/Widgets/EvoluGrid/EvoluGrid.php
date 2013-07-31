@@ -50,15 +50,36 @@ class EvoluGrid implements HtmlElementInterface{
 	private $infiniteScroll = false;
 	
 	/**
+	 * The position of the row which will launch the ajax call for infinite scroll when scrolling (start by the end).
+	 * if empty, the default value is 5
+	 *
+	 * @var int
+	 */
+	private $infiniteScroll_ElementPosition = 5;
+
+	/**
+	 * Fixed the header of the evolugrid table
+	 * 
+	 * @var bool
+	 */
+	private $fixedHeader = false;
+	
+	/**
+	 * CSS selector of the nav bar (to fix the evolugrid header just below).
+	 * If empty, the header is fixed to the top of the window.
+	 *
+	 * @var string
+	 */
+	private $fixedHeader_NavBarSelector;
+	
+	/**
 	 * The search form that will be displayed just before the grid.
 	 * If you want to put the search form somewhere else, you do not have to use this property.
 	 * You can instead use the formSelector to point to a form anywhere on your page. 
 	 * 
 	 * @var HtmlElementInterface
 	 */
-	private $searchForm;
-	
-	
+	private $searchForm;	
 	
 	/**
 	 * URL that will be called in Ajax and return the data to display.
@@ -131,6 +152,35 @@ class EvoluGrid implements HtmlElementInterface{
 	}
 	
 	/**
+	 * The position of the row which will launch the ajax call for infinite scroll when scrolling (start by the end).
+	 * if empty, the default value is 5
+	 * 
+	 * @param int $infiniteScroll_ElementPosition
+	 */
+	public function setInfiniteScrollElementPosition($infiniteScroll_ElementPosition) {
+		$this->infiniteScroll_ElementPosition = $infiniteScroll_ElementPosition;
+	}
+	
+	/**
+	 * Fixed the header of the evolugrid table
+	 *
+	 * @param bool $fixedHeader
+	 */
+	public function setFixedHeader($fixedHeader) {
+		$this->fixedHeader = $fixedHeader;
+	}
+	
+	/**
+	 * CSS selector of the nav bar (to fix the evolugrid header just below).
+	 * If empty, the header is fixed to the top of the window.
+	 * 
+	 * @param string $fixedHeader_NavBarSelector
+	 */
+	public function setFixedHeaderNavBarSelector($fixedHeader_NavBarSelector) {
+		$this->fixedHeader_NavBarSelector = $fixedHeader_NavBarSelector;
+	}
+	
+	/**
 	 * A CSS form selector that points to the form used to filter data.
 	 * This is optionnal if you are using the formHtmlElement.
 	 *
@@ -179,6 +229,9 @@ class EvoluGrid implements HtmlElementInterface{
 		$descriptor->export_csv = $this->exportCSV;
 		$descriptor->limit = $this->limit;
 		$descriptor->infiniteScroll = $this->infiniteScroll;
+		$descriptor->infiniteScroll_ElementPosition = $this->infiniteScroll_ElementPosition;
+		$descriptor->fixedHeader = $this->fixedHeader;
+		$descriptor->fixedHeader_NavBarSelector = $this->fixedHeader_NavBarSelector;
 		
 		if ($this->formSelector){
 			$descriptor->filterForm = $this->formSelector;
@@ -199,6 +252,7 @@ class EvoluGrid implements HtmlElementInterface{
 		}
 		echo '
 				<div id="'.$id.'"></div>
+				<div class="ajaxLoader" style="text-align: center; margin-top: 20px; margin-bottom: 20px; display: none;"><img src="vendor/mouf/html.widgets.evolugrid/img/ajax-loader.gif" alt="ajax-loader"></div>
 			</div>
 			<script type="text/javascript">
 				$(document).ready(function() {

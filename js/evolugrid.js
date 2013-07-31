@@ -19,8 +19,8 @@
  *  export_csv: true, // Whether we can export to CSV or not,
  *  loadOnInit: true, // Whether we should start loading the table (true) or wait for the user to submit the search form (false),
  *  rowCssClass: "key", // If set, for each row, we will look in the dataset for the row, for the "key" passed in parameter. The associated value will be used as a class of the tr row. 
- *  loaderImgDiv: "selector" // A jQuery selector pointing to a div that contains a ajax loader gif
  *  infiniteScroll: boolean // To set a infinite scroll instead of a pager
+ *  fixedHeader: boolean // To sfixed the header of the evolugrid table
  * }
  * 
  * Any parameter (except URL) can be dynamically passed from the server side.
@@ -30,7 +30,8 @@
 			"loadOnInit": true,
 			"export_csv": true,
 			"limit": 100,
-			"infiniteScroll": false
+			"infiniteScroll": false,
+			"fixedHeader": false
 	}
 
 	var sortKey;
@@ -40,6 +41,9 @@
 	var scrollOffset; 
 	var scrollReady;
 	var scrollNoMoreResults;
+	
+	//Only use for fixed header behavior
+	var headerTopOffset;
 	
 	/**
 	 * Returns the list of filters to be applied to the query.
@@ -112,6 +116,7 @@
                 $(this).data('descriptor', descriptor);
                 
                 var $this = $(this);
+                
                 if (descriptor.infiniteScroll) {               	
                 	// We initialise the infinite scroll
                 	scrollReady = true;
@@ -122,15 +127,32 @@
                 		// We test if we have not make a request
                 		if (scrollReady == false) return;
                 		 
-                		if(($(window).scrollTop() + $(window).height()) == $(document).height())	{
+                		var lastElementPositon = $this.find('table tbody tr:nth-last-child(' + descriptor.infiniteScroll_ElementPosition + ')').position();
+                		
+                		if(($(window).scrollTop() + $(window).height()) >= lastElementPositon.top)	{
                 			if ( scrollNoMoreResults == true) {
                     			return;
                     		}
+                
                 			scrollReady = false;
                 			$this.evolugrid('scroll', false);
                 		}
                 	});
                 }
+                
+                if (descriptor.fixedHeader) {
+                	if (descriptor.fixedHeader_NavBarSelector == undefined) {
+                		descriptor.fixedHeader_NavBarSelector = ".navbar"
+                	}
+                	
+                	if ($(descriptor.fixedHeader_NavBarSelector).length) {
+                		var navBarPosition = $(descriptor.fixedHeader_NavBarSelector).position();
+                		headerTopOffset = navBarPosition.top + $(descriptor.fixedHeader_NavBarSelector).height();
+                	} else {
+                		headerTopOffset = 0;
+                	}
+                }
+                                
                 if (descriptor.filterForm) {
                 	if (descriptor.filterFormSubmitButton) {
                 		$(descriptor.filterFormSubmitButton).click(function(event) {
@@ -197,12 +219,8 @@
 	    refresh : function( noPage, filters ) {
 	    	var descriptor=$(this).data('descriptor');
 	    	
-	    	//If there is a loader image
-	    	//We replace the table by the image
-	    	if (descriptor.loaderImgDiv) {
-	    		$(this).hide();
-	    		descriptor.loaderImgDiv.show();
-	    	}
+	    	//We show the ajax loader
+	    	$(this).next('div.ajaxLoader').show();	    	
 	    	
 	    	// While refreshing, let's make sure noone touches the buttons!
 	    	// FIXME: we should check which are already disabled and not reenable them later.... 
@@ -233,19 +251,28 @@
 	    		}
 	    		$(countTarget).html(data.count);
 	    		//construct th
+	    		//construct th
 	    		$this.html("");
-	    		var table=$('<table>').appendTo($this);
+	    		var table= $('<table>').appendTo($this);
+	    		var thead = $('<thead>').appendTo(table);
+	    		var tbody = $('<tbody>').appendTo(table);
 	    		var tr=$('<tr>');
-	    		table.append(tr);
-	    		table.addClass(extendedDescriptor.tableClasses);
+	    		thead.append(tr);
+	    		table.addClass(extendedDescriptor.tableClasses);		    		
 	    		_generateHeaders(tr, extendedDescriptor, $this);
+	    		
+	    		if (descriptor.fixedHeader) {
+	    			table.addClass("table-fixed-header");
+	    			thead.addClass("header");
+	    		}
+	    		
 	    		//construct td
 	    		for (var i=0;i<data.data.length;i++){
 	    			tr=$('<tr>');
 	    			if (extendedDescriptor.rowCssClass) {
 	    				tr.addClass(data.data[i][extendedDescriptor.rowCssClass]);
 	    			}
-	    			table.append(tr);
+	    			tbody.append(tr);
 	    			for(var j=0;j<extendedDescriptor.columns.length;j++){
 	    				var td=$('<td>');
 	    				// jsdisplay is used when the data comes in JSON from the server (and you want js display)
@@ -319,12 +346,13 @@
 		    		$(descriptor.filterForm).find("input[type=button]").attr("disabled", false);
 		    	}
 		    	
-		    	//If there is a loader image
-		    	//We replace the image by the results table
-		    	if (descriptor.loaderImgDiv) {
-		    		descriptor.loaderImgDiv.hide();
-		    		$this.show();
-		    	}
+		    	//We hide the ajax loader
+		    	$this.next('div.ajaxLoader').hide();
+		    	
+		    	if (descriptor.fixedHeader) {
+    				//Enable fixed header for the table
+    				table.fixedHeader({topOffset:headerTopOffset});
+    			}
 	    	},
 	    	error : function(err,status) { 
 	    		console.error("Error on ajax callback: "+status);
@@ -334,7 +362,10 @@
 	    },	    
 	    scroll : function(init) {
 	    	var descriptor=$(this).data('descriptor');
-	    	    		    	
+	    	
+	    	//We show the ajax loader
+	    	$(this).next('div.ajaxLoader').show();
+	    		    	    		    	
 	    	// While refreshing, let's make sure noone touches the buttons!
 	    	// FIXME: we should check which are already disabled and not reenable them later.... 
 	    	if (descriptor.filterFormSubmitButton) {
@@ -354,8 +385,7 @@
 	    	filters.push({"name":"limit", "value": descriptor.limit});
 	    	filters.push({"name":"sort_key", "value": sortKey});
 	    	filters.push({"name":"sort_order", "value": sortOrder});
-	    		
-	    	$this.find('div.ajaxLoader').show();
+	    		    	
 	    	$.ajax({url:descriptor.url, dataType:'json', data : filters,
 		    	success: function(data){
 			    	var extendedDescriptor=$.extend(true, {}, descriptor, data.descriptor)
@@ -363,11 +393,18 @@
 			    	if (init) {
 			    		//construct th
 			    		$this.html("");
-			    		var table=$('<table>').appendTo($this);
+			    		var table= $('<table>').appendTo($this);
+			    		var thead = $('<thead>').appendTo(table);
+			    		var tbody = $('<tbody>').appendTo(table);
 			    		var tr=$('<tr>');
-			    		table.append(tr);
-			    		table.addClass(extendedDescriptor.tableClasses)
+			    		thead.append(tr);
+			    		table.addClass(extendedDescriptor.tableClasses);		    		
 			    		_generateHeaders(tr, extendedDescriptor, $this);
+			    		
+			    		if (descriptor.fixedHeader) {
+			    			table.addClass("table-fixed-header");
+			    			thead.addClass("header");
+			    		}
 			    	}
 		    		
 		    		//construct td
@@ -376,7 +413,7 @@
 		    			if (extendedDescriptor.rowCssClass) {
 		    				tr.addClass(data.data[i][extendedDescriptor.rowCssClass]);
 		    			}
-		    			$this.find('table').append(tr);
+		    			$this.find('tbody').append(tr);
 		    			for(var j=0;j<extendedDescriptor.columns.length;j++){
 		    				var td=$('<td>');
 		    				// jsdisplay is used when the data comes in JSON from the server (and you want js display)
@@ -408,9 +445,13 @@
 		    		
 		    		if (init) {
 		    			//construct no more results
-		    			$this.append('<div class="noMoreResults" style="display:none; font-style:italic; text-align: center;	margin-top: 20px;">> No more results <</div>');
-		    			//construct no more results
-		    			$this.append('<div class="ajaxLoader" style="text-align: center; margin-top: 20px;"><img src="vendor/mouf/html.widgets.evolugrid/img/ajax-loader.gif" alt="ajax-loader"></div>');
+		    			var noMoreResultsDiv = $('<div>').html("> No more results <").addClass("noMoreResults").css({'display':'none', 'font-style':'italic', 'text-align':'center', 'margin-top':20, 'margin-bottom':20});
+		    			$this.append(noMoreResultsDiv);
+		    					    			
+		    			if (descriptor.fixedHeader) {
+		    				//Enable fixed header for the table
+		    				table.fixedHeader({topOffset:headerTopOffset});
+		    			}
 		    		}
 			    			    		
 		    		// Finally, let's enable buttons again:
@@ -421,16 +462,22 @@
 			    		$(descriptor.filterForm).find("input[type=button]").attr("disabled", false);
 			    	}
 			    	
-			    	$this.find('div.ajaxLoader').hide();
+			    	//We hide the ajax loader
+			    	$this.next('div.ajaxLoader').hide();
 			    	
+			    	if (descriptor.fixedHeader) {
+			    		//we compute the header size for fixed header
+			    		$this.find('table').fixedHeaderComputeHeaderWidth();
+			    	}
+			    				    	
 			    	// We update the scroll offset
 			    	scrollOffset = scrollOffset + parseInt(descriptor.limit);
 			    	
 			    	// Enable scroll again
 		    		scrollReady = true;
 			    	
+		    		// No more results
 			    	if (data.data.length == 0) {
-			    		// No more results
 			    		scrollNoMoreResults = true;
 			    		$this.find('div.noMoreResults').show();
 			    	} 			    	
@@ -453,4 +500,72 @@
 	    }    
 	  
 	  };	
+})(jQuery);
+
+
+//To fix header (optional)
+//Inspired from https://github.com/oma/table-fixed-header
+
+(function($) {
+
+	$.fn.fixedHeader = function (options) {
+	 var config = {
+	   topOffset: 0
+	 };
+	 if (options){ $.extend(config, options); }
+
+	 return this.each( function() {
+	  var o = $(this);
+
+	  var $win = $(window)
+	    , $head = $('thead.header', o)
+	    , isFixed = 0;
+	  var headTop = $head.length && $head.offset().top - config.topOffset;
+
+	  function processScroll() {
+	    if (!o.is(':visible')) return;
+	    if ($('thead.header-copy').size())
+	    var i, scrollTop = $win.scrollTop();
+	    var t = $head.length && $head.offset().top - config.topOffset;
+	    if (!isFixed && headTop != t) { headTop = t; }
+	    if (scrollTop >= headTop && !isFixed) {
+	      isFixed = 1;
+	    } else if (scrollTop <= headTop && isFixed) {
+	      isFixed = 0;
+	    }
+	    isFixed ? $('thead.header-copy', o).removeClass('hide')
+	            : $('thead.header-copy', o).addClass('hide');
+	  }
+	  
+	  $win.on('scroll', processScroll);
+
+	  $head.on('click', function () {
+	    if (!isFixed) setTimeout(function () {  $win.scrollTop($win.scrollTop() - config.topOffset) }, 10);
+	  })
+
+	  $head.clone().removeClass('header').addClass('header-copy header-fixed').appendTo(o);
+	  
+	  $(this).fixedHeaderComputeHeaderWidth();
+	  
+	  $head.css({ margin:'0 auto',
+	              width: o.width()});
+	  
+	  $(this).find('.header-fixed').css({ 'position': 'fixed',
+		  								  'top': config.topOffset,
+		  								  'z-index': '1020'});
+	  
+	  processScroll();
+	 });
+	};
+	
+	$.fn.fixedHeaderComputeHeaderWidth = function () {
+		var o = $(this);
+		var $head = $('thead.header', o);
+		var header_width = $head.width();
+		o.find('thead.header-copy').width(header_width);
+		o.find('thead.header > tr:first > th').each(function (i, h){
+			var w = $(h).width();
+		    o.find('thead.header-copy> tr > th:eq('+i+')').width(w)
+		 });
+	};
 })(jQuery);
