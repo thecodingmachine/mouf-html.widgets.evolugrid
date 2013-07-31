@@ -124,7 +124,6 @@
                 		 
                 		if(($(window).scrollTop() + $(window).height()) == $(document).height())	{
                 			if ( scrollNoMoreResults == true) {
-                    			$this.find('div.noResults').show();
                     			return;
                     		}
                 			scrollReady = false;
@@ -355,7 +354,8 @@
 	    	filters.push({"name":"limit", "value": descriptor.limit});
 	    	filters.push({"name":"sort_key", "value": sortKey});
 	    	filters.push({"name":"sort_order", "value": sortOrder});
-
+	    		
+	    	$this.find('div.ajaxLoader').show();
 	    	$.ajax({url:descriptor.url, dataType:'json', data : filters,
 		    	success: function(data){
 			    	var extendedDescriptor=$.extend(true, {}, descriptor, data.descriptor)
@@ -408,7 +408,9 @@
 		    		
 		    		if (init) {
 		    			//construct no more results
-		    			$this.append('<div class="noResults" style="display:none">No more results</div>');
+		    			$this.append('<div class="noMoreResults" style="display:none; font-style:italic; text-align: center;	margin-top: 20px;">> No more results <</div>');
+		    			//construct no more results
+		    			$this.append('<div class="ajaxLoader" style="text-align: center; margin-top: 20px;"><img src="vendor/mouf/html.widgets.evolugrid/img/ajax-loader.gif" alt="ajax-loader"></div>');
 		    		}
 			    			    		
 		    		// Finally, let's enable buttons again:
@@ -419,15 +421,18 @@
 			    		$(descriptor.filterForm).find("input[type=button]").attr("disabled", false);
 			    	}
 			    	
+			    	$this.find('div.ajaxLoader').hide();
+			    	
 			    	// We update the scroll offset
 			    	scrollOffset = scrollOffset + parseInt(descriptor.limit);
 			    	
 			    	// Enable scroll again
 		    		scrollReady = true;
 			    	
-			    	if (data.count < scrollOffset) {
+			    	if (data.data.length == 0) {
 			    		// No more results
 			    		scrollNoMoreResults = true;
+			    		$this.find('div.noMoreResults').show();
 			    	} 			    	
 		    	},
 		    	error : function(err,status) { 
