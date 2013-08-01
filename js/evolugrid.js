@@ -545,7 +545,7 @@
 		    		scrollReady = true;
 			    	
 		    		// No more results
-			    	if (data.data.length == 0) {
+			    	if (data.data.length == 0 || data.data.length < descriptor.limit) {
 			    		scrollNoMoreResults = true;
 			    		$this.find('div.noMoreResults').show();
 			    	} 			    	
