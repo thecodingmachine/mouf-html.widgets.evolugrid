@@ -43,6 +43,20 @@ class EvoluGrid implements HtmlElementInterface{
 	private $formSelector;
 	
 	/**
+	 * Enable the search history when the user click on the previous page button.
+	 *
+	 * @var bool
+	 */
+	private $searchHistory = false;
+	
+	/**
+	 * Enable auto fill form for search history.
+	 *
+	 * @var bool
+	 */
+	private $searchHistoryAutoFillForm = false;
+	
+	/**
 	 * Replaces the pagination by an infinite scroll.
 	 * 
 	 * @var bool
@@ -80,7 +94,7 @@ class EvoluGrid implements HtmlElementInterface{
 	 * @var HtmlElementInterface
 	 */
 	private $searchForm;	
-	
+		
 	/**
 	 * URL that will be called in Ajax and return the data to display.
 	 *
@@ -191,6 +205,24 @@ class EvoluGrid implements HtmlElementInterface{
 	}
 	
 	/**
+	 * Enable the search history when the user click on the previous page button
+	 * 
+	 * @param bool $searchHistory
+	 */
+	public function setSearchHistory($searchHistory) {
+		$this->searchHistory = $searchHistory;
+	}
+	
+	/**
+	 * Enable auto fill form for search history.
+	 *
+	 * @param bool $searchHistoryAutoFillForm
+	 */
+	public function setSearchHistoryAutoFillForm($searchHistoryAutoFillForm) {
+		$this->searchHistoryAutoFillForm = $searchHistoryAutoFillForm;
+	}
+	
+	/**
 	 * The search form that will be displayed just before the grid.
 	 * If you want to put the search form somewhere else, you do not have to use this property.
 	 * You can instead ue the formSelector to point to a form anywhere on your page.
@@ -201,7 +233,6 @@ class EvoluGrid implements HtmlElementInterface{
 		$this->searchForm = $searchForm;
 		return $this;
 	}
-	
 
 	/**
 	 * Renders the object in HTML.
@@ -232,6 +263,8 @@ class EvoluGrid implements HtmlElementInterface{
 		$descriptor->infiniteScroll_ElementPosition = $this->infiniteScroll_ElementPosition;
 		$descriptor->fixedHeader = $this->fixedHeader;
 		$descriptor->fixedHeader_NavBarSelector = $this->fixedHeader_NavBarSelector;
+		$descriptor->searchHistory = $this->searchHistory;
+		$descriptor->searchHistoryAutoFillForm = $this->searchHistoryAutoFillForm;
 		
 		if ($this->formSelector){
 			$descriptor->filterForm = $this->formSelector;

@@ -45,6 +45,9 @@
 	//Only use for fixed header behavior
 	var headerTopOffset;
 	
+	//Only use for historic state
+	var manualStateChange = true;
+	
 	/**
 	 * Returns the list of filters to be applied to the query.
 	 * Some filters can be passed directly to the function. In that case only those filters are taken into account
@@ -107,7 +110,21 @@
 			tr.append(th);
 		}		
 	}
-		
+	
+	var _getUrlParams =  function () {
+		  var vars = [], hash;
+		  var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+		  for(var i = 0; i < hashes.length; i++)
+		  {
+		      hash = hashes[i].split('=');
+		      var temp = {};
+		      temp.name = hash[0];
+		      temp.value = decodeURI(hash[1].replace(/\+/g, '%20'));
+		      vars.push(temp);
+		  }
+		  return vars;
+		}
+			
 	var methods = {
 	    init : function( options ) {
 	    	var descriptor = $.extend(true, {}, defaultOptions, options);
@@ -188,20 +205,60 @@
 	                	});
                 	}
             	}
-                if (descriptor.loadOnInit) {
-                	if (descriptor.infiniteScroll) {
-                		scrollReady = false;
-                		$this.evolugrid('scroll', true);
-    				} else {
-    					$this.evolugrid('refresh', 0);
-    				}
+                if (descriptor.searchHistory) {  
+               	 	History.Adapter.bind(window,'popstate',function(){
+               	 		if(manualStateChange == true){
+	               	 		var state = History.getState();	            		
+		                    if (descriptor.infiniteScroll) {   
+		                    	scrollOffset = 0;
+		            			scrollNoMoreResults = false;
+		            			scrollReady = false;
+		            			$this.evolugrid('scroll', true, state.data.filters);
+		                    } else {
+		                    	$this.evolugrid('refresh', 0, state.data.filters);
+		                    }	         
+		                    if (descriptor.searchHistoryAutoFillForm) {
+			                    $.each(state.data.filters, function(index, item){
+			            		    var $el = $('[name="'+item.name+'"]');
+			            		    var type = $el.attr('type');
+			
+			            		    switch(type){
+			            		        case 'checkbox':
+			            		            $el.attr('checked', 'checked');
+			            		            break;
+			            		        case 'radio':
+			            		            $el.filter('[value="'+item.value+'"]').attr('checked', 'checked');
+			            		            break;
+			            		        default:
+			            		            $el.val(item.value);
+			            		    }
+			            		});
+			                }
+               	 		}
+               	 		manualStateChange = true;
+               	 });	
+               }                
+               if (descriptor.loadOnInit) {
+            	   if (descriptor.searchHistory) {  
+            		   var filters = _getUrlParams();
+            		   History.replaceState({filters:filters}, null, '?' + $.param(filters));
+            	   } else {
+            		   if (descriptor.infiniteScroll) {
+            			   scrollOffset = 0;
+       					   scrollNoMoreResults = false;
+            			   scrollReady = false;
+            			   $this.evolugrid('scroll', true);
+            		   } else {
+   							$this.evolugrid('refresh', 0);
+            		   }
+            	   }
                 }
  	        });
 	    },
 	    csvExport : function(filters) {
 	    	var descriptor=$(this).data('descriptor');
 	    	
-	    	var filters = _getFilters(descriptor, filters);
+	    	filters = _getFilters(descriptor, filters);
 	    	
 	    	var url = descriptor.url;
 	    	if (url.indexOf("?") == -1) {
@@ -216,7 +273,7 @@
 	    	
 	    	window.open(url);
 	    },
-	    refresh : function( noPage, filters ) {
+	    refresh : function( noPage, filters) {
 	    	var descriptor=$(this).data('descriptor');
 	    	
 	    	//We show the ajax loader
@@ -233,14 +290,19 @@
 	    	
 	    	var $this=$(this);
 	    	filters = _getFilters(descriptor, filters);
+	    	
+	    	if (descriptor.searchHistory) {
+	    		manualStateChange = false;
+	    		History.pushState({filters:filters}, null, '?' + $.param(filters));
+	    	}
+	    	
 	    	filters.push({"name":"offset", "value": noPage*descriptor.limit});
 	    	filters.push({"name":"limit", "value": descriptor.limit});
 	    	filters.push({"name":"sort_key", "value": sortKey});
 	    	filters.push({"name":"sort_order", "value": sortOrder});
 
 	    	$.ajax({url:descriptor.url, dataType:'json', data : filters,
-	    	success: function(data){
-	    		
+	    	success: function(data){	    		
 		    	var extendedDescriptor=$.extend(true, {}, descriptor, data.descriptor)
 
 	    		//Display Count
@@ -360,7 +422,7 @@
 	    	
 	    	})
 	    },	    
-	    scroll : function(init) {
+	    scroll : function(init, filters) {
 	    	var descriptor=$(this).data('descriptor');
 	    	
 	    	//We show the ajax loader
@@ -380,12 +442,18 @@
 	    	}
 	    	
 	    	var $this=$(this);
-	    	var filters = _getFilters(descriptor);
+	    	filters = _getFilters(descriptor, filters);
+	    	
+	    	if (descriptor.searchHistory) {
+	    		manualStateChange = false;
+	    		History.pushState({filters:filters}, null, '?' + $.param(filters));
+	    	}
+	    	
 	    	filters.push({"name":"offset", "value": scrollOffset});
 	    	filters.push({"name":"limit", "value": descriptor.limit});
 	    	filters.push({"name":"sort_key", "value": sortKey});
 	    	filters.push({"name":"sort_order", "value": sortOrder});
-	    		    	
+	    		    		    	
 	    	$.ajax({url:descriptor.url, dataType:'json', data : filters,
 		    	success: function(data){
 			    	var extendedDescriptor=$.extend(true, {}, descriptor, data.descriptor)
