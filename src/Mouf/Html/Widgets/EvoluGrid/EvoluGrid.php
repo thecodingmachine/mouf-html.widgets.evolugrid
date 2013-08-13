@@ -285,7 +285,7 @@ class EvoluGrid implements HtmlElementInterface{
 		}
 		echo '
 				<div id="'.$id.'"></div>
-				<div class="ajaxLoader" style="text-align: center; margin-top: 20px; margin-bottom: 20px; display: none;"><img src="vendor/mouf/html.widgets.evolugrid/img/ajax-loader.gif" alt="ajax-loader"></div>
+				<div class="ajaxLoader" style="text-align: center; margin-top: 20px; margin-bottom: 20px; display: none;"><img src="'.ROOT_URL.'vendor/mouf/html.widgets.evolugrid/img/ajax-loader.gif" alt="ajax-loader"></div>
 			</div>
 			<script type="text/javascript">
 				$(document).ready(function() {

@@ -241,7 +241,7 @@
                if (descriptor.loadOnInit) {
             	   if (descriptor.searchHistory) {  
             		   var filters = _getUrlParams();
-            		   History.replaceState({filters:filters}, null, '?' + $.param(filters));
+            		   History.replaceState({filters:filters}, null, window.location.pathname + '?' + $.param(filters));
             	   } else {
             		   if (descriptor.infiniteScroll) {
             			   scrollOffset = 0;
@@ -293,7 +293,7 @@
 	    	
 	    	if (descriptor.searchHistory) {
 	    		manualStateChange = false;
-	    		History.pushState({filters:filters}, null, '?' + $.param(filters));
+	    		History.pushState({filters:filters}, null,  window.location.pathname + '?' + $.param(filters));
 	    	}
 	    	
 	    	filters.push({"name":"offset", "value": noPage*descriptor.limit});
@@ -446,7 +446,7 @@
 	    	
 	    	if (descriptor.searchHistory) {
 	    		manualStateChange = false;
-	    		History.pushState({filters:filters}, null, '?' + $.param(filters));
+	    		History.pushState({filters:filters}, null, window.location.pathname + '?' + $.param(filters));
 	    	}
 	    	
 	    	filters.push({"name":"offset", "value": scrollOffset});

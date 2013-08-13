@@ -298,7 +298,7 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 	 * @return string
 	 */
 	public function getUrl() {
-		return $this->url;
+		return ROOT_URL.$this->url;
 	}
 
 	/**
