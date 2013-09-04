@@ -43,7 +43,8 @@ Note: evolugrid can add additional parameters (see [search filters](searcj_filte
 			{
 				'title': 'Label',
 				'display': 'label',
-				'sortable': 'true',
+				'sortable': true,
+				'escapeHTML': false
 			},
 			{
 				'title': 'Creation date',

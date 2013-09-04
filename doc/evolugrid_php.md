@@ -34,11 +34,11 @@ This code should be returned to the Ajax call of Evolugrid:
 $evoluGrid = new EvoluGrid();
 
 // Let's add simple columns
-$evoluGrid->addColumn(new EvoluColumn("Name", "name"));
-$evoluGrid->addColumn(new EvoluColumn("Date", "date"));
+$evoluGrid->addColumn(new SimpleColumn("Name", "name"));
+$evoluGrid->addColumn(new SimpleColumn("Date", "date"));
 
 // Let's add a column with Javascript rendering
-$nameCol = new EvoluColumn("First name", "first_name");
+$nameCol = new SimpleColumn("First name", "first_name");
 $nameCol->jsrenderer = 'function(row) { return $("<a/>").text(row["first_name"]).attr("href", "'.ROOT_URL.'admin/client/edition.php?id="+row.id) }';
 $evoluGrid->addColumn($nameCol);
 

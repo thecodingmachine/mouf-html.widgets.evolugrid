@@ -113,9 +113,9 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 	/**
 	 * Add a new column to the grid.
 	 *
-	 * @param EvoluColumn $column
+	 * @param EvoluColumnInterface $column
 	 */
-	public function addColumn(EvoluColumn $column) {
+	public function addColumn(EvoluColumnInterface $column) {
 		$this->columns[] = $column;
 	}
 
@@ -220,6 +220,9 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 					if ($column instanceof EvoluColumnJsInterface) {
 						$columnArr['jsdisplay'] = $column->getJsRenderer();
 					}
+					if ($column instanceof EvoluColumnKeyInterface) {
+						$columnArr['escapeHTML'] = $column->isEscapeHTML();
+					}
 					$columnsArr[] = $columnArr;
 					
 					if (($column instanceof EvoluColumnFormatterInterface) && ($column->getFormatter() != null)) {
@@ -261,15 +264,15 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 	private function outputCsv($fp) {
 		// TODO: enable autoBuildColumns on CSV
 		$columnsTitles = array_map(
-				function (EvoluColumn $column) {
-					return utf8_decode($column->title);
+				function (EvoluColumnInterface $column) {
+					return utf8_decode($column->getTitle());
 				}, $this->columns);
 		fputcsv($fp, $columnsTitles, ";");
 		foreach ($this->getRows() as $row) {
 			$columns = array_map(
-					function (EvoluColumn $elem) use ($row) {
+					function (EvoluColumnInterface $elem) use ($row) {
 						if (is_object($row)) {
-							$key = $elem->key;
+							$key = $elem->getKey();
 							if (property_exists($row, $key)) {
 								return ($row->$key == "") ? " "
 										: utf8_decode($row->$key);
@@ -277,9 +280,9 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 								return " ";
 							}
 						} else {
-							if (isset($row[$elem->key])) {
-								return ($row[$elem->key] == "") ? " "
-										: utf8_decode($row[$elem->key]);
+							if (isset($row[$elem->getKey()])) {
+								return ($row[$elem->getKey()] == "") ? " "
+										: utf8_decode($row[$elem->getKey()]);
 							} else {
 								return " ";
 							}

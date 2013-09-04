@@ -10,5 +10,11 @@ namespace Mouf\Html\Widgets\EvoluGrid;
  * @author david
  */
 interface EvoluColumnKeyInterface extends EvoluColumnInterface {
-	
+
+	/**
+	 * Returns true if the column escapes HTML, and false otherwise.
+	 *
+	 * @return bool
+	 */
+	public function isEscapeHTML();
 }

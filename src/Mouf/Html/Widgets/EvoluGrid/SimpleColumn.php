@@ -33,6 +33,13 @@ class SimpleColumn implements EvoluColumnKeyInterface, EvoluColumnFormatterInter
 	 * @var bool
 	 */
 	private $sortable;
+
+	/**
+	 * True if you should escape HTML tag, false otherwise.
+	 * 
+	 * @var bool
+	 */
+	private $escapeHTML;
 	
 	/**
 	 * The width of the column.
@@ -62,6 +69,7 @@ class SimpleColumn implements EvoluColumnKeyInterface, EvoluColumnFormatterInter
 	 * @Important $title
 	 * @Important $key
 	 * @Important $sortable
+	 * @Important $escapeHTML
 	 * @Important $width
 	 * @Important $displayCondition
 	 * @Important $formatter
@@ -71,11 +79,13 @@ class SimpleColumn implements EvoluColumnKeyInterface, EvoluColumnFormatterInter
 	 * @param int $width Returns the width of the column. Just like the CSS width property, you can express it in %, px, em, etc... This is optionnal. Leave empty to let the browser decide.
 	 * @param ConditionInterface $displayCondition
 	 * @param FormatterInterface $formatter Formatter used to format the column output (optional).
+	 * @param bool $escapeHTML True if you should escape HTML tag, false otherwise.
 	 */
-	public function __construct($title, $key, $sortable = false, $width = null, $displayCondition = null, $formatter = null) {
+	public function __construct($title, $key, $sortable = false, $width = null, $displayCondition = null, $formatter = null, $escapeHTML = true) {
 		$this->title = $title;
 		$this->key = $key;
 		$this->sortable = $sortable;
+		$this->escapeHTML = $escapeHTML;
 		$this->width = $width;
 		$this->displayCondition = $displayCondition;
 		$this->formatter = $formatter;
@@ -102,6 +112,13 @@ class SimpleColumn implements EvoluColumnKeyInterface, EvoluColumnFormatterInter
 	 */
 	public function isSortable() {
 		return $this->sortable;
+	}
+
+	/**
+	 * Returns true if the column escapes HTML, and false otherwise.
+	 */
+	public function isEscapeHTML() {
+		return $this->escapeHTML;
 	}
 	
 	/**

@@ -19,7 +19,8 @@ Here is a sample of all options available. Explanation is below:
 			{
 				"title": "Name",
 				"key": "name",
-				"sortable": true
+				"sortable": true,
+				"escapeHTML": false
 			},
 			{
 				"title": "First name",
@@ -166,6 +167,11 @@ A column descriptor contains:
 		<td>sortable</td>
 		<td>Boolean, optionnal</td>
 		<td>Whether we can sort upon this column or not. Defaults to false.</td>
+	</tr>
+	<tr>
+		<td>escapeHTML</td>
+		<td>Boolean, optionnal</td>
+		<td>Whether the data displayed in this column should be HTML escaped or not. This is only applied for "key" columns. If a "jsrenderer" is set, this parameter is ignored. Defaults to true.</td>
 	</tr>
 	<tr>
 		<td>width</td>

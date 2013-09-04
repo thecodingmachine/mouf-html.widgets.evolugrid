@@ -337,6 +337,8 @@
 	    			tbody.append(tr);
 	    			for(var j=0;j<extendedDescriptor.columns.length;j++){
 	    				var td=$('<td>');
+	    				// variable to escape HTML tag
+	    				var escape = false;
 	    				// jsdisplay is used when the data comes in JSON from the server (and you want js display)
 	    				// if jsdipslay is used, display is ignored.
 	    				var jsdisplay=extendedDescriptor.columns[j].jsdisplay;
@@ -350,6 +352,9 @@
 			    				if(typeof display == 'function'){
 			    					var html=display(data.data[i]);
 			    				}else {
+			    					if(typeof extendedDescriptor.columns[j].escapeHTML == 'undefined' || extendedDescriptor.columns[j].escapeHTML == true) {
+			    						escape = true;
+			    					}
 			    					var html=data.data[i][display];
 			    					if (html === 0) {
 			    						html = "0";
@@ -358,7 +363,12 @@
 		    				}
 	    				}
 	    				if(html){
-	    					td.html(html);
+	    					if(escape) {
+		    					td.text(html);
+	    					}
+	    					else {
+		    					td.html(html);	
+	    					}
 		    			}
 	    				tr.append(td);
 		    		}   			
@@ -484,6 +494,8 @@
 		    			$this.find('tbody').append(tr);
 		    			for(var j=0;j<extendedDescriptor.columns.length;j++){
 		    				var td=$('<td>');
+		    				// variable to escape HTML tag
+		    				var escape = false;
 		    				// jsdisplay is used when the data comes in JSON from the server (and you want js display)
 		    				// if jsdipslay is used, display is ignored.
 		    				var jsdisplay=extendedDescriptor.columns[j].jsdisplay;
@@ -497,6 +509,9 @@
 				    				if(typeof display == 'function'){
 				    					var html=display(data.data[i]);
 				    				}else {
+				    					if(typeof extendedDescriptor.columns[j].escapeHTML == 'undefined' || extendedDescriptor.columns[j].escapeHTML == true) {
+				    						escape = true;
+				    					}
 				    					var html=data.data[i][display];
 				    					if (html === 0) {
 				    						html = "0";
@@ -505,7 +520,12 @@
 			    				}
 		    				}
 		    				if(html){
-		    					td.html(html);
+		    					if(escape) {
+			    					td.text(html);
+		    					}
+		    					else {
+			    					td.html(html);	
+		    					}
 			    			}
 		    				tr.append(td);
 			    		}   			
