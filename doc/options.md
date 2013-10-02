@@ -15,6 +15,7 @@ Here is a sample of all options available. Explanation is below:
 	  	filterCallback: function, // A function taking 0 arguments and returning a map of filters (passed as arguments to the Ajax URL). This is applied before the filterForm.
 		rowCssClass: "key", // If set, for each row, we will look in the dataset for the row, for the "key" passed in parameter. The associated value will be used as a class of the tr row. 
 		loaderImgDiv: "selector", // A jQuery selector pointing to a div that contains a ajax loader gif
+		trClickable: false, // Whether we should click on tr. this call js function evolugridTrClickable(rowObject)
 		columns: [
 			{
 				"title": "Name",

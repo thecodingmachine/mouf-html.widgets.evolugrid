@@ -113,9 +113,9 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 	/**
 	 * Add a new column to the grid.
 	 *
-	 * @param EvoluColumn $column
+	 * @param EvoluColumnInterface $column
 	 */
-	public function addColumn(EvoluColumn $column) {
+	public function addColumn(EvoluColumnInterface $column) {
 		$this->columns[] = $column;
 	}
 

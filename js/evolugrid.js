@@ -19,8 +19,9 @@
  *  export_csv: true, // Whether we can export to CSV or not,
  *  loadOnInit: true, // Whether we should start loading the table (true) or wait for the user to submit the search form (false),
  *  rowCssClass: "key", // If set, for each row, we will look in the dataset for the row, for the "key" passed in parameter. The associated value will be used as a class of the tr row. 
- *  infiniteScroll: boolean // To set a infinite scroll instead of a pager
- *  fixedHeader: boolean // To sfixed the header of the evolugrid table
+ *  infiniteScroll: boolean, // To set a infinite scroll instead of a pager
+ *  fixedHeader: boolean, // To sfixed the header of the evolugrid table
+ *  trClickable: boolean // Whether we should click on tr. this call js function evolugridTrClickable(rowObject)
  * }
  * 
  * Any parameter (except URL) can be dynamically passed from the server side.
@@ -31,7 +32,8 @@
 			"export_csv": true,
 			"limit": 100,
 			"infiniteScroll": false,
-			"fixedHeader": false
+			"fixedHeader": false,
+			"trClickable": false
 	}
 
 	var sortKey;
@@ -124,6 +126,18 @@
 		  }
 		  return vars;
 		}
+	
+	var trClickElement = function (descriptor, tr, el) {
+		// If tr is clickable add js callback
+		if(descriptor.trClickable) {
+			tr.click(function () {
+				if(typeof evolugridTrClickable == 'function') {
+					evolugridTrClickable(el);
+				}
+			})
+		}
+		
+	}
 			
 	var methods = {
 	    init : function( options ) {
@@ -331,6 +345,9 @@
 	    		//construct td
 	    		for (var i=0;i<data.data.length;i++){
 	    			tr=$('<tr>');
+	    			var dataTemp = data.data[i];
+	    			trClickElement(descriptor, tr, dataTemp);
+	    			
 	    			if (extendedDescriptor.rowCssClass) {
 	    				tr.addClass(data.data[i][extendedDescriptor.rowCssClass]);
 	    			}
@@ -478,6 +495,8 @@
 		    		//construct td
 		    		for (var i=0;i<data.data.length;i++){
 		    			tr=$('<tr>');
+		    			var dataTemp = data.data[i];
+		    			trClickElement(descriptor, tr, dataTemp);
 		    			if (extendedDescriptor.rowCssClass) {
 		    				tr.addClass(data.data[i][extendedDescriptor.rowCssClass]);
 		    			}

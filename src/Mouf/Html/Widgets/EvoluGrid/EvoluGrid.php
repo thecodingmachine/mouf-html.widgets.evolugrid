@@ -94,7 +94,15 @@ class EvoluGrid implements HtmlElementInterface{
 	 * @var HtmlElementInterface
 	 */
 	private $searchForm;	
-		
+
+	/**
+	 * The tr table is clickable and this call a js funcvtion named evolugridTrClickable(object)
+	 * The object passed in parameter is the row object.
+	 *
+	 * @var bool
+	 */
+	private $trClickable;
+	
 	/**
 	 * URL that will be called in Ajax and return the data to display.
 	 *
@@ -235,6 +243,17 @@ class EvoluGrid implements HtmlElementInterface{
 	}
 
 	/**
+	 * Activate the clickable tr to call js function with the row object
+	 * evolugridTrClickable(object)
+	 *
+	 * @param bool $trClickable
+	 */
+	public function setTrClickable($trClickable = false) {
+		$this->trClickable = $trClickable;
+		return $this;
+	}
+	
+	/**
 	 * Renders the object in HTML.
 	 * The Html is echoed directly into the output.
 	 *
@@ -265,6 +284,7 @@ class EvoluGrid implements HtmlElementInterface{
 		$descriptor->fixedHeader_NavBarSelector = $this->fixedHeader_NavBarSelector;
 		$descriptor->searchHistory = $this->searchHistory;
 		$descriptor->searchHistoryAutoFillForm = $this->searchHistoryAutoFillForm;
+		$descriptor->trClickable = $this->trClickable;
 		
 		if ($this->formSelector){
 			$descriptor->filterForm = $this->formSelector;

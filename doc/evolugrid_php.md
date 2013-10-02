@@ -31,7 +31,7 @@ The EvoluGrid can also help you return the dataset (and the column model associa
 This code should be returned to the Ajax call of Evolugrid:
 
 ```php
-$evoluGrid = new EvoluGrid();
+$evoluGrid = new EvoluGridResultSet();
 
 // Let's add simple columns
 $evoluGrid->addColumn(new EvoluColumn("Name", "name"));
