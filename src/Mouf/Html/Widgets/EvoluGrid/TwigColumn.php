@@ -1,30 +1,44 @@
 <?php
 namespace Mouf\Html\Widgets\EvoluGrid;
 
-use Mouf\Utils\Common\ConditionInterface\ConditionInterface;
 use Mouf\Utils\Common\Formatters\FormatterInterface;
+use Mouf\Utils\Common\ConditionInterface\ConditionInterface;
+use \Twig_Environment;
 
 /**
- * A column of an EvoluGrid that renders HTML
+ * A column of an EvoluGrid that renders a key of the resultset.
  * 
- * @author Pierre Vaidie
+ * @author David Negrier
  */
-class HtmlColumn implements EvoluColumnJsInterface {
+class TwigColumn implements EvoluColumnKeyInterface, EvoluColumnRowFormatterInterface {
 	/**
 	 * The title of the column to display
 	 * 
-	 * @Important
 	 * @var string
 	 */
 	private $title;
+
+	/**
+	 * The twig code to render the column.
+	 * 
+	 * @var string
+	 */
+	private $twig;
 	
 	/**
-	 * The key to sort upon (or null if the column is not sortable)
-	 *
+	 * True if the column is sortable, false otherwise.
+	 * 
+	 * @var bool
+	 */
+	private $sortable;
+
+	/**
+	 * Get the key to sort upon.
+	 * 
 	 * @var string
 	 */
 	private $sortKey;
-	
+
 	/**
 	 * The width of the column.
 	 * 
@@ -32,10 +46,8 @@ class HtmlColumn implements EvoluColumnJsInterface {
 	 */
 	private $width;
 	
-	/**
-	 * The Html to output
-	 */
-	private $html;
+	private $columnNumber;
+	private static $COLUMN_NUMBER = 0;
 	
 	/**
 	 * This condition must be matched to display the column.
@@ -45,25 +57,36 @@ class HtmlColumn implements EvoluColumnJsInterface {
 	 * @var ConditionInterface
 	 */
 	private $displayCondition;
-		
+	
+	private $twigEnvironment;
+	
 	/**
 	 * @Important $title
+	 * @Important $twig
 	 * @Important $sortKey
+	 * @Important $sortable
 	 * @Important $width
-	 * @Important $html
 	 * @Important $displayCondition
 	 * @param string $title The title of the column to display
-	 * @param string $sortKey The key to sort upon (or null if the column is not sortable)
+	 * @param string $twig The twig code to render the column.
+	 * @param string $key Get the key to map to in the datagrid. Only used for sort order.
+	 * @param bool $sortable True if the column is sortable, false otherwise.
 	 * @param int $width Returns the width of the column. Just like the CSS width property, you can express it in %, px, em, etc... This is optionnal. Leave empty to let the browser decide.
-	 * @param string $html The Html to ouput. You can use placeholders to use row values. For example, <code>&lt;a href='show?id={id}' class="btn"&gt;{name}&lt;/a&gt;</code>
 	 * @param ConditionInterface $displayCondition
 	 */
-	public function __construct($title, $html,  $sortKey = null, $width = null, $displayCondition = null) {
+	public function __construct($title, $twig, $sortKey = null, $sortable = false, $width = null, $displayCondition = null) {
 		$this->title = $title;
-		$this->width = $width;
-		$this->html = $html;
+		$this->twig = $twig;
 		$this->sortKey = $sortKey;
+		$this->sortable = $sortable;
+		$this->width = $width;
 		$this->displayCondition = $displayCondition;
+		
+		self::$COLUMN_NUMBER++;
+		$this->columnNumber = self::$COLUMN_NUMBER;
+		
+		$loader = new \Twig_Loader_String();
+		$this->twigEnvironment = new \Twig_Environment($loader);
 	}
 
 	/**
@@ -76,7 +99,15 @@ class HtmlColumn implements EvoluColumnJsInterface {
 	
 	/**
 	 * (non-PHPdoc)
-	 * @see \Mouf\Html\Widgets\EvoluGrid\EvoluColumnInterface::getSortKey()
+	 * @see \Mouf\Html\Widgets\EvoluGrid\EvoluColumnKeyInterface::getKey()
+	 */
+	public function getKey() {
+		return "twig_".$this->columnNumber;
+	}
+	
+	/**
+	 * (non-PHPdoc)
+	 * @see \Mouf\Html\Widgets\EvoluGrid\EvoluColumnKeyInterface::getSortKey()
 	 */
 	public function getSortKey() {
 		return $this->sortKey;
@@ -86,7 +117,14 @@ class HtmlColumn implements EvoluColumnJsInterface {
 	 * Returns true if the column is sortable, and false otherwise.
 	 */
 	public function isSortable() {
-		return $this->sortKey != null;
+		return $this->sortable;
+	}
+
+	/**
+	 * Returns true if the column escapes HTML, and false otherwise.
+	 */
+	public function isEscapeHTML() {
+		return false;
 	}
 	
 	/**
@@ -101,7 +139,7 @@ class HtmlColumn implements EvoluColumnJsInterface {
 	
 	/**
 	 * If this function returns true, the column should not be displayed.
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function isHidden() {
@@ -110,24 +148,16 @@ class HtmlColumn implements EvoluColumnJsInterface {
 		}
 		return !$this->displayCondition->isOk();
 	}
-		
-	/**
-	 * Returns the JS function to be used to render the html.
-	 *
-	 * @return string
-	 */
-	public function getJsRenderer() {	
-		$html = $this->html;	
-		preg_match_all('/{\w*}/', $html, $res);		
-		if (!empty($res)) {
-			$matches = $res[0];
-			$replaceStr = "";
-			foreach ($matches as $key => $value) {
-				$replaceStr .= '.replace("'.$value.'", row.'.str_replace(array('{','}'), array('',''), $value).')';
-			}
-		} 		
-		return 'function(row) { return '.json_encode($html).$replaceStr.' }';	
-		
-	}
 	
+	/**
+	 * Format the row passed in parameter
+	 * 
+	 * @param array $row
+	 * @return array
+	 */
+	public function formatRow($row) {
+		$cell = $this->twigEnvironment->render($this->twig, $row);
+		$row["twig_".$this->columnNumber] = $cell;
+		return $row;
+	}
 }

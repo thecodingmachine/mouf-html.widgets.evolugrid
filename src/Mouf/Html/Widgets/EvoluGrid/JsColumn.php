@@ -82,9 +82,9 @@ class JsColumn implements EvoluColumnJsInterface {
 	
 	/**
 	 * (non-PHPdoc)
-	 * @see \Mouf\Html\Widgets\EvoluGrid\EvoluColumnKeyInterface::getKey()
+	 * @see \Mouf\Html\Widgets\EvoluGrid\EvoluColumnKeyInterface::getSortKey()
 	 */
-	public function getKey() {
+	public function getSortKey() {
 		return $this->sortKey;
 	}
 	

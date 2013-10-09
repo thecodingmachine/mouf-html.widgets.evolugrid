@@ -147,13 +147,13 @@ A column descriptor contains:
 		<td>The title of the column to display</td>
 	</tr>
 	<tr>
-		<td>key</td>
+		<td>display</td>
 		<td>Compulsory (if no jsrenderer)</td>
 		<td>The key to map to in the Ajax dataset. This is also the key that will be returned to the Ajax
 		callback when you try to sort on the column (if "sortable" is set)</td>
 	</tr>
 	<tr>
-		<td>jsrenderer</td>
+		<td>jsdisplay</td>
 		<td>Optionnal</td>
 		<td>If set, this JS function will be used to render the cell.
 		This should contain an anonymous Javascript function, taking one parameter (the data row being displayed)
@@ -167,6 +167,12 @@ A column descriptor contains:
 		<td>sortable</td>
 		<td>Boolean, optionnal</td>
 		<td>Whether we can sort upon this column or not. Defaults to false.</td>
+	</tr>
+	<tr>
+		<td>sortKey</td>
+		<td>Optionnal</td>
+		<td>The key to sort upon. If not available, the "key" will be used as a sort key.
+		Only used if "sortable"=true.</td>
 	</tr>
 	<tr>
 		<td>escapeHTML</td>

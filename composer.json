@@ -24,7 +24,8 @@
         "mouf/database.querywriter": "~3.0",
         "mouf/javascript.historyjs": "~1.8",
         "mouf/utils.common.conditioninterface": "2.*",
-        "mouf/utils.common.formatters": ">=3.0,<4.0"
+        "mouf/utils.common.formatters": "~3.0",
+        "twig/twig": "1.*@stable"
     },
     "autoload": {
         "psr-0": {

@@ -211,8 +211,8 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 				if (!$column->isHidden()) {
 					/* @var $column EvoluColumnInterface */
 					$columnArr = array("title" => $column->getTitle());
-					$columnArr['display'] = $column->getKey();
 					$columnArr['sortable'] = $column->isSortable();
+					$columnArr['sortKey'] = $column->getSortKey();
 					$width = $column->getWidth();
 					if ($width) {
 						$columnArr['width'] = $width;
@@ -221,6 +221,7 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 						$columnArr['jsdisplay'] = $column->getJsRenderer();
 					}
 					if ($column instanceof EvoluColumnKeyInterface) {
+						$columnArr['display'] = $column->getKey();
 						$columnArr['escapeHTML'] = $column->isEscapeHTML();
 					}
 					$columnsArr[] = $columnArr;
@@ -229,6 +230,11 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 						foreach ($resultData as $key=>$row) {
 							$formatter = $column->getFormatter();
 							$resultData[$key][$column->getKey()] = $formatter->format($row[$column->getKey()]);
+						}
+					}
+					if ($column instanceof EvoluColumnRowFormatterInterface) {
+						foreach ($resultData as $key=>$row) {
+							$resultData[$key] = $column->formatRow($row);
 						}
 					}
 				}

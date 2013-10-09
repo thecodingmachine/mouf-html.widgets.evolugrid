@@ -10,7 +10,15 @@ namespace Mouf\Html\Widgets\EvoluGrid;
  * @author david
  */
 interface EvoluColumnKeyInterface extends EvoluColumnInterface {
-
+	
+	/**
+	 * Returns the key to map to in the datagrid. If you are using the "SimpleColumn" class,
+	 * the data associated to the key will be directly displayed.
+	 *
+	 * @return string
+	 */
+	public function getKey();
+	
 	/**
 	 * Returns true if the column escapes HTML, and false otherwise.
 	 *

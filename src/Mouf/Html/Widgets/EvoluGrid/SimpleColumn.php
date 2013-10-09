@@ -113,6 +113,15 @@ class SimpleColumn implements EvoluColumnKeyInterface, EvoluColumnFormatterInter
 	public function isSortable() {
 		return $this->sortable;
 	}
+	
+	/**
+	 * Returns the key to sort upon in the datagrid.
+	 *
+	 * @return string
+	 */
+	public function getSortKey() {
+		return $this->key;
+	}
 
 	/**
 	 * Returns true if the column escapes HTML, and false otherwise.

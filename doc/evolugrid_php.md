@@ -38,9 +38,15 @@ $evoluGrid->addColumn(new SimpleColumn("Name", "name"));
 $evoluGrid->addColumn(new SimpleColumn("Date", "date"));
 
 // Let's add a column with Javascript rendering
-$nameCol = new SimpleColumn("First name", "first_name");
-$nameCol->jsrenderer = 'function(row) { return $("<a/>").text(row["first_name"]).attr("href", "'.ROOT_URL.'admin/client/edition.php?id="+row.id) }';
+$nameCol = new JsColumn("First name", 'function(row) { return $("<a/>").text(row["first_name"]).attr("href", "'.ROOT_URL.'admin/client/edition.php?id="+row.id) }');
 $evoluGrid->addColumn($nameCol);
+
+// Let's add a column with Html rendering
+$htmlCol = new HtmlColumn("Edit", "<a href='/edit?id={id}'>Edit</a>");
+
+// Need more power? A Twig renderer is available!
+// Let's add a column with Twig rendering (http://twig.sensiolabs.org)
+$twigCol = new TwigColumn("Edit", "<% if (id > 0) %><a href='/edit?id={{id}}'>Edit</a><% endif %>");
 
 $data = array(
 	0=>array(id=>1, "name"=>"Doe", "first_name"=>"John", "date"=>"12/12/12"),

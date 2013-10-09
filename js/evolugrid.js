@@ -76,10 +76,16 @@
 				th.css("width", columnDescriptor.width);
 			}
 			var key = columnDescriptor.display;
+			var colSortKey;
+			if (columnDescriptor.sortKey) {
+				colSortKey = columnDescriptor.sortKey;
+			} else {
+				colSortKey = key;
+			}
 			if (columnDescriptor.sortable) {
-				(function(key) {
+				(function(colSortKey) {
 					var sortButtonAsc = $('<a href="#" />').click(function() {
-						sortKey = key;
+						sortKey = colSortKey;
 						sortOrder = "asc";
 						if (descriptor.infiniteScroll) {
 							evolugrid.evolugrid('scroll', true);
@@ -93,7 +99,7 @@
 					th.append(sortButtonAsc);
 					
 					var sortButtonDown = $('<a href="#" />').click(function() {
-						sortKey = key;
+						sortKey = colSortKey;
 						sortOrder = "desc";
 						if (descriptor.infiniteScroll) {
 							evolugrid.evolugrid('scroll', true);
@@ -105,7 +111,7 @@
 					sortButtonDown.append("<i class='icon-chevron-down'></i>");
 					th.append(" ");
 					th.append(sortButtonDown);
-				})(key);
+				})(colSortKey);
 			}
 			tr.append(th);
 		}		
