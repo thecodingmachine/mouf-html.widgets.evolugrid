@@ -104,7 +104,7 @@
 						if (descriptor.infiniteScroll) {
 							evolugrid.evolugrid('scroll', true);
 						} else {
-							evolugrid.evolugrid('refresh', 1);
+							evolugrid.evolugrid('refresh', 0);
 						}
 						return false;
 					});
