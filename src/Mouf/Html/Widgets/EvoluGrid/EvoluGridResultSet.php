@@ -188,7 +188,7 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 			if ($this->results instanceof SortableInterface && !empty($this->sortKey)) {
 				$this->results->sort($this->sortKey, $this->sortOrder);
 			}
-				
+			
 			$resultArray = ValueUtils::val($this->results);
 
 			$resultData = array();
@@ -203,7 +203,15 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 						}
 					}
 				}
-				$resultData[] = (array) $rowArray;
+				if ($rowArray instanceof \Iterator) {
+					$tmpArray = array();
+					foreach ($rowArray as $key => $value) {
+						$tmpArray[$key] = $value;
+					}
+					$resultData[] = $tmpArray;
+				} else {
+					$resultData[] = (array) $rowArray;
+				}
 			}
 
 			$columnsArr = array();
