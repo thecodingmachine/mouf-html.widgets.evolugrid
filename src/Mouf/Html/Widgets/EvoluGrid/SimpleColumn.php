@@ -1,6 +1,8 @@
 <?php
 namespace Mouf\Html\Widgets\EvoluGrid;
 
+use Mouf\Utils\Value\ValueUtils;
+use Mouf\Utils\Value\ValueInterface;
 use Mouf\Utils\Common\Formatters\FormatterInterface;
 use Mouf\Utils\Common\ConditionInterface\ConditionInterface;
 
@@ -15,7 +17,7 @@ class SimpleColumn implements EvoluColumnKeyInterface, EvoluColumnFormatterInter
 	 * The title of the column to display
 	 * 
 	 * @Important
-	 * @var string
+	 * @var string|ValueInterface
 	 */
 	private $title;
 
@@ -73,7 +75,7 @@ class SimpleColumn implements EvoluColumnKeyInterface, EvoluColumnFormatterInter
 	 * @Important $width
 	 * @Important $displayCondition
 	 * @Important $formatter
-	 * @param string $title The title of the column to display
+	 * @param string|ValueInterface $title The title of the column to display
 	 * @param string $key Get the key to map to in the datagrid.
 	 * @param bool $sortable True if the column is sortable, false otherwise.
 	 * @param int $width Returns the width of the column. Just like the CSS width property, you can express it in %, px, em, etc... This is optionnal. Leave empty to let the browser decide.
@@ -96,7 +98,7 @@ class SimpleColumn implements EvoluColumnKeyInterface, EvoluColumnFormatterInter
 	 * @see \Mouf\Html\Widgets\EvoluGrid\EvoluColumnInterface::getTitle()
 	 */
 	public function getTitle() {
-		return $this->title;
+		return ValueUtils::val($this->title);
 	}
 	
 	/**

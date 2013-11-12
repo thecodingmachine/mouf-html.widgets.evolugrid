@@ -14,7 +14,7 @@ class HtmlColumn implements EvoluColumnJsInterface {
 	 * The title of the column to display
 	 * 
 	 * @Important
-	 * @var string
+	 * @var string|ValueInterface
 	 */
 	private $title;
 	
@@ -52,7 +52,7 @@ class HtmlColumn implements EvoluColumnJsInterface {
 	 * @Important $width
 	 * @Important $html
 	 * @Important $displayCondition
-	 * @param string $title The title of the column to display
+	 * @param string|ValueInterface $title The title of the column to display
 	 * @param string $sortKey The key to sort upon (or null if the column is not sortable)
 	 * @param int $width Returns the width of the column. Just like the CSS width property, you can express it in %, px, em, etc... This is optionnal. Leave empty to let the browser decide.
 	 * @param string $html The Html to ouput. You can use placeholders to use row values. For example, <code>&lt;a href='show?id={id}' class="btn"&gt;{name}&lt;/a&gt;</code>
@@ -71,7 +71,7 @@ class HtmlColumn implements EvoluColumnJsInterface {
 	 * @see \Mouf\Html\Widgets\EvoluGrid\EvoluColumnInterface::getTitle()
 	 */
 	public function getTitle() {
-		return $this->title;
+		return ValueUtils::val($this->title);
 	}
 	
 	/**
