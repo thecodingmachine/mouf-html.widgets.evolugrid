@@ -1,6 +1,8 @@
 <?php
 namespace Mouf\Html\Widgets\EvoluGrid;
 
+use Mouf\Utils\Value\ValueUtils;
+use Mouf\Utils\Value\ValueInterface;
 use Mouf\Utils\Common\ConditionInterface\ConditionInterface;
 use Mouf\Utils\Common\Formatters\FormatterInterface;
 
