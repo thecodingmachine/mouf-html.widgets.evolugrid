@@ -94,7 +94,15 @@ class EvoluGrid implements HtmlElementInterface{
 	 * @var HtmlElementInterface
 	 */
 	private $searchForm;	
-		
+
+	/**
+	 * The JS callback taking 1 argument and triggered when a row is clicked. JS function signature: function(rowObject)
+	 * The object passed in parameter is the row object.
+	 *
+	 * @var string
+	 */
+	private $onRowClick;
+	
 	/**
 	 * URL that will be called in Ajax and return the data to display.
 	 *
@@ -235,6 +243,19 @@ class EvoluGrid implements HtmlElementInterface{
 	}
 
 	/**
+	 * The JS callback taking 1 argument and triggered when a row is clicked. JS function signature: function(rowObject)
+	 * The object passed in parameter is the row object.
+	 *
+	 * For instance: function(row) { console.log("Row clicked:" + row.id); }
+	 *
+	 * @param string $onRowClick
+	 */
+	public function setOnRowClick($onRowClick) {
+		$this->onRowClick = $onRowClick;
+		return $this;
+	}
+	
+	/**
 	 * Renders the object in HTML.
 	 * The Html is echoed directly into the output.
 	 *
@@ -289,7 +310,14 @@ class EvoluGrid implements HtmlElementInterface{
 			</div>
 			<script type="text/javascript">
 				$(document).ready(function() {
-				    var descriptor = '.$descriptorJSON.';
+				    var descriptor = '.$descriptorJSON.';';
+				    
+		if($this->onRowClick) {
+			echo '
+					descriptor.onRowClick = '.$this->onRowClick.';
+				';
+		}	    
+		echo '
 				    $("#'.$id.'").evolugrid(descriptor);
 				});
 			</script> 
