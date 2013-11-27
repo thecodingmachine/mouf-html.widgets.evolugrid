@@ -21,7 +21,7 @@
  *  rowCssClass: "key", // If set, for each row, we will look in the dataset for the row, for the "key" passed in parameter. The associated value will be used as a class of the tr row. 
  *  infiniteScroll: boolean, // To set a infinite scroll instead of a pager
  *  fixedHeader: boolean, // To sfixed the header of the evolugrid table
- *  rowClick: boolean // Whether we should click on tr. this call js function evolugridrowClick(rowObject)
+ *  onRowClick: function, // Callback called when we click on a row. Callback signature: function(rowObject, event)
  * }
  * 
  * Any parameter (except URL) can be dynamically passed from the server side.
@@ -136,8 +136,8 @@
 	var rowClickElement = function (descriptor, tr, el) {
 		// If tr is clickable add js callback
 		if(descriptor.onRowClick) {
-			tr.click(function () {
-				descriptor.onRowClick(el);
+			tr.click(function (event) {
+				descriptor.onRowClick(el, event);
 			})
 		}
 		
