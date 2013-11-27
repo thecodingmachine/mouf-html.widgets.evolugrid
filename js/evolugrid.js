@@ -21,7 +21,7 @@
  *  rowCssClass: "key", // If set, for each row, we will look in the dataset for the row, for the "key" passed in parameter. The associated value will be used as a class of the tr row. 
  *  infiniteScroll: boolean, // To set a infinite scroll instead of a pager
  *  fixedHeader: boolean, // To sfixed the header of the evolugrid table
- *  trClickable: boolean // Whether we should click on tr. this call js function evolugridTrClickable(rowObject)
+ *  rowClick: boolean // Whether we should click on tr. this call js function evolugridrowClick(rowObject)
  * }
  * 
  * Any parameter (except URL) can be dynamically passed from the server side.
@@ -33,7 +33,7 @@
 			"limit": 100,
 			"infiniteScroll": false,
 			"fixedHeader": false,
-			"trClickable": false
+			"rowClick": false
 	}
 
 	var sortKey;
@@ -127,13 +127,11 @@
 		  return vars;
 		}
 	
-	var trClickElement = function (descriptor, tr, el) {
+	var rowClickElement = function (descriptor, tr, el) {
 		// If tr is clickable add js callback
-		if(descriptor.trClickable) {
+		if(descriptor.onRowClick) {
 			tr.click(function () {
-				if(typeof evolugridTrClickable == 'function') {
-					evolugridTrClickable(el);
-				}
+				descriptor.onRowClick(el);
 			})
 		}
 		
@@ -346,7 +344,7 @@
 	    		for (var i=0;i<data.data.length;i++){
 	    			tr=$('<tr>');
 	    			var dataTemp = data.data[i];
-	    			trClickElement(descriptor, tr, dataTemp);
+	    			rowClickElement(descriptor, tr, dataTemp);
 	    			
 	    			if (extendedDescriptor.rowCssClass) {
 	    				tr.addClass(data.data[i][extendedDescriptor.rowCssClass]);
@@ -496,7 +494,7 @@
 		    		for (var i=0;i<data.data.length;i++){
 		    			tr=$('<tr>');
 		    			var dataTemp = data.data[i];
-		    			trClickElement(descriptor, tr, dataTemp);
+		    			rowClickElement(descriptor, tr, dataTemp);
 		    			if (extendedDescriptor.rowCssClass) {
 		    				tr.addClass(data.data[i][extendedDescriptor.rowCssClass]);
 		    			}

@@ -96,12 +96,12 @@ class EvoluGrid implements HtmlElementInterface{
 	private $searchForm;	
 
 	/**
-	 * The tr table is clickable and this call a js funcvtion named evolugridTrClickable(object)
+	 * The JS callback taking 1 argument and triggered when a row is clicked. JS function signature: function(rowObject)
 	 * The object passed in parameter is the row object.
 	 *
-	 * @var bool
+	 * @var string
 	 */
-	private $trClickable;
+	private $onRowClick;
 	
 	/**
 	 * URL that will be called in Ajax and return the data to display.
@@ -243,13 +243,15 @@ class EvoluGrid implements HtmlElementInterface{
 	}
 
 	/**
-	 * Activate the clickable tr to call js function with the row object
-	 * evolugridTrClickable(object)
+	 * The JS callback taking 1 argument and triggered when a row is clicked. JS function signature: function(rowObject)
+	 * The object passed in parameter is the row object.
 	 *
-	 * @param bool $trClickable
+	 * For instance: function(row) { console.log("Row clicked:" + row.id); }
+	 *
+	 * @param string $onRowClick
 	 */
-	public function setTrClickable($trClickable = false) {
-		$this->trClickable = $trClickable;
+	public function setOnRowClick($onRowClick) {
+		$this->onRowClick = $onRowClick;
 		return $this;
 	}
 	
@@ -284,7 +286,6 @@ class EvoluGrid implements HtmlElementInterface{
 		$descriptor->fixedHeader_NavBarSelector = $this->fixedHeader_NavBarSelector;
 		$descriptor->searchHistory = $this->searchHistory;
 		$descriptor->searchHistoryAutoFillForm = $this->searchHistoryAutoFillForm;
-		$descriptor->trClickable = $this->trClickable;
 		
 		if ($this->formSelector){
 			$descriptor->filterForm = $this->formSelector;
@@ -309,7 +310,14 @@ class EvoluGrid implements HtmlElementInterface{
 			</div>
 			<script type="text/javascript">
 				$(document).ready(function() {
-				    var descriptor = '.$descriptorJSON.';
+				    var descriptor = '.$descriptorJSON.';';
+				    
+		if($this->onRowClick) {
+			echo '
+					descriptor.onRowClick = '.$this->onRowClick.';
+				';
+		}	    
+		echo '
 				    $("#'.$id.'").evolugrid(descriptor);
 				});
 			</script> 
