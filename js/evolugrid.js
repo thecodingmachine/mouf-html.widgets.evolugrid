@@ -319,7 +319,7 @@
 	    	filters.push({"name":"sort_key", "value": sortKey});
 	    	filters.push({"name":"sort_order", "value": sortOrder});
 
-	    	$.ajax({url:descriptor.url, dataType:'json', data : filters,
+	    	$.ajax({url:descriptor.url, cache: false, dataType:'json', data : filters,
 	    	success: function(data){	    		
 		    	var extendedDescriptor=$.extend(true, {}, descriptor, data.descriptor)
 
@@ -485,7 +485,7 @@
 	    	filters.push({"name":"sort_key", "value": sortKey});
 	    	filters.push({"name":"sort_order", "value": sortOrder});
 	    		    		    	
-	    	$.ajax({url:descriptor.url, dataType:'json', data : filters,
+	    	$.ajax({url:descriptor.url, dataType:'json', cache: false, data : filters,
 		    	success: function(data){
 			    	var extendedDescriptor=$.extend(true, {}, descriptor, data.descriptor)
 			    	
