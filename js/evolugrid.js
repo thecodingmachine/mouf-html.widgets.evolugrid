@@ -416,21 +416,21 @@
 	    		
 	    		var pageCount = null;
 	    		if (data.count != null) {
-	    			pageCount=Math.floor(data.count/extendedDescriptor.limit);
+	    			pageCount=Math.ceil(data.count/extendedDescriptor.limit);
 	    		}
 	    		
-	    		if (pageCount>0) {
+	    		if (pageCount>1) {
 		    		if(noPage>0){
 		    			pager.append($('<i>').addClass('icon-chevron-left pointer pager-cursor').text("<").click(function(){$this.evolugrid('refresh',noPage-1);}));
 		    		}
 		    		var pagerText = "Page "+(noPage+1);
 		    		
 		    		if (data.count != null) {
-		    			pagerText += " / "+(pageCount+1);
+		    			pagerText += " / "+(pageCount);
 		    		}
 		    		pager.append($('<span>').text(pagerText));
 		    		
-		    		if((data.count != null && noPage<pageCount) || (data.count == null && extendedDescriptor.limit && data.data.length == extendedDescriptor.limit)){
+		    		if((data.count != null && (noPage+1)<pageCount) || (data.count == null && extendedDescriptor.limit && data.data.length == extendedDescriptor.limit)){
 		    			pager.append($('<i>').addClass('icon-chevron-right pointer pager-cursor').text(">").click(function(){$this.evolugrid('refresh',noPage+1);}));
 		    		}
 	    		}
