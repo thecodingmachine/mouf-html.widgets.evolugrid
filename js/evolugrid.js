@@ -122,9 +122,15 @@
 	var _getUrlParams =  function () {
 		  var vars = [], hash;
 		  var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+		  
+		  if (hashes[0] === window.location.href) {
+			  return vars;
+		  }
+		  
 		  for(var i = 0; i < hashes.length; i++)
 		  {
 		      hash = hashes[i].split('=');
+		      
 		      var temp = {};
 		      temp.name = hash[0];
 		      temp.value = decodeURI(hash[1].replace(/\+/g, '%20'));
