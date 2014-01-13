@@ -122,9 +122,15 @@
 	var _getUrlParams =  function () {
 		  var vars = [], hash;
 		  var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+		  
+		  if (hashes[0] === window.location.href) {
+			  return vars;
+		  }
+		  
 		  for(var i = 0; i < hashes.length; i++)
 		  {
 		      hash = hashes[i].split('=');
+		      
 		      var temp = {};
 		      temp.name = hash[0];
 		      temp.value = decodeURI(hash[1].replace(/\+/g, '%20'));
@@ -410,21 +416,21 @@
 	    		
 	    		var pageCount = null;
 	    		if (data.count != null) {
-	    			pageCount=Math.floor(data.count/extendedDescriptor.limit);
+	    			pageCount=Math.ceil(data.count/extendedDescriptor.limit);
 	    		}
 	    		
-	    		if (pageCount>0) {
+	    		if (pageCount>1) {
 		    		if(noPage>0){
 		    			pager.append($('<i>').addClass('icon-chevron-left pointer pager-cursor').text("<").click(function(){$this.evolugrid('refresh',noPage-1);}));
 		    		}
 		    		var pagerText = "Page "+(noPage+1);
 		    		
 		    		if (data.count != null) {
-		    			pagerText += " / "+(pageCount+1);
+		    			pagerText += " / "+(pageCount);
 		    		}
 		    		pager.append($('<span>').text(pagerText));
 		    		
-		    		if((data.count != null && noPage<pageCount) || (data.count == null && extendedDescriptor.limit && data.data.length == extendedDescriptor.limit)){
+		    		if((data.count != null && (noPage+1)<pageCount) || (data.count == null && extendedDescriptor.limit && data.data.length == extendedDescriptor.limit)){
 		    			pager.append($('<i>').addClass('icon-chevron-right pointer pager-cursor').text(">").click(function(){$this.evolugrid('refresh',noPage+1);}));
 		    		}
 	    		}
