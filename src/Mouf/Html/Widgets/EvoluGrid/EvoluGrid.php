@@ -297,7 +297,7 @@ class EvoluGrid implements HtmlElementInterface{
 		$descriptorJSON = json_encode($descriptor);
 					
 		echo '
-			<div id="'.$id.'__evolugrid_holder">
+			<div id="'.$id.'__evolugrid_holder" style="position: relative">
 				';
 		if ($this->searchForm) {
 			echo '<div id="'.$id.'__searchform">';
@@ -305,9 +305,14 @@ class EvoluGrid implements HtmlElementInterface{
 			echo '</div>';
 		}
 		echo '
-				<div id="'.$id.'"></div>
-				<div class="ajaxLoader" style="text-align: center; margin-top: 20px; margin-bottom: 20px; display: none;"><img src="'.ROOT_URL.'vendor/mouf/html.widgets.evolugrid/img/ajax-loader.gif" alt="ajax-loader"></div>
-			</div>
+				<div id="'.$id.'"></div>';
+		if($this->infiniteScroll) {
+			echo '<div class="ajaxLoader" style="text-align: center; margin-top: 20px; margin-bottom: 20px; display: none;"><img src="'.ROOT_URL.'vendor/mouf/html.widgets.evolugrid/img/ajax-loader.gif" alt="ajax-loader"></div>';
+		}
+		else {
+			echo '<div class="ajaxLoader" style="text-align: center; background-color: black; width: 100%; height: 100%; position: absolute; top: 0; opacity: 0.3"><img src="'.ROOT_URL.'vendor/mouf/html.widgets.evolugrid/img/ajax-loader.gif" alt="ajax-loader" style="margin-top: -20px; position: absolute; top: 50%;"></div>';
+		}
+		echo '</div>
 			<script type="text/javascript">
 				$(document).ready(function() {
 				    var descriptor = '.$descriptorJSON.';';
