@@ -148,6 +148,10 @@
 		}
 		
 	}
+	
+	var getPagerElement = function (element, page) {
+		return $('<span/>').append($('<a/>').text(' '+(page+1)+' ').click(function(){element.evolugrid('refresh',page);return false;}));
+	}
 			
 	var methods = {
 	    init : function( options ) {
@@ -414,22 +418,79 @@
 	    			pager.append(span);
 	    		}
 	    		
+	    		// Number of all pages
 	    		var pageCount = null;
 	    		if (data.count != null) {
 	    			pageCount=Math.ceil(data.count/extendedDescriptor.limit);
 	    		}
 	    		
+	    		// Number max of element aroundthe page selected
+	    		var pageElement = 2;
+	    		
 	    		if (pageCount>1) {
+	    			// Add the < at the start
 		    		if(noPage>0){
 		    			pager.append($('<i>').addClass('icon-chevron-left pointer pager-cursor').text("<").click(function(){$this.evolugrid('refresh',noPage-1);}));
 		    		}
-		    		var pagerText = "Page "+(noPage+1);
 		    		
-		    		if (data.count != null) {
-		    			pagerText += " / "+(pageCount);
+		    		// If the page select is inferior of the number element display
+		    		if(noPage - pageElement <= 0) {
+		    			// Display only the possible element 
+		    			for(var i = 0; i < noPage; i ++) {
+		    				pager.append(getPagerElement($this, i));
+		    				pager.append($('<span/>').text('-'));
+			    		}
 		    		}
+		    		// Else display the first element, after ... if the number of page don't followed
+		    		// end the x page (x is the number of dispayed element) 
+		    		else {
+		    			// First page
+		    			pager.append(getPagerElement($this, 0));
+		    			// The ... if the page is far of the first page
+		    			if(noPage - pageElement > 1) {
+		    				pager.append($('<span>').text('...'));
+		    			}
+		    			else {
+		    				pager.append($('<span/>').text('-'));
+		    			}
+		    			// The x element
+		    			for(var i = noPage - pageElement; i < noPage; i ++) {
+		    				pager.append(getPagerElement($this, i));
+		    				pager.append($('<span/>').text('-'));
+			    		}
+		    		}
+	    		
+	    			// Display the current page (it isn't a link)
+		    		var pagerText = (noPage+1);
 		    		pager.append($('<span>').text(pagerText));
 		    		
+		    		// Display the page after the page selected
+		    		// If the page selected is near the end
+    				if(pageCount - pageElement - 1 <= noPage) {
+    					for(var i = noPage + 1; i < pageCount; i ++) {
+		    				pager.append($('<span/>').text('-'));
+		    				pager.append(getPagerElement($this, i));
+			    		}
+    				}
+    				// Else display the x page and the ... and the last page
+    				else {
+    		    		if(noPage + pageElement < pageCount) {
+    			    		for(var i = noPage + 1; i <= noPage + pageElement; i ++) {
+    		    				pager.append($('<span/>').text('-'));
+    		    				pager.append(getPagerElement($this, i));
+    			    		}
+    		    		}
+    		    		if(pageCount != noPage + pageElement + 2) {
+    		    			pager.append($('<span>').text('...'));
+    		    		}
+    		    		else {
+		    				pager.append($('<span/>').text('-'));
+    		    			
+    		    		}
+    					pager.append(getPagerElement($this, pageCount - 1));
+    				}
+
+    				// Display the > at the end
 		    		if((data.count != null && (noPage+1)<pageCount) || (data.count == null && extendedDescriptor.limit && data.data.length == extendedDescriptor.limit)){
 		    			pager.append($('<i>').addClass('icon-chevron-right pointer pager-cursor').text(">").click(function(){$this.evolugrid('refresh',noPage+1);}));
 		    		}
