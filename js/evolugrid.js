@@ -155,7 +155,6 @@
 			
 	var methods = {
 	    init : function( options ) {
-	    	console.log('dfezf');
 	    	var descriptor = $.extend(true, {}, defaultOptions, options);
 	    	
 	    	return this.each(function(){
@@ -173,8 +172,8 @@
                 		// We test if we have not make a request
                 		if (scrollReady == false) return;
                 		 
-                		var lastElementPositon = $this.find('table tbody tr:nth-last-child(' + descriptor.infiniteScroll_ElementPosition + ')').position();
-                         		
+                		var lastElementPositon = $this.find('table tbody tr:last-child').position();
+                		                         		
                 		if(($(window).scrollTop() + $(window).height()) >= lastElementPositon.top)	{
                 			if ( scrollNoMoreResults == true) {
                     			return;
@@ -234,9 +233,12 @@
 	                	});
                 	}
             	}
-                if (descriptor.searchHistory) {  
+                if (descriptor.searchHistory) {                  	
                	 	History.Adapter.bind(window,'popstate',function(){
-               	 		console.log("change state");
+	               	 	  // Ignore inital popstate that some browsers fire on page load
+               	 		  var popped = ('state' in window.history && window.history.state !== null);
+	               	 	  if ( !popped ) return
+	               	 	  
                	 		if(manualStateChange == true){
 	               	 		var state = History.getState();	            		
 		                    if (descriptor.infiniteScroll) {   
@@ -268,18 +270,14 @@
                	 		manualStateChange = true;
                	 });	
                }            
-               console.log('before');
                if (descriptor.loadOnInit) {
             	   if (descriptor.searchHistory) {  
-            		   /*var filters = _getUrlParams();
-            		   console.log("load on init");
+            		   var filters = _getUrlParams();
             		   if (filters.length === 0 ) {
-            			   console.log('ici');
-            			   History.replaceState({}, null, window.location.pathname + '?');
+            			   History.replaceState({}, 'evolugrid', window.location.pathname + '?');
             		   } else {
-            			   History.replaceState({filters:filters}, null, window.location.pathname + '?' + $.param(filters));
-            			   console.log('la');
-            		   }*/
+            			   History.replaceState({filters:filters}, 'evolugrid', window.location.pathname + '?' + $.param(filters));
+            		   }
             	   } else {
             		   if (descriptor.infiniteScroll) {
             			   scrollOffset = 0;
