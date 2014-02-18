@@ -122,8 +122,8 @@
 	var _getUrlParams =  function () {
 		  var vars = [], hash;
 		  var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-		  
-		  if (hashes[0] === window.location.href) {
+		  		  
+		  if (hashes[0] === window.location.href || hashes[0] === "") {
 			  return vars;
 		  }
 		  
@@ -155,6 +155,7 @@
 			
 	var methods = {
 	    init : function( options ) {
+	    	console.log('dfezf');
 	    	var descriptor = $.extend(true, {}, defaultOptions, options);
 	    	
 	    	return this.each(function(){
@@ -173,7 +174,7 @@
                 		if (scrollReady == false) return;
                 		 
                 		var lastElementPositon = $this.find('table tbody tr:nth-last-child(' + descriptor.infiniteScroll_ElementPosition + ')').position();
-                		
+                         		
                 		if(($(window).scrollTop() + $(window).height()) >= lastElementPositon.top)	{
                 			if ( scrollNoMoreResults == true) {
                     			return;
@@ -235,6 +236,7 @@
             	}
                 if (descriptor.searchHistory) {  
                	 	History.Adapter.bind(window,'popstate',function(){
+               	 		console.log("change state");
                	 		if(manualStateChange == true){
 	               	 		var state = History.getState();	            		
 		                    if (descriptor.infiniteScroll) {   
@@ -265,11 +267,19 @@
                	 		}
                	 		manualStateChange = true;
                	 });	
-               }                
+               }            
+               console.log('before');
                if (descriptor.loadOnInit) {
             	   if (descriptor.searchHistory) {  
-            		   var filters = _getUrlParams();
-            		   History.replaceState({filters:filters}, null, window.location.pathname + '?' + $.param(filters));
+            		   /*var filters = _getUrlParams();
+            		   console.log("load on init");
+            		   if (filters.length === 0 ) {
+            			   console.log('ici');
+            			   History.replaceState({}, null, window.location.pathname + '?');
+            		   } else {
+            			   History.replaceState({filters:filters}, null, window.location.pathname + '?' + $.param(filters));
+            			   console.log('la');
+            		   }*/
             	   } else {
             		   if (descriptor.infiniteScroll) {
             			   scrollOffset = 0;
