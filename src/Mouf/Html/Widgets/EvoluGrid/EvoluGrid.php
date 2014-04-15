@@ -104,6 +104,12 @@ class EvoluGrid implements HtmlElementInterface{
 	private $onRowClick;
 	
 	/**
+	 * A set of RowEventListernerInterface that will associate mouseevents ans associated callbacks to each row item
+	 * @var RowEventListernerInterface[]
+	 */
+	private $rowEventListeners = array();
+	
+	/**
 	 * URL that will be called in Ajax and return the data to display.
 	 *
 	 * @Property
@@ -256,6 +262,16 @@ class EvoluGrid implements HtmlElementInterface{
 	}
 	
 	/**
+	 * A set of RowEventListernerInterface that will associate mouseevents ans associated callbacks to each row item
+	 *
+	 * @param RowEventListernerInterface[] $rowEventListeners
+	 */
+	public function setRowEventListeners($rowEventListeners) {
+		$this->rowEventListeners = $rowEventListeners;
+		return $this;
+	}
+	
+	/**
 	 * Renders the object in HTML.
 	 * The Html is echoed directly into the output.
 	 *
@@ -286,6 +302,16 @@ class EvoluGrid implements HtmlElementInterface{
 		$descriptor->fixedHeader_NavBarSelector = $this->fixedHeader_NavBarSelector;
 		$descriptor->searchHistory = $this->searchHistory;
 		$descriptor->searchHistoryAutoFillForm = $this->searchHistoryAutoFillForm;
+		
+		$listeners = array();
+		foreach ($this->rowEventListeners as $listener){
+			/* @var $listener RowEventListernerInterface */ 
+			$obj = new \stdClass();
+			$obj->event = $listener->getEventName();
+			$obj->callback = $listener->getCallback();
+			$listeners[] = $obj;
+		}
+		$descriptor->rowEventListeners = $listeners;
 		
 		if ($this->formSelector){
 			$descriptor->filterForm = $this->formSelector;

@@ -338,7 +338,7 @@
 	    	filters.push({"name":"sort_order", "value": sortOrder});
 
 	    	$.ajax({url:descriptor.url, cache: false, dataType:'json', data : filters,
-	    	success: function(data){	    		
+	    	success: function(data){
 		    	var extendedDescriptor=$.extend(true, {}, descriptor, data.descriptor)
 
 	    		//Display Count
@@ -369,6 +369,12 @@
 	    			tr=$('<tr>');
 	    			var dataTemp = data.data[i];
 	    			rowClickElement(descriptor, tr, dataTemp);
+	    			
+	    			$.each(descriptor.rowEventListeners, function(index, listener){
+	    				tr.on(listener.event, function (event){
+	    					listener.callback(dataTemp, event);
+	    				});
+	    			})
 	    			
 	    			if (extendedDescriptor.rowCssClass) {
 	    				tr.addClass(data.data[i][extendedDescriptor.rowCssClass]);
