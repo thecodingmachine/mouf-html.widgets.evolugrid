@@ -337,18 +337,19 @@ class EvoluGrid implements HtmlElementInterface{
 		}
 		echo '</div>
 			<script type="text/javascript">
-				$(document).ready(function() {
-				    var descriptor = '.$descriptorJSON.';
-				    descriptor.rowEventListeners = '.$listeners.';';
-				    
-		if($this->onRowClick) {
-			echo '
-					descriptor.onRowClick = '.$this->onRowClick.';
-				';
-		}	    
-		echo '
-				    $("#'.$id.'").evolugrid(descriptor);
-				});
+                (function($) {
+                    $(document).ready(function() {
+                        var descriptor = '.$descriptorJSON.';';
+
+            if($this->onRowClick) {
+                echo '
+                        descriptor.onRowClick = '.$this->onRowClick.';
+                    ';
+            }
+            echo '
+                        $("#'.$id.'").evolugrid(descriptor);
+                    });
+                })(jQuery);
 			</script> 
 		';
 	}
