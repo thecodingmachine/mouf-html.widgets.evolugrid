@@ -149,6 +149,15 @@
 		
 	}
 	
+	var registerRowEvents = function (descriptor, tr, el) {
+		$.each(descriptor.rowEventListeners, function(index, listener){
+			tr.on(listener.event, function (event){
+				listener.callback(el, event);
+			});
+		})
+		
+	}
+	
 	var getPagerElement = function (element, page) {
 		return $('<span/>').append($('<a/>').text(' '+(page+1)+' ').click(function(){element.evolugrid('refresh',page);return false;}));
 	}
@@ -370,11 +379,7 @@
 	    			var dataTemp = data.data[i];
 	    			rowClickElement(descriptor, tr, dataTemp);
 	    			
-	    			$.each(descriptor.rowEventListeners, function(index, listener){
-	    				tr.on(listener.event, function (event){
-	    					listener.callback(dataTemp, event);
-	    				});
-	    			})
+	    			registerRowEvents(descriptor, tr, dataTemp);
 	    			
 	    			if (extendedDescriptor.rowCssClass) {
 	    				tr.addClass(data.data[i][extendedDescriptor.rowCssClass]);
@@ -592,6 +597,9 @@
 		    			tr=$('<tr>');
 		    			var dataTemp = data.data[i];
 		    			rowClickElement(descriptor, tr, dataTemp);
+		    			
+		    			registerRowEvents(descriptor, tr, dataTemp);
+		    			
 		    			if (extendedDescriptor.rowCssClass) {
 		    				tr.addClass(data.data[i][extendedDescriptor.rowCssClass]);
 		    			}

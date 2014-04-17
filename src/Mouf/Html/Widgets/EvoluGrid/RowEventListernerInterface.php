@@ -11,9 +11,6 @@ namespace Mouf\Html\Widgets\EvoluGrid;
  */
 interface RowEventListernerInterface {
 	
-	const EVENT_CLICK = 'click';
-	const EVENT_DBLCLICK = 'dblclick';
-	const EVENT_HOVER = 'hover'; 	
 	/**
 	 * Returns the event that will be called from the row element and will trigger the listener's callback
 	 * @return string

@@ -303,15 +303,12 @@ class EvoluGrid implements HtmlElementInterface{
 		$descriptor->searchHistory = $this->searchHistory;
 		$descriptor->searchHistoryAutoFillForm = $this->searchHistoryAutoFillForm;
 		
-		$listeners = array();
+		$listeners = "[";
 		foreach ($this->rowEventListeners as $listener){
 			/* @var $listener RowEventListernerInterface */ 
-			$obj = new \stdClass();
-			$obj->event = $listener->getEventName();
-			$obj->callback = $listener->getCallback();
-			$listeners[] = $obj;
+			$listeners .= "{event:'".$listener->getEventName()."', callback: ".$listener->getCallback()."}";
 		}
-		$descriptor->rowEventListeners = $listeners;
+		$listeners .= "]";
 		
 		if ($this->formSelector){
 			$descriptor->filterForm = $this->formSelector;
@@ -341,7 +338,8 @@ class EvoluGrid implements HtmlElementInterface{
 		echo '</div>
 			<script type="text/javascript">
 				$(document).ready(function() {
-				    var descriptor = '.$descriptorJSON.';';
+				    var descriptor = '.$descriptorJSON.';
+				    descriptor.rowEventListeners = '.$listeners.';';
 				    
 		if($this->onRowClick) {
 			echo '
