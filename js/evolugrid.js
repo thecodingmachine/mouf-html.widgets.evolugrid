@@ -150,6 +150,9 @@
 	}
 	
 	var registerRowEvents = function (descriptor, tr, el) {
+		if (!descriptor.rowEventListeners){
+			return;
+		}
 		$.each(descriptor.rowEventListeners, function(index, listener){
 			tr.on(listener.event, function (event){
 				listener.callback(el, event);
