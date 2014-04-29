@@ -96,7 +96,7 @@
 						}
 						return false;
 					});
-					sortButtonAsc.append("<i class='icon-chevron-up'></i>");
+					sortButtonAsc.append("<i class='icon-chevron-up glyphicon glyphicon-chevron-up'></i>");
 					th.append(" ");
 					th.append(sortButtonAsc);
 					
@@ -110,7 +110,7 @@
 						}
 						return false;
 					});
-					sortButtonDown.append("<i class='icon-chevron-down'></i>");
+					sortButtonDown.append("<i class='icon-chevron-down glyphicon glyphicon-chevron-down'></i>");
 					th.append(" ");
 					th.append(sortButtonDown);
 				})(colSortKey);
@@ -162,7 +162,9 @@
 	}
 	
 	var getPagerElement = function (element, page) {
-		return $('<span/>').append($('<a/>').text(' '+(page+1)+' ').click(function(){element.evolugrid('refresh',page);return false;}));
+		return $('<span/>').append($('<a/>').text(' '+(page+1)+' ')
+				.css('cursor', 'pointer')
+				.click(function(){element.evolugrid('refresh',page);return false;}));
 	}
 			
 	var methods = {
@@ -452,7 +454,9 @@
 	    		if (pageCount>1) {
 	    			// Add the < at the start
 		    		if(noPage>0){
-		    			pager.append($('<i>').addClass('icon-chevron-left pointer pager-cursor').text("<").click(function(){$this.evolugrid('refresh',noPage-1);}));
+		    			pager.append($('<i>').addClass('icon-chevron-left pointer pager-cursor glyphicon glyphicon-chevron-left')//.text("<")
+		    					.css('cursor', 'pointer')
+		    					.click(function(){$this.evolugrid('refresh',noPage-1);}));
 		    		}
 		    		
 		    		// If the page select is inferior of the number element display
@@ -514,7 +518,9 @@
 
     				// Display the > at the end
 		    		if((data.count != null && (noPage+1)<pageCount) || (data.count == null && extendedDescriptor.limit && data.data.length == extendedDescriptor.limit)){
-		    			pager.append($('<i>').addClass('icon-chevron-right pointer pager-cursor').text(">").click(function(){$this.evolugrid('refresh',noPage+1);}));
+		    			pager.append($('<i>').addClass('icon-chevron-right pointer pager-cursor glyphicon glyphicon-chevron-right')//.text(">")
+		    					.css('cursor', 'pointer')
+		    					.click(function(){$this.evolugrid('refresh',noPage+1);}));
 		    		}
 	    		}
 
