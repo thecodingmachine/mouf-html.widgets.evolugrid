@@ -348,8 +348,12 @@
 	    	
 	    	filters.push({"name":"offset", "value": noPage*descriptor.limit});
 	    	filters.push({"name":"limit", "value": descriptor.limit});
-	    	filters.push({"name":"sort_key", "value": sortKey});
-	    	filters.push({"name":"sort_order", "value": sortOrder});
+	    	if (sortKey) {
+	    		filters.push({"name":"sort_key", "value": sortKey});
+	    	}
+	    	if (sortOrder) {
+	    		filters.push({"name":"sort_order", "value": sortOrder});
+	    	}
 
 	    	$.ajax({url:descriptor.url, cache: false, dataType:'json', data : filters,
 	    	success: function(data){
@@ -577,8 +581,12 @@
 	    	
 	    	filters.push({"name":"offset", "value": scrollOffset});
 	    	filters.push({"name":"limit", "value": descriptor.limit});
-	    	filters.push({"name":"sort_key", "value": sortKey});
-	    	filters.push({"name":"sort_order", "value": sortOrder});
+	    	if (sortKey) {
+	    		filters.push({"name":"sort_key", "value": sortKey});
+	    	}
+	    	if (sortOrder) {
+	    		filters.push({"name":"sort_order", "value": sortOrder});
+	    	}
 	    		    		    	
 	    	$.ajax({url:descriptor.url, dataType:'json', cache: false, data : filters,
 		    	success: function(data){
