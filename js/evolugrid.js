@@ -545,6 +545,8 @@
     				//Enable fixed header for the table
     				table.fixedHeader({topOffset:headerTopOffset});
     			}
+
+                $this.evolugrid('loaded');
 	    	},
 	    	error : function(err,status) { 
 	    		console.error("Error on ajax callback: "+status);
@@ -697,13 +699,19 @@
 			    	if (data.data.length == 0 || data.data.length < descriptor.limit) {
 			    		scrollNoMoreResults = true;
 			    		$this.find('div.noMoreResults').show();
-			    	} 			    	
+			    	}
+
+                    $this.evolugrid('loaded');
 		    	},
 		    	error : function(err,status) { 
 		    		console.error("Error on ajax callback for scroll: "+status);
 		    	}
 		    	})
-	    }
+	    },
+        loaded : function(){
+            var descriptor=$(this).data('descriptor');
+            descriptor.onResultShown();
+        }
 	  };
 
 	  $.fn.evolugrid = function( method ) {	    

@@ -102,14 +102,20 @@ class EvoluGrid implements HtmlElementInterface{
 	 * @var string
 	 */
 	private $onRowClick;
-	
-	/**
+    /**
 	 * A set of RowEventListernerInterface that will associate mouseevents ans associated callbacks to each row item
 	 * @var RowEventListernerInterface[]
 	 */
 	private $rowEventListeners = array();
-	
-	/**
+
+    /**
+     * The JS callback called when results have been displayed
+     *
+     * @var string
+     */
+    private $onResultShown;
+
+    /**
 	 * URL that will be called in Ajax and return the data to display.
 	 *
 	 * @Property
@@ -270,6 +276,22 @@ class EvoluGrid implements HtmlElementInterface{
 		$this->rowEventListeners = $rowEventListeners;
 		return $this;
 	}
+
+    /**
+     * @param string $onResultShown
+     */
+    public function setOnResultShown($onResultShown)
+    {
+        $this->onResultShown = $onResultShown;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOnResultShown()
+    {
+        return $this->onResultShown;
+    }
 	
 	/**
 	 * Renders the object in HTML.
@@ -344,6 +366,16 @@ class EvoluGrid implements HtmlElementInterface{
             if($this->onRowClick) {
                 echo '
                         descriptor.onRowClick = '.$this->onRowClick.';
+                    ';
+            }
+            if($this->rowEventListeners) {
+                echo '
+                        descriptor.rowEventListeners = '.$listeners.';
+                    ';
+            }
+            if($this->onResultShown) {
+                echo '
+                        descriptor.onResultShown = '.$this->onResultShown.';
                     ';
             }
             echo '
