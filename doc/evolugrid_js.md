@@ -13,7 +13,7 @@ Let's get started with a very simple use case:
 #### Javascript part
 ```js
 $(document).ready(function() {
-	$("#liste").evolugrid({
+	$("#list").evolugrid({
 		url: "/mypath/search",
 		limit  : 50
 	});
@@ -86,19 +86,11 @@ A few methods are available on your Evolugrid object :
 - **refresh**: This method allows the user to manually refresh the data displayed on the Evolugrid. This method is called as below :
 
 ```js
-$(document).ready(function() {
-	$("#liste").evolugrid(
-	    'refresh'
-	);
-});
+	$("#list").evolugrid('refresh');
 ```
 
 - **cvsExport**: This method gives the opportunity to download the displayed on the evolugrid as a CSV file. This method is called as below :
 
 ```js
-$(document).ready(function() {
-	$("#liste").evolugrid(
-	    'csvExport'
-	);
-});
+    $("#list").evolugrid('csvExport');
 ```
