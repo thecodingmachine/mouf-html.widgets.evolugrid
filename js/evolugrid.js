@@ -710,7 +710,9 @@
 	    },
         loaded : function(){
             var descriptor=$(this).data('descriptor');
-            descriptor.onResultShown();
+            if (descriptor.onResultShown){
+                descriptor.onResultShown();
+            }
         }
 	  };
 
