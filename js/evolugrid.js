@@ -158,7 +158,7 @@
 			return;
 		}
 		$.each(descriptor.rowEventListeners, function(index, listener){
-			tr.on(listener.event, function (event){
+			tr.find('td:not(.exclude_row_listener)').on(listener.event, function (event){
 				listener.callback(el, event);
 			});
 		})
@@ -397,9 +397,7 @@
 	    			tr=$('<tr>');
 	    			var dataTemp = data.data[i];
 	    			rowClickElement(descriptor, tr, dataTemp);
-	    			
-	    			registerRowEvents(descriptor, tr, dataTemp);
-	    			
+
 	    			if (extendedDescriptor.rowCssClass) {
 	    				tr.addClass(data.data[i][extendedDescriptor.rowCssClass]);
 	    			}
@@ -439,8 +437,14 @@
 		    					td.html(html);	
 	    					}
 		    			}
+                        var cssClass = extendedDescriptor.columns[j].cssClass;
+                        if (cssClass){
+                            td.addClass(cssClass);
+                        }
 	    				tr.append(td);
-		    		}   			
+		    		}
+
+                    registerRowEvents(descriptor, tr, dataTemp);
 	    		}
 	    		//construct pager
 	    		var pager=$('<div>').addClass("pager");
@@ -627,8 +631,6 @@
 		    			var dataTemp = data.data[i];
 		    			rowClickElement(descriptor, tr, dataTemp);
 		    			
-		    			registerRowEvents(descriptor, tr, dataTemp);
-		    			
 		    			if (extendedDescriptor.rowCssClass) {
 		    				tr.addClass(data.data[i][extendedDescriptor.rowCssClass]);
 		    			}
@@ -668,8 +670,16 @@
 			    					td.html(html);	
 		    					}
 			    			}
+
+                            var cssClass = extendedDescriptor.columns[j].cssClass;
+                            if (cssClass){
+                                td.addClass(cssClass);
+                            }
+                            
 		    				tr.append(td);
-			    		}   			
+			    		}
+
+                        registerRowEvents(descriptor, tr, dataTemp);
 		    		}
 		    		
 		    		if (init) {

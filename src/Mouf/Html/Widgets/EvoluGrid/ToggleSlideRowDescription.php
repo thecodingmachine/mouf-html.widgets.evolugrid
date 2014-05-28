@@ -34,7 +34,8 @@ class ToggleSlideRowDescription implements RowEventListernerInterface {
 	public function getCallback(){
 		return "
 		function(row, event){
-			var parentRow = $(event.currentTarget);
+			var cell = $(event.currentTarget);
+			var parentRow = cell.parents('tr');
 			if (parentRow.data('details') == null){
 				var description = row.$this->descriptionKey;
 				var rowElem = $('<tr/>').hide();

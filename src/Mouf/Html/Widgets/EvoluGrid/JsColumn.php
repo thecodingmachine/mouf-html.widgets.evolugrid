@@ -14,6 +14,9 @@ use Mouf\Utils\Common\ConditionInterface\ConditionInterface;
  * @author David Negrier
  */
 class JsColumn implements EvoluColumnJsInterface {
+
+    use CssClassTrait;
+
 	/**
 	 * The title of the column to display
 	 * 
@@ -50,7 +53,7 @@ class JsColumn implements EvoluColumnJsInterface {
 	 * @var ConditionInterface
 	 */
 	private $displayCondition;
-	
+
 	/**
 	 * @Important
 	 * @param string $title The title of the column to display
@@ -116,4 +119,5 @@ class JsColumn implements EvoluColumnJsInterface {
 		}
 		return !$this->displayCondition->isOk();
 	}
+
 }
