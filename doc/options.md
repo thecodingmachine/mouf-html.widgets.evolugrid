@@ -21,7 +21,8 @@ Here is a sample of all options available. Explanation is below:
 				"title": "Name",
 				"key": "name",
 				"sortable": true,
-				"escapeHTML": false
+				"escapeHTML": false,
+				"cssClass": false
 			},
 			{
 				"title": "First name",
@@ -184,6 +185,11 @@ A column descriptor contains:
 		<td>escapeHTML</td>
 		<td>Boolean, optionnal</td>
 		<td>Whether the data displayed in this column should be HTML escaped or not. This is only applied for "key" columns. If a "jsrenderer" is set, this parameter is ignored. Defaults to true.</td>
+	</tr>
+	<tr>
+		<td>cssClass</td>
+		<td>String, optionnal</td>
+		<td>The CSS Class that should be added to all cells of the column</td>
 	</tr>
 	<tr>
 		<td>width</td>

@@ -675,7 +675,7 @@
                             if (cssClass){
                                 td.addClass(cssClass);
                             }
-                            
+
 		    				tr.append(td);
 			    		}
 

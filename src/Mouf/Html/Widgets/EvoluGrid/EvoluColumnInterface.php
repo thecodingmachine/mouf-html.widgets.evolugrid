@@ -47,7 +47,7 @@ interface EvoluColumnInterface {
 	public function isHidden();
 
     /**
-     * Returns the class of the cells of this column
+     * Returns the CSS class of the cells of this column
      * @return string
      */
     public function getClass();
