@@ -34,6 +34,7 @@
 		"mouf/html.htmlelement" : ">=2.0-dev,<3.0",
 		"mouf/utils.common.formatters" : "~3.0",
 		"mouf/utils.value.common-value" : "~1.0",
+        "mouf/utils.value.value-interface" : "~1.0",
 		"mouf/utils.common.url-interface" : "~1.0"
 	},
 	"autoload" : {

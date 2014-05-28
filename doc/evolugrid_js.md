@@ -13,7 +13,7 @@ Let's get started with a very simple use case:
 #### Javascript part
 ```js
 $(document).ready(function() {
-	$("#liste").evolugrid({
+	$("#list").evolugrid({
 		url: "/mypath/search",
 		limit  : 50
 	});
@@ -78,3 +78,19 @@ be passed as an option to the evolugrid plugin can also be passed/overwritten in
 - **count**: the total number of rows the result set contains
 
 [Have a look at the list of available options](options.md)
+
+#### Available methods
+
+A few methods are available on your Evolugrid object :
+
+- **refresh**: This method allows the user to manually refresh the data displayed on the Evolugrid. This method is called as below :
+
+```js
+	$("#list").evolugrid('refresh');
+```
+
+- **cvsExport**: This method gives the opportunity to download the displayed on the evolugrid as a CSV file. This method is called as below :
+
+```js
+    $("#list").evolugrid('csvExport');
+```

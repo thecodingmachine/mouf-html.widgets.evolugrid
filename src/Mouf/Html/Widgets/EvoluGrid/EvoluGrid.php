@@ -3,6 +3,8 @@ namespace Mouf\Html\Widgets\EvoluGrid;
 
 use Mouf\Utils\Common\UrlInterface;
 use Mouf\Html\HtmlElement\HtmlElementInterface;
+use Mouf\Utils\Value\ValueInterface;
+use Mouf\Utils\Value\ValueUtils;
 
 /**
  * This class represents a grid that can be rendered using the EvoluGrid JS jQuery plugin.
@@ -114,6 +116,13 @@ class EvoluGrid implements HtmlElementInterface{
      * @var string
      */
     private $onResultShown;
+
+    /**
+     * Message to display if no results are shown
+     *
+     * @var ValueInterface|string
+     */
+    private $noResultsMessage;
 
     /**
 	 * URL that will be called in Ajax and return the data to display.
@@ -292,6 +301,20 @@ class EvoluGrid implements HtmlElementInterface{
     {
         return $this->onResultShown;
     }
+
+    /**
+     * @return ValueInterface|string
+     */
+    public function getNoResultsMessage(){
+        return $this->noResultsMessage;
+    }
+
+    /**
+     * @param ValueInterface|string $noResultsMessage
+     */
+    public function setNoResultsMessage($noResultsMessage){
+        $this->noResultsMessage = $noResultsMessage;
+    }
 	
 	/**
 	 * Renders the object in HTML.
@@ -324,7 +347,9 @@ class EvoluGrid implements HtmlElementInterface{
 		$descriptor->fixedHeader_NavBarSelector = $this->fixedHeader_NavBarSelector;
 		$descriptor->searchHistory = $this->searchHistory;
 		$descriptor->searchHistoryAutoFillForm = $this->searchHistoryAutoFillForm;
-		
+        $descriptor->noResultsMessage = ValueUtils::val($this->noResultsMessage);
+
+
 		$listeners = "[";
 		foreach ($this->rowEventListeners as $listener){
 			/* @var $listener RowEventListernerInterface */ 

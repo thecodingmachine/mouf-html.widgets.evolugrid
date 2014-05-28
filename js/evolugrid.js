@@ -33,7 +33,8 @@
 			"limit": 100,
 			"infiniteScroll": false,
 			"fixedHeader": false,
-			"rowClick": false
+			"rowClick": false,
+            "noResultsMessage": "> No results are available <"
 	}
 
 	var sortKey;
@@ -49,6 +50,9 @@
 	
 	//Only use for historic state
 	var manualStateChange = true;
+
+    //Message to display if no results are shown
+    var noResultsMessage;
 	
 	/**
 	 * Returns the list of filters to be applied to the query.
@@ -381,7 +385,13 @@
 	    			table.addClass("table-fixed-header");
 	    			thead.addClass("header");
 	    		}
-	    		
+
+                //Show the no results message if data.length = 0
+                if (data.data.length == 0 && descriptor.infiniteScroll == false) {
+                    var noMoreResultsDiv = $('<div>').html(descriptor.noResultsMessage).addClass("noMoreResults").css({'font-style':'italic', 'text-align':'center', 'margin-top':20, 'margin-bottom':20});
+                    $this.append(noMoreResultsDiv);
+                }
+
 	    		//construct td
 	    		for (var i=0;i<data.data.length;i++){
 	    			tr=$('<tr>');
