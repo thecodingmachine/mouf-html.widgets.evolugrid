@@ -33,7 +33,8 @@
 			"limit": 100,
 			"infiniteScroll": false,
 			"fixedHeader": false,
-			"rowClick": false
+			"rowClick": false,
+            "noResultsMessage": "> No results are available <"
 	}
 
 	var sortKey;
@@ -49,6 +50,9 @@
 	
 	//Only use for historic state
 	var manualStateChange = true;
+
+    //Message to display if no results are shown
+    var noResultsMessage;
 	
 	/**
 	 * Returns the list of filters to be applied to the query.
@@ -96,7 +100,7 @@
 						}
 						return false;
 					});
-					sortButtonAsc.append("<i class='icon-chevron-up'></i>");
+					sortButtonAsc.append("<i class='icon-chevron-up glyphicon glyphicon-chevron-up'></i>");
 					th.append(" ");
 					th.append(sortButtonAsc);
 					
@@ -110,7 +114,7 @@
 						}
 						return false;
 					});
-					sortButtonDown.append("<i class='icon-chevron-down'></i>");
+					sortButtonDown.append("<i class='icon-chevron-down glyphicon glyphicon-chevron-down'></i>");
 					th.append(" ");
 					th.append(sortButtonDown);
 				})(colSortKey);
@@ -154,7 +158,7 @@
 			return;
 		}
 		$.each(descriptor.rowEventListeners, function(index, listener){
-			tr.on(listener.event, function (event){
+			tr.find('td:not(.exclude_row_listener)').on(listener.event, function (event){
 				listener.callback(el, event);
 			});
 		})
@@ -162,7 +166,9 @@
 	}
 	
 	var getPagerElement = function (element, page) {
-		return $('<span/>').append($('<a/>').text(' '+(page+1)+' ').click(function(){element.evolugrid('refresh',page);return false;}));
+		return $('<span/>').append($('<a/>').text(' '+(page+1)+' ')
+				.css('cursor', 'pointer')
+				.click(function(){element.evolugrid('refresh',page);return false;}));
 	}
 			
 	var methods = {
@@ -346,8 +352,12 @@
 	    	
 	    	filters.push({"name":"offset", "value": noPage*descriptor.limit});
 	    	filters.push({"name":"limit", "value": descriptor.limit});
-	    	filters.push({"name":"sort_key", "value": sortKey});
-	    	filters.push({"name":"sort_order", "value": sortOrder});
+	    	if (sortKey) {
+	    		filters.push({"name":"sort_key", "value": sortKey});
+	    	}
+	    	if (sortOrder) {
+	    		filters.push({"name":"sort_order", "value": sortOrder});
+	    	}
 
 	    	$.ajax({url:descriptor.url, cache: false, dataType:'json', data : filters,
 	    	success: function(data){
@@ -375,15 +385,19 @@
 	    			table.addClass("table-fixed-header");
 	    			thead.addClass("header");
 	    		}
-	    		
+
+                //Show the no results message if data.length = 0
+                if (data.data.length == 0 && descriptor.infiniteScroll == false) {
+                    var noMoreResultsDiv = $('<div>').html(descriptor.noResultsMessage).addClass("noMoreResults").css({'font-style':'italic', 'text-align':'center', 'margin-top':20, 'margin-bottom':20});
+                    $this.append(noMoreResultsDiv);
+                }
+
 	    		//construct td
 	    		for (var i=0;i<data.data.length;i++){
 	    			tr=$('<tr>');
 	    			var dataTemp = data.data[i];
 	    			rowClickElement(descriptor, tr, dataTemp);
-	    			
-	    			registerRowEvents(descriptor, tr, dataTemp);
-	    			
+
 	    			if (extendedDescriptor.rowCssClass) {
 	    				tr.addClass(data.data[i][extendedDescriptor.rowCssClass]);
 	    			}
@@ -423,8 +437,14 @@
 		    					td.html(html);	
 	    					}
 		    			}
+                        var cssClass = extendedDescriptor.columns[j].cssClass;
+                        if (cssClass){
+                            td.addClass(cssClass);
+                        }
 	    				tr.append(td);
-		    		}   			
+		    		}
+
+                    registerRowEvents(descriptor, tr, dataTemp);
 	    		}
 	    		//construct pager
 	    		var pager=$('<div>').addClass("pager");
@@ -452,7 +472,9 @@
 	    		if (pageCount>1) {
 	    			// Add the < at the start
 		    		if(noPage>0){
-		    			pager.append($('<i>').addClass('icon-chevron-left pointer pager-cursor').text("<").click(function(){$this.evolugrid('refresh',noPage-1);}));
+		    			pager.append($('<i>').addClass('icon-chevron-left pointer pager-cursor glyphicon glyphicon-chevron-left')//.text("<")
+		    					.css('cursor', 'pointer')
+		    					.click(function(){$this.evolugrid('refresh',noPage-1);}));
 		    		}
 		    		
 		    		// If the page select is inferior of the number element display
@@ -514,7 +536,9 @@
 
     				// Display the > at the end
 		    		if((data.count != null && (noPage+1)<pageCount) || (data.count == null && extendedDescriptor.limit && data.data.length == extendedDescriptor.limit)){
-		    			pager.append($('<i>').addClass('icon-chevron-right pointer pager-cursor').text(">").click(function(){$this.evolugrid('refresh',noPage+1);}));
+		    			pager.append($('<i>').addClass('icon-chevron-right pointer pager-cursor glyphicon glyphicon-chevron-right')//.text(">")
+		    					.css('cursor', 'pointer')
+		    					.click(function(){$this.evolugrid('refresh',noPage+1);}));
 		    		}
 	    		}
 
@@ -535,6 +559,8 @@
     				//Enable fixed header for the table
     				table.fixedHeader({topOffset:headerTopOffset});
     			}
+
+                $this.evolugrid('loaded');
 	    	},
 	    	error : function(err,status) { 
 	    		console.error("Error on ajax callback: "+status);
@@ -571,8 +597,12 @@
 	    	
 	    	filters.push({"name":"offset", "value": scrollOffset});
 	    	filters.push({"name":"limit", "value": descriptor.limit});
-	    	filters.push({"name":"sort_key", "value": sortKey});
-	    	filters.push({"name":"sort_order", "value": sortOrder});
+	    	if (sortKey) {
+	    		filters.push({"name":"sort_key", "value": sortKey});
+	    	}
+	    	if (sortOrder) {
+	    		filters.push({"name":"sort_order", "value": sortOrder});
+	    	}
 	    		    		    	
 	    	$.ajax({url:descriptor.url, dataType:'json', cache: false, data : filters,
 		    	success: function(data){
@@ -600,8 +630,6 @@
 		    			tr=$('<tr>');
 		    			var dataTemp = data.data[i];
 		    			rowClickElement(descriptor, tr, dataTemp);
-		    			
-		    			registerRowEvents(descriptor, tr, dataTemp);
 		    			
 		    			if (extendedDescriptor.rowCssClass) {
 		    				tr.addClass(data.data[i][extendedDescriptor.rowCssClass]);
@@ -642,8 +670,16 @@
 			    					td.html(html);	
 		    					}
 			    			}
+
+                            var cssClass = extendedDescriptor.columns[j].cssClass;
+                            if (cssClass){
+                                td.addClass(cssClass);
+                            }
+
 		    				tr.append(td);
-			    		}   			
+			    		}
+
+                        registerRowEvents(descriptor, tr, dataTemp);
 		    		}
 		    		
 		    		if (init) {
@@ -683,13 +719,21 @@
 			    	if (data.data.length == 0 || data.data.length < descriptor.limit) {
 			    		scrollNoMoreResults = true;
 			    		$this.find('div.noMoreResults').show();
-			    	} 			    	
+			    	}
+
+                    $this.evolugrid('loaded');
 		    	},
 		    	error : function(err,status) { 
 		    		console.error("Error on ajax callback for scroll: "+status);
 		    	}
 		    	})
-	    }
+	    },
+        loaded : function(){
+            var descriptor=$(this).data('descriptor');
+            if (descriptor.onResultShown){
+                descriptor.onResultShown();
+            }
+        }
 	  };
 
 	  $.fn.evolugrid = function( method ) {	    

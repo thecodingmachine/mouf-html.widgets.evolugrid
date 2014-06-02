@@ -13,6 +13,9 @@ use Mouf\Utils\Common\ConditionInterface\ConditionInterface;
  * @author David Negrier
  */
 class SimpleColumn implements EvoluColumnKeyInterface, EvoluColumnFormatterInterface {
+
+    use CssClassTrait;
+
 	/**
 	 * The title of the column to display
 	 * 
@@ -166,5 +169,5 @@ class SimpleColumn implements EvoluColumnKeyInterface, EvoluColumnFormatterInter
 			return null;
 		}
 	}
-	
+
 }
