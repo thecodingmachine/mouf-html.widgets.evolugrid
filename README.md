@@ -10,8 +10,8 @@ It comes in 2 parts:
 
 You can use the JS library as a stand-alone, if you are not using PHP as your backend.
 
-Why Evolgrid is different
--------------------------  
+Why Evolugrid is different
+-------------------------- 
 
 There are a number of Ajax tables out there, and Evolugrid is certainly not the most powerful of them. BUT, it has
 a number of interesting features that makes it different. Especially:

@@ -58,6 +58,7 @@ $evoluGridRs->addColumn(new SimpleColumn("Date", "date"));
 // Let's add a column with Javascript rendering
 $nameCol = new JsColumn("First name", 'function(row) { return $("<a/>").text(row["first_name"]).attr("href", "'.ROOT_URL.'admin/client/edition.php?id="+row.id) }');
 $evoluGridRs->addColumn($nameCol);
+$evoluGridRs->setClass("js-col");//You can set a CSS class on any column type in order to add it on the column's cells
 
 // Let's add a column with Html rendering
 $htmlCol = new HtmlColumn("Edit", "<a href='/edit?id={id}'>Edit</a>");

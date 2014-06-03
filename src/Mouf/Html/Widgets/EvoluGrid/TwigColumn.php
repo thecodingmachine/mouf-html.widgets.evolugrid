@@ -11,6 +11,9 @@ use \Twig_Environment;
  * @author David Negrier
  */
 class TwigColumn implements EvoluColumnKeyInterface, EvoluColumnRowFormatterInterface {
+
+    use CssClassTrait;
+
 	/**
 	 * The title of the column to display
 	 * 
@@ -59,7 +62,7 @@ class TwigColumn implements EvoluColumnKeyInterface, EvoluColumnRowFormatterInte
 	private $displayCondition;
 	
 	private $twigEnvironment;
-	
+
 	/**
 	 * @Important $title
 	 * @Important $twig
@@ -160,4 +163,5 @@ class TwigColumn implements EvoluColumnKeyInterface, EvoluColumnRowFormatterInte
 		$row["twig_".$this->columnNumber] = $cell;
 		return $row;
 	}
+
 }

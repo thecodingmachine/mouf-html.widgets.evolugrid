@@ -12,6 +12,9 @@ use Mouf\Utils\Common\Formatters\FormatterInterface;
  * @author Pierre Vaidie
  */
 class HtmlColumn implements EvoluColumnJsInterface {
+
+    use CssClassTrait;
+
 	/**
 	 * The title of the column to display
 	 * 
@@ -47,7 +50,7 @@ class HtmlColumn implements EvoluColumnJsInterface {
 	 * @var ConditionInterface
 	 */
 	private $displayCondition;
-		
+
 	/**
 	 * @Important $title
 	 * @Important $sortKey
@@ -131,5 +134,5 @@ class HtmlColumn implements EvoluColumnJsInterface {
 		return 'function(row) { return '.json_encode($html).$replaceStr.' }';	
 		
 	}
-	
+
 }

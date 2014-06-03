@@ -221,6 +221,7 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 					$columnArr = array("title" => $column->getTitle());
 					$columnArr['sortable'] = $column->isSortable();
 					$columnArr['sortKey'] = $column->getSortKey();
+                    $columnArr['cssClass'] = $column->getClass();
 					$width = $column->getWidth();
 					if ($width) {
 						$columnArr['width'] = $width;

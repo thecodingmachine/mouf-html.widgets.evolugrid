@@ -33,7 +33,8 @@
 			"limit": 100,
 			"infiniteScroll": false,
 			"fixedHeader": false,
-			"rowClick": false
+			"rowClick": false,
+            "noResultsMessage": "> No results are available <"
 	}
 
 	var sortKey;
@@ -49,6 +50,9 @@
 	
 	//Only use for historic state
 	var manualStateChange = true;
+
+    //Message to display if no results are shown
+    var noResultsMessage;
 	
 	/**
 	 * Returns the list of filters to be applied to the query.
@@ -154,7 +158,7 @@
 			return;
 		}
 		$.each(descriptor.rowEventListeners, function(index, listener){
-			tr.on(listener.event, function (event){
+			tr.find('td:not(.exclude_row_listener)').on(listener.event, function (event){
 				listener.callback(el, event);
 			});
 		})
@@ -381,15 +385,19 @@
 	    			table.addClass("table-fixed-header");
 	    			thead.addClass("header");
 	    		}
-	    		
+
+                //Show the no results message if data.length = 0
+                if (data.data.length == 0 && descriptor.infiniteScroll == false) {
+                    var noMoreResultsDiv = $('<div>').html(descriptor.noResultsMessage).addClass("noMoreResults").css({'font-style':'italic', 'text-align':'center', 'margin-top':20, 'margin-bottom':20});
+                    $this.append(noMoreResultsDiv);
+                }
+
 	    		//construct td
 	    		for (var i=0;i<data.data.length;i++){
 	    			tr=$('<tr>');
 	    			var dataTemp = data.data[i];
 	    			rowClickElement(descriptor, tr, dataTemp);
-	    			
-	    			registerRowEvents(descriptor, tr, dataTemp);
-	    			
+
 	    			if (extendedDescriptor.rowCssClass) {
 	    				tr.addClass(data.data[i][extendedDescriptor.rowCssClass]);
 	    			}
@@ -429,8 +437,14 @@
 		    					td.html(html);	
 	    					}
 		    			}
+                        var cssClass = extendedDescriptor.columns[j].cssClass;
+                        if (cssClass){
+                            td.addClass(cssClass);
+                        }
 	    				tr.append(td);
-		    		}   			
+		    		}
+
+                    registerRowEvents(descriptor, tr, dataTemp);
 	    		}
 	    		//construct pager
 	    		var pager=$('<div>').addClass("pager");
@@ -617,8 +631,6 @@
 		    			var dataTemp = data.data[i];
 		    			rowClickElement(descriptor, tr, dataTemp);
 		    			
-		    			registerRowEvents(descriptor, tr, dataTemp);
-		    			
 		    			if (extendedDescriptor.rowCssClass) {
 		    				tr.addClass(data.data[i][extendedDescriptor.rowCssClass]);
 		    			}
@@ -658,8 +670,16 @@
 			    					td.html(html);	
 		    					}
 			    			}
+
+                            var cssClass = extendedDescriptor.columns[j].cssClass;
+                            if (cssClass){
+                                td.addClass(cssClass);
+                            }
+
 		    				tr.append(td);
-			    		}   			
+			    		}
+
+                        registerRowEvents(descriptor, tr, dataTemp);
 		    		}
 		    		
 		    		if (init) {
@@ -710,7 +730,9 @@
 	    },
         loaded : function(){
             var descriptor=$(this).data('descriptor');
-            descriptor.onResultShown();
+            if (descriptor.onResultShown){
+                descriptor.onResultShown();
+            }
         }
 	  };
 
