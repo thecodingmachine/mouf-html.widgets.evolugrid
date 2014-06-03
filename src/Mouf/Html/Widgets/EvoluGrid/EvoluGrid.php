@@ -114,6 +114,13 @@ class EvoluGrid implements HtmlElementInterface{
      * @var string
      */
     private $onResultShown;
+    
+    /**
+     * If set, for each row, we will look in the dataset for the row, for the "key" passed in parameter. The associated value will be used as a class of the tr row.
+     *
+     * @var string
+     */
+    private $rowCssClass;
 
     /**
 	 * URL that will be called in Ajax and return the data to display.
@@ -292,6 +299,16 @@ class EvoluGrid implements HtmlElementInterface{
     {
         return $this->onResultShown;
     }
+    
+    /**
+     * If set, for each row, we will look in the dataset for the row, for the "key" passed in parameter. The associated value will be used as a class of the tr row.
+     * @param string $rowCssClass
+     */
+    public function setRowCssClass($rowCssClass)
+    {
+    	$this->rowCssClass = $rowCssClass;
+    }
+    
 	
 	/**
 	 * Renders the object in HTML.
@@ -324,6 +341,7 @@ class EvoluGrid implements HtmlElementInterface{
 		$descriptor->fixedHeader_NavBarSelector = $this->fixedHeader_NavBarSelector;
 		$descriptor->searchHistory = $this->searchHistory;
 		$descriptor->searchHistoryAutoFillForm = $this->searchHistoryAutoFillForm;
+		$descriptor->rowCssClass = $this->rowCssClass;
 		
 		$listeners = "[";
 		foreach ($this->rowEventListeners as $listener){
