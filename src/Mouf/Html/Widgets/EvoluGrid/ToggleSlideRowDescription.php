@@ -38,10 +38,12 @@ class ToggleSlideRowDescription implements RowEventListernerInterface {
 			var parentRow = cell.parents('tr');
 			if (parentRow.data('details') == null){
 				var description = row.$this->descriptionKey;
-				var rowElem = $('<tr/>').hide();
-				rowElem.append($('<td/>').attr('colspan', parentRow.children().length).html(description)).insertAfter(parentRow);
-				rowElem.fadeIn();
-				parentRow.data('details', rowElem);
+				if(description) {
+					var rowElem = $('<tr/>').hide();
+					rowElem.append($('<td/>').attr('colspan', parentRow.children().length).html(description)).insertAfter(parentRow);
+					rowElem.fadeIn();
+					parentRow.data('details', rowElem);
+				}
 			}else{
 				var descriptionRow = parentRow.data('details');
 				descriptionRow.fadeOut().delay().remove();
