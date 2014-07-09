@@ -3,6 +3,8 @@ namespace Mouf\Html\Widgets\EvoluGrid;
 
 use Mouf\Utils\Common\Formatters\FormatterInterface;
 use Mouf\Utils\Common\ConditionInterface\ConditionInterface;
+use Mouf\Utils\Value\ValueInterface;
+use Mouf\Utils\Value\ValueUtils;
 use \Twig_Environment;
 
 /**
@@ -14,11 +16,12 @@ class TwigColumn implements EvoluColumnKeyInterface, EvoluColumnRowFormatterInte
 
     use CssClassTrait;
 
-	/**
-	 * The title of the column to display
-	 * 
-	 * @var string
-	 */
+    /**
+     * The title of the column to display
+     *
+     * @Important
+     * @var string|ValueInterface
+     */
 	private $title;
 
 	/**
@@ -70,7 +73,7 @@ class TwigColumn implements EvoluColumnKeyInterface, EvoluColumnRowFormatterInte
 	 * @Important $sortable
 	 * @Important $width
 	 * @Important $displayCondition
-	 * @param string $title The title of the column to display
+	 * @param string|ValueInterface $title The title of the column to display
 	 * @param string $twig The twig code to render the column.
 	 * @param string $key Get the key to map to in the datagrid. Only used for sort order.
 	 * @param bool $sortable True if the column is sortable, false otherwise.
@@ -97,7 +100,7 @@ class TwigColumn implements EvoluColumnKeyInterface, EvoluColumnRowFormatterInte
 	 * @see \Mouf\Html\Widgets\EvoluGrid\EvoluColumnInterface::getTitle()
 	 */
 	public function getTitle() {
-		return $this->title;
+		return ValueUtils::val($this->title);
 	}
 	
 	/**
