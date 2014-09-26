@@ -34,7 +34,9 @@
 			"infiniteScroll": false,
 			"fixedHeader": false,
 			"rowClick": false,
-            "noResultsMessage": "> No results are available <"
+            "noResultsMessage": "> No results are available <",
+            "chevronUpClass" : "icon-chevron-up glyphicon glyphicon-chevron-up",
+            "chevronDownClass" : "icon-chevron-down glyphicon glyphicon-chevron-down"
 	}
 
 	var sortKey;
@@ -100,7 +102,7 @@
 						}
 						return false;
 					});
-					sortButtonAsc.append("<i class='icon-chevron-up glyphicon glyphicon-chevron-up'></i>");
+					sortButtonAsc.append("<i class='"+descriptor.chevronUpClass+"'></i>");
 					th.append(" ");
 					th.append(sortButtonAsc);
 					
@@ -114,7 +116,7 @@
 						}
 						return false;
 					});
-					sortButtonDown.append("<i class='icon-chevron-down glyphicon glyphicon-chevron-down'></i>");
+					sortButtonDown.append("<i class='"+descriptor.chevronDownClass+"'></i>");
 					th.append(" ");
 					th.append(sortButtonDown);
 				})(colSortKey);

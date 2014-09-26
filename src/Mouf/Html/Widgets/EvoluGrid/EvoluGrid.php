@@ -125,6 +125,21 @@ class EvoluGrid implements HtmlElementInterface{
     private $rowCssClass;
 
     /**
+     * If the sortable param is set to true, this property will set the class of the <i> element in order to display the up arrow to sort our grid (default is bootstrap glyphicon, but you can use basically font-awesome if you have display troubles with firefox)
+     *
+     * @var string
+     */
+    private $chevronUpClass;
+
+    /**
+     * If the sortable param is set to true, this property will set the class of the <i> element in order to display the down arrow to sort our grid (default is bootstrap glyphicon, but you can use basically font-awesome if you have display troubles with firefox)
+     *
+     * @var string
+     */
+    private $chevronDownClass;
+
+
+    /**
      * Message to display if no results are shown
      *
      * @var ValueInterface|string
@@ -282,6 +297,30 @@ class EvoluGrid implements HtmlElementInterface{
 		$this->onRowClick = $onRowClick;
 		return $this;
 	}
+
+    /**
+     *  If the sortable param is set to true, this property will set the class of the <i> element in order to display the up arrow to sort our grid
+     * (default is bootstrap glyphicon, but you can use basically font-awesome if you have display troubles with firefox)
+     *
+     * @param string $chevronUpClass
+     * @return $this
+     */
+    public function setChevronUpClass($chevronUpClass) {
+        $this->chevronUpClass = $chevronUpClass;
+        return $this;
+    }
+
+    /**
+     *  If the sortable param is set to true, this property will set the class of the <i> element in order to display the down arrow to sort our grid
+     * (default is bootstrap glyphicon, but you can use basically font-awesome if you have display troubles with firefox)
+     *
+     * @param string $chevronDownClass
+     * @return $this
+     */
+    public function setChevronDownClass($chevronDownClass) {
+        $this->chevronDownClass = $chevronDownClass;
+        return $this;
+    }
 	
 	/**
 	 * A set of RowEventListernerInterface that will associate mouseevents ans associated callbacks to each row item
@@ -365,6 +404,12 @@ class EvoluGrid implements HtmlElementInterface{
 		$descriptor->searchHistoryAutoFillForm = $this->searchHistoryAutoFillForm;
 		$descriptor->rowCssClass = $this->rowCssClass;
         $descriptor->noResultsMessage = ValueUtils::val($this->noResultsMessage);
+        if($this->chevronUpClass) {
+            $descriptor->chevronUpClass = $this->chevronUpClass;
+        }
+        if($this->chevronDownClass) {
+            $descriptor->chevronDownClass = $this->chevronDownClass;
+        }
 
         $listeners = "[";
 		foreach ($this->rowEventListeners as $listener){
