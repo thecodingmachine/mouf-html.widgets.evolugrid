@@ -147,6 +147,13 @@ class EvoluGrid implements HtmlElementInterface{
     private $noResultsMessage;
 
     /**
+     * The selector name for the DOM element that will receive the number of results
+     *
+     * @var string
+     */
+    private $countTarget;
+
+    /**
 	 * URL that will be called in Ajax and return the data to display.
 	 *
 	 * @Property
@@ -254,6 +261,14 @@ class EvoluGrid implements HtmlElementInterface{
 	public function setFormSelector($formSelector) {
 		$this->formSelector = $formSelector;
 	}
+
+    /**
+     * @param string $countTarget
+     */
+    public function setCountTarget($countTarget)
+    {
+        $this->countTarget = $countTarget;
+    }
 	
 	/**
 	 * Enable the search history when the user click on the previous page button
@@ -404,6 +419,7 @@ class EvoluGrid implements HtmlElementInterface{
 		$descriptor->searchHistoryAutoFillForm = $this->searchHistoryAutoFillForm;
 		$descriptor->rowCssClass = $this->rowCssClass;
         $descriptor->noResultsMessage = ValueUtils::val($this->noResultsMessage);
+        $descriptor->countTarget = $this->countTarget;
         if($this->chevronUpClass) {
             $descriptor->chevronUpClass = $this->chevronUpClass;
         }

@@ -626,6 +626,14 @@
 			    			thead.addClass("header");
 			    		}
 			    	}
+
+                    //Display Count
+                    if(!extendedDescriptor.countTarget){
+                        var countTarget = "#count";
+                    } else {
+                        var countTarget=extendedDescriptor.countTarget
+                    }
+                    $(countTarget).html(data.count);
 		    		
 		    		//construct td
 		    		for (var i=0;i<data.data.length;i++){
