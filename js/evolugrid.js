@@ -55,6 +55,8 @@
 
     //Message to display if no results are shown
     var noResultsMessage;
+
+    var additionnalData;
 	
 	/**
 	 * Returns the list of filters to be applied to the query.
@@ -608,8 +610,9 @@
 	    		    		    	
 	    	$.ajax({url:descriptor.url, dataType:'json', cache: false, data : filters,
 		    	success: function(data){
+
 			    	var extendedDescriptor=$.extend(true, {}, descriptor, data.descriptor)
-			    	
+
 			    	if (init) {
 			    		//construct th
 			    		$this.html("");
@@ -710,6 +713,9 @@
 			    		$(descriptor.filterForm).find("button").attr("disabled", false);
 			    		$(descriptor.filterForm).find("input[type=button]").attr("disabled", false);
 			    	}
+
+                    //set additionnal data
+                    additionnalData = data.additionnalData;
 			    	
 			    	//We hide the ajax loader
 			    	$this.next('div.ajaxLoader').hide();
@@ -741,7 +747,7 @@
         loaded : function(){
             var descriptor=$(this).data('descriptor');
             if (descriptor.onResultShown){
-                descriptor.onResultShown();
+                descriptor.onResultShown(additionnalData);
             }
         }
 	  };

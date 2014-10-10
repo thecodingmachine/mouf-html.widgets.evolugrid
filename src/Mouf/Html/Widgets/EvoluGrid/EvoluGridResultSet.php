@@ -72,7 +72,9 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 	private $offset;
 	private $sortKey;
 	private $sortOrder;
-	
+
+    private $additionnalData;
+
 	/**
 	 * Sets the result set to display.
 	 *
@@ -129,6 +131,14 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 	public function setFormat($format) {
 		$this->format = $format;
 	}
+
+    /**
+     * @param mixed $additionnalData
+     */
+    public function setAdditionnalData($additionnalData)
+    {
+        $this->additionnalData = $additionnalData;
+    }
 
 	/**
 	 * (non-PHPdoc)
@@ -254,6 +264,7 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 			$descriptor['columns'] = $columnsArr;
 
 			$jsonMessage['descriptor'] = $descriptor;
+            $jsonMessage['additionnalData'] = $this->additionnalData;
 			echo json_encode($jsonMessage);
 		} elseif ($format == self::FORMAT_CSV) {
 
