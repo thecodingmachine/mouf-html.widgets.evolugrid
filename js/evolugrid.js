@@ -457,7 +457,7 @@
 	    		    		
 	    		if (extendedDescriptor.export_csv) {
 	    			var span = $('<span/>').click(function(){$this.evolugrid('csvExport');});
-	    			span.append($('<i/>').addClass('icon-file pointer export-csv'));
+	    			span.append($('<i/>').addClass('glyphicon glyphicon-file').attr('style', 'cursor:pointer;'));
 	    			span.append("Export to CSV");
 	    			pager.append(span);
 	    		}
