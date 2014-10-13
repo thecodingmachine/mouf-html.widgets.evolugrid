@@ -25,6 +25,10 @@
  * }
  * 
  * Any parameter (except URL) can be dynamically passed from the server side.
+ *
+ * events:
+ *
+ * - newRow: event triggered when a new row is added to the Evolugrid. Event signature: function(event, tr, data) where tr is the <tr> element and data is the JSON data for the row
  */
 (function ($){
 	var defaultOptions = {
@@ -446,6 +450,7 @@
 	    				tr.append(td);
 		    		}
 
+                    $this.trigger('newRow', [tr, dataTemp]);
                     registerRowEvents(descriptor, tr, dataTemp);
 	    		}
 	    		//construct pager
