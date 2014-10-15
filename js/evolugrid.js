@@ -697,6 +697,7 @@
 		    				tr.append(td);
 			    		}
 
+                        $this.trigger('newRow', [tr, dataTemp]);
                         registerRowEvents(descriptor, tr, dataTemp);
 		    		}
 		    		
