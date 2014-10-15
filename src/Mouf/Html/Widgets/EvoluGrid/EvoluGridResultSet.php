@@ -67,6 +67,8 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 	 * @var unknown
 	 */
 	private $format = null;
+
+    private $csvFilename = "data.csv";
 	
 	private $limit;
 	private $offset;
@@ -83,6 +85,10 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 	public function setResults($results) {
 		$this->results = $results;
 	}
+
+    public function getResults() {
+        return $this->results;
+    }
 	
 	/**
 	 * Sets the total number of records for this resultset (used to paginate results).
@@ -102,6 +108,14 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 	public function setUrl($url) {
 		$this->url = $url;
 	}
+
+    /**
+     * The filename of your generated CSV file
+     * @param string $fileName
+     */
+    public function setCsvFilename($fileName) {
+        $this->csvFilename = $fileName;
+    }
 
 	/**
 	 * The list of columns displayed in the grid.
@@ -132,12 +146,20 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 		$this->format = $format;
 	}
 
+
     /**
      * @param mixed $additionnalData
      */
     public function setAdditionnalData($additionnalData)
     {
         $this->additionnalData = $additionnalData;
+    }
+    public function setRows($rows) {
+        $this->rows = $rows;
+    }
+
+    public function getRows() {
+        return $this->rows;
     }
 
 	/**
@@ -158,7 +180,7 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 			$this->sortOrder = $_GET['sort_order'];
 		}
 		
-		$this->output($this->format);
+		$this->output($this->format, $this->csvFilename);
 	}
 
 	/**
@@ -294,7 +316,7 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 					return utf8_decode($column->getTitle());
 				}, $this->columns);
 		fputcsv($fp, $columnsTitles, ";");
-		foreach ($this->getRows() as $row) {
+		foreach ($this->getResults() as $row) {
 			$columns = array_map(
 					function (EvoluColumnInterface $elem) use ($row) {
 						if (is_object($row)) {

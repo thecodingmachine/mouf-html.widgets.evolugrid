@@ -95,3 +95,8 @@ A few methods are available on your Evolugrid object :
 ```js
     $("#list").evolugrid('csvExport');
 ```
+
+#### Available events
+
+- **newRow**: event triggered when a new row is added to the Evolugrid.
+  Event signature: `function(event, tr, data) {...}` where `tr` is the `<tr>` element and `data` is the JSON data for the row
