@@ -319,18 +319,25 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 		foreach ($this->getResults() as $row) {
 			$columns = array_map(
 					function (EvoluColumnInterface $elem) use ($row) {
+                        if (($elem instanceof EvoluColumnFormatterInterface) && ($elem->getFormatter() != null)) {
+                            $formatter = $elem->getFormatter();
+                            $row[$elem->getKey()] = $formatter->format($row[$elem->getKey()]);
+                        }
+                        if ($elem instanceof EvoluColumnRowFormatterInterface) {
+                            $row = $elem->formatRow($row);
+                        }
 						if (is_object($row)) {
 							$key = $elem->getKey();
 							if (property_exists($row, $key)) {
 								return ($row->$key == "") ? " "
-										: utf8_decode($row->$key);
+										: utf8_decode(strip_tags($row->$key));
 							} else {
 								return " ";
 							}
 						} else {
 							if (isset($row[$elem->getKey()])) {
 								return ($row[$elem->getKey()] == "") ? " "
-										: utf8_decode($row[$elem->getKey()]);
+										: utf8_decode(strip_tags($row[$elem->getKey()]));
 							} else {
 								return " ";
 							}
