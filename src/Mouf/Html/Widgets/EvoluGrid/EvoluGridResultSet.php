@@ -310,6 +310,11 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 	}
 
 	private function outputCsv($fp) {
+        foreach($this->columns as $key => $column) {
+            if (!($column instanceof EvoluColumnKeyInterface)){
+                unset($this->columns[$key]);
+            }
+        }
 		// TODO: enable autoBuildColumns on CSV
 		$columnsTitles = array_map(
 				function (EvoluColumnInterface $column) {
@@ -319,9 +324,6 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 		foreach ($this->getResults() as $row) {
 			$columns = array_map(
 					function (EvoluColumnInterface $elem) use ($row) {
-                        if (!($elem instanceof EvoluColumnKeyInterface)){
-                            return;
-                        }
                         if (($elem instanceof EvoluColumnFormatterInterface) && ($elem->getFormatter() != null)) {
                             $formatter = $elem->getFormatter();
                             $row[$elem->getKey()] = $formatter->format($row[$elem->getKey()]);
