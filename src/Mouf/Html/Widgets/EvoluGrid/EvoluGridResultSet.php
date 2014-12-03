@@ -327,7 +327,9 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
                             $row[$elem->getKey()] = $formatter->format($row[$elem->getKey()]);
                         }
                         if ($elem instanceof EvoluColumnRowFormatterInterface) {
-                            $row = $elem->formatRow($row);
+                            if(is_array($row)) {
+                                $row = $elem->formatRow($row);
+                            }
                         }
 						if (is_object($row)) {
 							$key = $elem->getKey();
