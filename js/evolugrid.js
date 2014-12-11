@@ -580,6 +580,7 @@
 	    scroll : function(init, filters) {
 	    	var descriptor=$(this).data('descriptor');
 	    	
+	    	
 	    	//We show the ajax loader
 	    	$(this).next('div.ajaxLoader').show();
 	    		    	    		    	
@@ -594,6 +595,8 @@
 	    	
 	    	if (init) {
 	    		scrollOffset = 0;
+	    		//if init && infinit scroll, remove table rows
+	    		$(this).find('tbody').remove();
 	    	}
 	    	
 	    	var $this=$(this);
