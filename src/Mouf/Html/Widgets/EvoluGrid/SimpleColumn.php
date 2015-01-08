@@ -12,7 +12,7 @@ use Mouf\Utils\Common\ConditionInterface\ConditionInterface;
  * 
  * @author David Negrier
  */
-class SimpleColumn implements EvoluColumnKeyInterface, EvoluColumnFormatterInterface {
+class SimpleColumn extends EvoluGridColumn implements EvoluColumnKeyInterface, EvoluColumnFormatterInterface {
 
     use CssClassTrait;
 

@@ -12,7 +12,7 @@ use \Twig_Environment;
  * 
  * @author David Negrier
  */
-class TwigColumn implements EvoluColumnKeyInterface, EvoluColumnRowFormatterInterface {
+class TwigColumn extends EvoluGridColumn implements EvoluColumnKeyInterface, EvoluColumnRowFormatterInterface {
 
     use CssClassTrait;
 
@@ -65,6 +65,7 @@ class TwigColumn implements EvoluColumnKeyInterface, EvoluColumnRowFormatterInte
 	private $displayCondition;
 	
 	private $twigEnvironment;
+	
 
 	/**
 	 * @Important $title

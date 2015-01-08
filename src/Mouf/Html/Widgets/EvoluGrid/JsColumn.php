@@ -13,7 +13,7 @@ use Mouf\Utils\Common\ConditionInterface\ConditionInterface;
  * 
  * @author David Negrier
  */
-class JsColumn implements EvoluColumnJsInterface {
+class JsColumn extends EvoluGridColumn implements EvoluColumnJsInterface {
 
     use CssClassTrait;
 

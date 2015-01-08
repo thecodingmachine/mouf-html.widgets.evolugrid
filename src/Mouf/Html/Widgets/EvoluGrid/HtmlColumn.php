@@ -11,7 +11,7 @@ use Mouf\Utils\Common\Formatters\FormatterInterface;
  * 
  * @author Pierre Vaidie
  */
-class HtmlColumn implements EvoluColumnJsInterface {
+class HtmlColumn extends EvoluGridColumn implements EvoluColumnJsInterface {
 
     use CssClassTrait;
 
