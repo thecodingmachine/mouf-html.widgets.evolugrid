@@ -17,8 +17,10 @@ if ($moufManager->instanceExists("evolugridLibrary")) {
 }
 $evolugridLib->getProperty("jsFiles")->setValue(array('vendor/mouf/html.widgets.evolugrid/js/evolugrid.js'));
 
-$renderer = $moufManager->getInstanceDescriptor('defaultWebLibraryRenderer');
-$evolugridLib->getProperty("renderer")->setValue($renderer);
+if ($moufManager->has('defaultWebLibraryRenderer')) {
+	$renderer = $moufManager->getInstanceDescriptor('defaultWebLibraryRenderer');
+	$evolugridLib->getProperty("renderer")->setValue($renderer);
+}
 $evolugridLib->getProperty("dependencies")->setValue(array($moufManager->getInstanceDescriptor('jQueryLibrary')));
 
 $webLibraryManager = $moufManager->getInstanceDescriptor('defaultWebLibraryManager');
