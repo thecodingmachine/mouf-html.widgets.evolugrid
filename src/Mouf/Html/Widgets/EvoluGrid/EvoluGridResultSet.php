@@ -34,7 +34,7 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 	const FORMAT_CSV = 'csv';
 
 	/**
-	 * @var ArrayValueInterface
+	 * @var ArrayValueInterface|array
 	 */
 	private $results;
 
@@ -57,19 +57,26 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 
 	/**
 	 * The total number of rows (!= from the number of rows returned by the grid, used to paginate)
-	 * @var int
+	 * @var IntValueInterface|int
 	 */
 	private $count = null;
+
+    /**
+     * The encoding of the csv file output
+     * @var string
+     */
+    private $csvEncoding = "CP1252";
 
 	/**
 	 * The format to use when outputing data.
 	 * Can be self::FORMAT_JSON or self::FORMAT_CSV
-	 * @var unknown
+	 * @var string
 	 */
 	private $format = null;
 
     private $csvFilename = "data.csv";
 	
+
 	private $limit;
 	private $offset;
 	private $sortKey;
@@ -80,7 +87,7 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 	/**
 	 * Sets the result set to display.
 	 *
-	 * @param ArrayValueInterface $results
+	 * @param ArrayValueInterface|array $results
 	 */
 	public function setResults($results) {
 		$this->results = $results;
@@ -94,7 +101,7 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 	 * Sets the total number of records for this resultset (used to paginate results).
 	 * Warning, total number of rows != from the number of rows returned by the grid
 	 *
-	 * @param IntValueInterface $count
+	 * @param IntValueInterface|int $count
 	 */
 	public function setTotalRowsCount($count) {
 		$this->count = $count;
@@ -160,6 +167,14 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 
     public function getRows() {
         return $this->rows;
+    }
+
+    /**
+     * The encoding of the csv file output
+     * @param string $encoding
+     */
+    public function setCsvEncoding($encoding) {
+        $this->csvEncoding = $encoding;
     }
 
 	/**
@@ -316,15 +331,24 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
                 unset($this->columns[$key]);
             }
         }
+
+        // Let's only keep the columns that are tied to keys (we cannot render JS in CSV exports)
+        $keyColumns = array_filter($this->columns, function(EvoluColumnInterface $column) {
+            return $column instanceof EvoluColumnKeyInterface;
+        });
+
 		// TODO: enable autoBuildColumns on CSV
 		$columnsTitles = array_map(
-				function (EvoluColumnInterface $column) {
-					return utf8_decode($column->getTitle());
-				}, $this->columns);
+				function (EvoluColumnKeyInterface $column) {
+					return iconv("UTF-8", $this->csvEncoding, $column->getTitle());
+				}, $keyColumns);
 		fputcsv($fp, $columnsTitles, ";");
-		foreach ($this->getResults() as $row) {
+
+        $resultArray = ValueUtils::val($this->results);
+
+		foreach ($resultArray as $row) {
 			$columns = array_map(
-					function (EvoluColumnInterface $elem) use ($row) {
+					function (EvoluColumnKeyInterface $elem) use ($row) {
                         if (($elem instanceof EvoluColumnFormatterInterface) && ($elem->getFormatter() != null)) {
                             $formatter = $elem->getFormatter();
                             $row[$elem->getKey()] = $formatter->format($row[$elem->getKey()]);
@@ -338,19 +362,19 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 							$key = $elem->getKey();
 							if (property_exists($row, $key)) {
 								return ($row->$key == "") ? " "
-										: utf8_decode(strip_tags($row->$key));
+										: iconv("UTF-8", $this->csvEncoding, strip_tags($row->$key));
 							} else {
 								return " ";
 							}
 						} else {
 							if (isset($row[$elem->getKey()])) {
 								return ($row[$elem->getKey()] == "") ? " "
-										: utf8_decode(strip_tags($row[$elem->getKey()]));
+										: iconv("UTF-8", $this->csvEncoding, strip_tags($row[$elem->getKey()]));
 							} else {
 								return " ";
 							}
 						}
-					}, $this->columns);
+					}, $keyColumns);
 			fputcsv($fp, $columns, ";");
 		}
 

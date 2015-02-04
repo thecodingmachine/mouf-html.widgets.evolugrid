@@ -109,6 +109,13 @@ All you have to do it pass 2 more arguments to the "output" method:
 $evoluGridRs->output($_GET['output'], 'filename.csv');
 ```
 
+The default encoding for CSV files is "CP1252", this is the default encoding for West European Windows. If you want to change the encoding of the output file, you should use the `setCsvEncoding` function.
+
+```php
+// This will change the encoding of the output file to "UTF-8" (encoding compatible with LibreOffice)
+$evoluGridRs->setCsvEncoding("UTF-8");
+```
+
 ###Complete EvoluGrid sample using Splash MVC framework and pure PHP code
 
 In the example below, we create the EvoluGrid instances in the controller. In the next chapter we will
