@@ -61,15 +61,22 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 	 */
 	private $count = null;
 
+    /**
+     * The encoding of the csv file output
+     * @var string
+     */
+    private $csvEncoding = "CP1252";
+
 	/**
 	 * The format to use when outputing data.
 	 * Can be self::FORMAT_JSON or self::FORMAT_CSV
-	 * @var unknown
+	 * @var string
 	 */
 	private $format = null;
 
     private $csvFilename = "data.csv";
 	
+
 	private $limit;
 	private $offset;
 	private $sortKey;
@@ -160,6 +167,14 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 
     public function getRows() {
         return $this->rows;
+    }
+
+    /**
+     * The encoding of the csv file output
+     * @param string $encoding
+     */
+    public function setCsvEncoding($encoding) {
+        $this->csvEncoding = $encoding;
     }
 
 	/**
@@ -319,7 +334,7 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 		// TODO: enable autoBuildColumns on CSV
 		$columnsTitles = array_map(
 				function (EvoluColumnInterface $column) {
-					return utf8_decode($column->getTitle());
+					return iconv("UTF-8", $this->csvEncoding, $column->getTitle());
 				}, $this->columns);
 		fputcsv($fp, $columnsTitles, ";");
 		foreach ($this->getResults() as $row) {
@@ -338,14 +353,14 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 							$key = $elem->getKey();
 							if (property_exists($row, $key)) {
 								return ($row->$key == "") ? " "
-										: utf8_decode(strip_tags($row->$key));
+										: iconv("UTF-8", $this->csvEncoding, strip_tags($row->$key));
 							} else {
 								return " ";
 							}
 						} else {
 							if (isset($row[$elem->getKey()])) {
 								return ($row[$elem->getKey()] == "") ? " "
-										: utf8_decode(strip_tags($row[$elem->getKey()]));
+										: iconv("UTF-8", $this->csvEncoding, strip_tags($row[$elem->getKey()]));
 							} else {
 								return " ";
 							}
