@@ -34,7 +34,7 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 	const FORMAT_CSV = 'csv';
 
 	/**
-	 * @var ArrayValueInterface
+	 * @var ArrayValueInterface|array
 	 */
 	private $results;
 
@@ -57,7 +57,7 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 
 	/**
 	 * The total number of rows (!= from the number of rows returned by the grid, used to paginate)
-	 * @var int
+	 * @var IntValueInterface|int
 	 */
 	private $count = null;
 
@@ -87,7 +87,7 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 	/**
 	 * Sets the result set to display.
 	 *
-	 * @param ArrayValueInterface $results
+	 * @param ArrayValueInterface|array $results
 	 */
 	public function setResults($results) {
 		$this->results = $results;
@@ -101,7 +101,7 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 	 * Sets the total number of records for this resultset (used to paginate results).
 	 * Warning, total number of rows != from the number of rows returned by the grid
 	 *
-	 * @param IntValueInterface $count
+	 * @param IntValueInterface|int $count
 	 */
 	public function setTotalRowsCount($count) {
 		$this->count = $count;
@@ -331,15 +331,24 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
                 unset($this->columns[$key]);
             }
         }
+
+        // Let's only keep the columns that are tied to keys (we cannot render JS in CSV exports)
+        $keyColumns = array_filter($this->columns, function(EvoluColumnInterface $column) {
+            return $column instanceof EvoluColumnKeyInterface;
+        });
+
 		// TODO: enable autoBuildColumns on CSV
 		$columnsTitles = array_map(
-				function (EvoluColumnInterface $column) {
+				function (EvoluColumnKeyInterface $column) {
 					return iconv("UTF-8", $this->csvEncoding, $column->getTitle());
-				}, $this->columns);
+				}, $keyColumns);
 		fputcsv($fp, $columnsTitles, ";");
-		foreach ($this->getResults() as $row) {
+
+        $resultArray = ValueUtils::val($this->results);
+
+		foreach ($resultArray as $row) {
 			$columns = array_map(
-					function (EvoluColumnInterface $elem) use ($row) {
+					function (EvoluColumnKeyInterface $elem) use ($row) {
                         if (($elem instanceof EvoluColumnFormatterInterface) && ($elem->getFormatter() != null)) {
                             $formatter = $elem->getFormatter();
                             $row[$elem->getKey()] = $formatter->format($row[$elem->getKey()]);
@@ -365,7 +374,7 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 								return " ";
 							}
 						}
-					}, $this->columns);
+					}, $keyColumns);
 			fputcsv($fp, $columns, ";");
 		}
 

@@ -48,7 +48,7 @@ class TwigColumn extends EvoluGridColumn implements EvoluColumnKeyInterface, Evo
 	/**
 	 * The width of the column.
 	 * 
-	 * @var string
+	 * @var int|string
 	 */
 	private $width;
 	
@@ -65,22 +65,23 @@ class TwigColumn extends EvoluGridColumn implements EvoluColumnKeyInterface, Evo
 	private $displayCondition;
 	
 	private $twigEnvironment;
-	
 
-	/**
-	 * @Important $title
-	 * @Important $twig
-	 * @Important $sortKey
-	 * @Important $sortable
-	 * @Important $width
-	 * @Important $displayCondition
-	 * @param string|ValueInterface $title The title of the column to display
-	 * @param string $twig The twig code to render the column.
-	 * @param string $key Get the key to map to in the datagrid. Only used for sort order.
-	 * @param bool $sortable True if the column is sortable, false otherwise.
-	 * @param int $width Returns the width of the column. Just like the CSS width property, you can express it in %, px, em, etc... This is optionnal. Leave empty to let the browser decide.
-	 * @param ConditionInterface $displayCondition
-	 */
+
+    /**
+     * @Important $title
+     * @Important $twig
+     * @Important $sortKey
+     * @Important $sortable
+     * @Important $width
+     * @Important $displayCondition
+     * @param string|ValueInterface $title The title of the column to display
+     * @param string $twig The twig code to render the column.
+     * @param string|null $sortKey
+     * @param bool $sortable True if the column is sortable, false otherwise.
+     * @param int|string $width Returns the width of the column. Just like the CSS width property, you can express it in %, px, em, etc... This is optional. Leave empty to let the browser decide.
+     * @param ConditionInterface $displayCondition
+     * @internal param string $key Get the key to map to in the datagrid. Only used for sort order.
+     */
 	public function __construct($title, $twig, $sortKey = null, $sortable = false, $width = null, $displayCondition = null) {
 		$this->title = $title;
 		$this->twig = $twig;
