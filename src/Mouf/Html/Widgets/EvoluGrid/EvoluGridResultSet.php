@@ -63,9 +63,11 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 
     /**
      * The encoding of the csv file output
+     * //IGNORE remove unexcepting notice when some special character cannot be converted
+     * Don't forget to add it if you change the encoding
      * @var string
      */
-    private $csvEncoding = "CP1252";
+    private $csvEncoding = "CP1252//IGNORE";
 
 	/**
 	 * The format to use when outputing data.
