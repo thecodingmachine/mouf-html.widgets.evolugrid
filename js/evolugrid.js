@@ -216,12 +216,14 @@
                 		descriptor.fixedHeader_NavBarSelector = ".navbar"
                 	}
                 	
-                	if ($(descriptor.fixedHeader_NavBarSelector).length) {
+                	var navBarDisplay = $(descriptor.fixedHeader_NavBarSelector).css('position');
+            		if(navBarDisplay == 'fixed') {
                 		var navBarPosition = $(descriptor.fixedHeader_NavBarSelector).position();
                 		headerTopOffset = navBarPosition.top + $(descriptor.fixedHeader_NavBarSelector).height();
-                	} else {
-                		headerTopOffset = 0;
-                	}
+            		}
+            		else {
+            			headerTopOffset = 0;
+            		}
                 }
                                 
                 if (descriptor.filterForm) {
