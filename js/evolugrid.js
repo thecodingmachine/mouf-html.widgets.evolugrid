@@ -82,6 +82,38 @@
 		return [];
 	};
 	
+	var _getFilterValue = function(filters, name) {
+		for(x in filters) {
+			if(filters[x]['name'] == name) {
+				return filters[x]['value'];
+			}
+		}
+		return null;
+	}
+	
+	var _filterAddPage = function(filters, offset, limit, sortKey, sortOrder) {
+		filters = _updateTableData(filters, 'offset', offset);
+		filters = _updateTableData(filters, 'limit', limit);
+		filters = _updateTableData(filters, 'sortKey', sortKey);
+		filters = _updateTableData(filters, 'sortOrder', sortOrder);
+		return filters;
+	}
+	
+	var _updateTableData = function(array, name, value) {
+		var hasElement = false;
+		for(x in array) {
+			if(array[x]['name'] == name) {
+				array[x]['value'] == value;
+				hasElement = true;
+				break;
+			}
+		}
+		if(!hasElement) {
+			array.push({"name": name, "value": value});
+		}
+		return array;
+	}
+	
 	var _generateHeaders = function(tr, descriptor, evolugrid) {
 		for(var i=0;i<descriptor.columns.length;i++){
 			var columnDescriptor = descriptor.columns[i];
@@ -275,7 +307,13 @@
 		            			scrollReady = false;
 		            			$this.evolugrid('scroll', true, state.data.filters);
 		                    } else {
-		                    	$this.evolugrid('refresh', 0, state.data.filters);
+		                    	var tempOffset = _getFilterValue(state.data.filters, 'offset');
+		                    	var tempLimit = _getFilterValue(state.data.filters, 'limit');
+		                    	var tempPage = 0;
+		                    	if(tempOffset && tempLimit) {
+		                    		tempPage = Math.floor(tempOffset / tempLimit);
+		                    	}
+		                    	$this.evolugrid('refresh', tempPage, state.data.filters);
 		                    }	         
 		                    if (descriptor.searchHistoryAutoFillForm) {
 			                    $.each(state.data.filters, function(index, item){
@@ -354,21 +392,14 @@
 	    	
 	    	var $this=$(this);
 	    	filters = _getFilters(descriptor, filters);
-	    	
+	    	filters = _filterAddPage(filters, noPage*descriptor.limit, descriptor.limit, sortKey, sortOrder)
+
 	    	if (descriptor.searchHistory) {
 	    		manualStateChange = false;
 	    		History.pushState({filters:filters}, null,  window.location.pathname + '?' + $.param(filters));
 	    	}
 	    	
-	    	filters.push({"name":"offset", "value": noPage*descriptor.limit});
-	    	filters.push({"name":"limit", "value": descriptor.limit});
-	    	if (sortKey) {
-	    		filters.push({"name":"sort_key", "value": sortKey});
-	    	}
-	    	if (sortOrder) {
-	    		filters.push({"name":"sort_order", "value": sortOrder});
-	    	}
-
+	    	
 	    	$.ajax({url:descriptor.url, cache: false, dataType:'json', data : filters,
 	    	success: function(data){
 		    	var extendedDescriptor=$.extend(true, {}, descriptor, data.descriptor)
