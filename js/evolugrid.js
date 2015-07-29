@@ -496,10 +496,10 @@
 	    		
 	    		    		
 	    		if (extendedDescriptor.export_csv) {
-	    			var span = $('<span/>').click(function(){$this.evolugrid('csvExport');});
-	    			span.append($('<i/>').addClass('glyphicon glyphicon-file').attr('style', 'cursor:pointer;'));
-	    			span.append("Export to CSV");
-	    			pager.append(span);
+					var button = $('<button class="btn btn-success">').click(function(){$this.evolugrid('csvExport');});
+					button.append($('<i/>').addClass('glyphicon glyphicon-file').attr('style', 'cursor:pointer;'));
+					button.append("Export to CSV");
+					pager.append(button);
 	    		}
 	    		
 	    		// Number of all pages
@@ -738,10 +738,11 @@
 		    		}
 
                     if (extendedDescriptor.export_csv) {
-                        var span = $('<span/>').click(function(){$this.evolugrid('csvExport');});
-                        span.append($('<i/>').addClass('glyphicon glyphicon-file').attr('style', 'cursor:pointer;'));
-                        span.append("Export to CSV");
-                        $this.append(span);
+						var button = $('<button class="btn btn-success">').click(function(){$this.evolugrid('csvExport');});
+						button.append($('<i/>').addClass('glyphicon glyphicon-file').attr('style', 'cursor:pointer;'));
+						button.append("Export to CSV");
+						pager.append(button);
+                        $this.append(button);
                     }
 		    		
 		    		if (init) {
