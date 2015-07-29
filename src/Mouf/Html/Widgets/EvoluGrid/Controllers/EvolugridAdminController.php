@@ -67,7 +67,7 @@ class EvolugridAdminController extends Controller {
 		$select = StatementFactory::toObject($parsed);
 		
 		$moufManager = MoufManager::getMoufManagerHiddenInstance();
-		$dbConnectionInstanceDescriptor = $moufManager->getInstanceDescriptor("dbConnection");
+		$dbConnectionInstanceDescriptor = $moufManager->getInstanceDescriptor("dbalConnection");
 		
 		$selectInstanceDescriptor = $select->toInstanceDescriptor($moufManager);
 		$parameters = FindParametersService::findParameters($selectInstanceDescriptor);
