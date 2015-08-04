@@ -373,7 +373,7 @@
 	    	}
 	    	url += "output=csv";
 	    	
-	    	window.open(url);
+	    	window.location.replace(url);
 	    },
 	    refresh : function( noPage, filters) {
 	    	var descriptor=$(this).data('descriptor');
@@ -496,7 +496,7 @@
 	    		
 	    		    		
 	    		if (extendedDescriptor.export_csv) {
-					var button = $('<button class="btn btn-success">').click(function(){$this.evolugrid('csvExport');});
+					var button = $('<button class="btn btn-success" type="button">').click(function(){$this.evolugrid('csvExport');});
 					button.append($('<i/>').addClass('glyphicon glyphicon-file').attr('style', 'cursor:pointer;'));
 					button.append("Export to CSV");
 					pager.append(button);
@@ -738,7 +738,7 @@
 		    		}
 
                     if (extendedDescriptor.export_csv) {
-						var button = $('<button class="btn btn-success">').click(function(){$this.evolugrid('csvExport');});
+						var button = $('<button class="btn btn-success" type="button">').click(function(){$this.evolugrid('csvExport');});
 						button.append($('<i/>').addClass('glyphicon glyphicon-file').attr('style', 'cursor:pointer;'));
 						button.append("Export to CSV");
 						pager.append(button);
