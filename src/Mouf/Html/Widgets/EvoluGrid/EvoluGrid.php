@@ -403,6 +403,8 @@ class EvoluGrid implements HtmlElementInterface{
 
 	/**
 	 * Disable the automatic search on first load of the grid
+	 * Default value : true
+	 *
 	 * @param boolean $loadOnInit
 	 */
 	public function setLoadOnInit($loadOnInit)
