@@ -78,7 +78,7 @@
    		if (descriptor.filterForm) {
    			return $(descriptor.filterForm).serializeArray();
     	}
-   			
+
 		return [];
 	};
 	
@@ -214,7 +214,9 @@
 	var methods = {
 	    init : function( options ) {
 	    	var descriptor = $.extend(true, {}, defaultOptions, options);
-	    	
+			if(options.noSearchOnFirstLoad) {
+				descriptor.loadOnInit = false;
+			}
 	    	return this.each(function(){
                 $(this).data('descriptor', descriptor);
                 
@@ -354,7 +356,9 @@
    							$this.evolugrid('refresh', 0);
             		   }
             	   }
-                }
+                } else {
+				   $this.next('div.ajaxLoader').hide();
+			   }
  	        });
 	    },
 	    csvExport : function(filters) {
