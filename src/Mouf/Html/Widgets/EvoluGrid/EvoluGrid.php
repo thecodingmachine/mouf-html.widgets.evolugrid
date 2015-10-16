@@ -158,7 +158,7 @@ class EvoluGrid implements HtmlElementInterface{
 	 *
 	 * @var bool
 	 */
-	private $noSearchOnFirstLoad = false;
+	private $loadOnInit = false;
 
     /**
 	 * URL that will be called in Ajax and return the data to display.
@@ -396,17 +396,18 @@ class EvoluGrid implements HtmlElementInterface{
 	/**
 	 * @return boolean
 	 */
-	public function isNoSearchOnFirstLoad()
+	public function isLoadOnInit()
 	{
-		return $this->noSearchOnFirstLoad;
+		return $this->loadOnInit;
 	}
 
 	/**
-	 * @param boolean $noSearchOnFirstLoad
+	 * Disable the automatic search on first load of the grid
+	 * @param boolean $loadOnInit
 	 */
-	public function setNoSearchOnFirstLoad($noSearchOnFirstLoad)
+	public function setLoadOnInit($loadOnInit)
 	{
-		$this->noSearchOnFirstLoad = $noSearchOnFirstLoad;
+		$this->loadOnInit = $loadOnInit;
 	}
 
 	/**
@@ -449,7 +450,7 @@ class EvoluGrid implements HtmlElementInterface{
         if($this->chevronDownClass) {
             $descriptor->chevronDownClass = $this->chevronDownClass;
         }
-		$descriptor->noSearchOnFirstLoad = $this->isNoSearchOnFirstLoad();
+		$descriptor->loadOnInit = $this->isLoadOnInit();
 
         $listeners = "[";
 		foreach ($this->rowEventListeners as $listener){
