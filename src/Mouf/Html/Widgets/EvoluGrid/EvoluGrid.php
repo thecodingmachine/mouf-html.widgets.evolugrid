@@ -153,6 +153,13 @@ class EvoluGrid implements HtmlElementInterface{
      */
     private $countTarget;
 
+	/**
+	 * Disable the automatic search on first load of the grid
+	 *
+	 * @var bool
+	 */
+	private $loadOnInit = false;
+
     /**
 	 * URL that will be called in Ajax and return the data to display.
 	 *
@@ -179,7 +186,7 @@ class EvoluGrid implements HtmlElementInterface{
 	 * @param int $limit
 	 */
 	public function setLimit($limit) {
-		if($limit)
+		if(!empty($limit) || $limit === 0)
 			$this->limit = $limit;
 		else
 			$this->limit = 100;
@@ -385,7 +392,26 @@ class EvoluGrid implements HtmlElementInterface{
     public function setNoResultsMessage($noResultsMessage){
         $this->noResultsMessage = $noResultsMessage;
     }
-	
+
+	/**
+	 * @return boolean
+	 */
+	public function isLoadOnInit()
+	{
+		return $this->loadOnInit;
+	}
+
+	/**
+	 * Disable the automatic search on first load of the grid
+	 * Default value : true
+	 *
+	 * @param boolean $loadOnInit
+	 */
+	public function setLoadOnInit($loadOnInit)
+	{
+		$this->loadOnInit = $loadOnInit;
+	}
+
 	/**
 	 * Renders the object in HTML.
 	 * The Html is echoed directly into the output.
@@ -426,6 +452,7 @@ class EvoluGrid implements HtmlElementInterface{
         if($this->chevronDownClass) {
             $descriptor->chevronDownClass = $this->chevronDownClass;
         }
+		$descriptor->loadOnInit = $this->isLoadOnInit();
 
         $listeners = "[";
 		foreach ($this->rowEventListeners as $listener){
@@ -439,8 +466,7 @@ class EvoluGrid implements HtmlElementInterface{
 		} elseif ($this->searchForm) {
 			$descriptor->filterForm = '#'.$id.'__searchform form';
 		}
-		
-		
+
 		$descriptorJSON = json_encode($descriptor);
 					
 		echo '
@@ -487,5 +513,5 @@ class EvoluGrid implements HtmlElementInterface{
 			</script> 
 		';
 	}
-	
+
 }
