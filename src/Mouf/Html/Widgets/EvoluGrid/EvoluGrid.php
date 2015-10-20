@@ -158,7 +158,7 @@ class EvoluGrid implements HtmlElementInterface{
 	 *
 	 * @var bool
 	 */
-	private $loadOnInit = false;
+	private $loadOnInit = true;
 
     /**
 	 * URL that will be called in Ajax and return the data to display.
