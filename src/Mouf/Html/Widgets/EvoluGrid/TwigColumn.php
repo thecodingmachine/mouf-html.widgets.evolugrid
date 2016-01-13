@@ -80,21 +80,25 @@ class TwigColumn extends EvoluGridColumn implements EvoluColumnKeyInterface, Evo
      * @param bool $sortable True if the column is sortable, false otherwise.
      * @param int|string $width Returns the width of the column. Just like the CSS width property, you can express it in %, px, em, etc... This is optional. Leave empty to let the browser decide.
      * @param ConditionInterface $displayCondition
-     * @internal param string $key Get the key to map to in the datagrid. Only used for sort order.
+     * @param Twig_Environment $twigEnvironment
      */
-	public function __construct($title, $twig, $sortKey = null, $sortable = false, $width = null, $displayCondition = null) {
+	public function __construct($title, $twig, $sortKey = null, $sortable = false, $width = null, $displayCondition = null, Twig_Environment $twigEnvironment = null) {
 		$this->title = $title;
 		$this->twig = $twig;
 		$this->sortKey = $sortKey;
 		$this->sortable = $sortable;
 		$this->width = $width;
 		$this->displayCondition = $displayCondition;
-		
+
 		self::$COLUMN_NUMBER++;
 		$this->columnNumber = self::$COLUMN_NUMBER;
-		
-		$loader = new \Twig_Loader_String();
-		$this->twigEnvironment = new \Twig_Environment($loader);
+
+        if (null === $twigEnvironment) {
+            $loader = new \Twig_Loader_String();
+            $this->twigEnvironment = new \Twig_Environment($loader);
+        } else {
+            $this->twigEnvironment = $twigEnvironment;
+        }
 	}
 
 	/**
