@@ -154,6 +154,13 @@ class EvoluGrid implements HtmlElementInterface{
     private $countTarget;
 
     /**
+     * If is the pagination to the top of the evolugrid
+     *
+     * @var bool
+     */
+    private $paginationTop = false;
+
+    /**
 	 * URL that will be called in Ajax and return the data to display.
 	 *
 	 * @Property
@@ -480,6 +487,11 @@ class EvoluGrid implements HtmlElementInterface{
                         descriptor.onResultShown = '.$this->onResultShown.';
                     ';
             }
+            if($this->paginationTop !== null) {
+                echo '
+                        descriptor.paginationTop = '.$this->paginationTop.';
+                    ';
+            }
             echo '
                         $("#'.$id.'").evolugrid(descriptor);
                     });
@@ -487,5 +499,23 @@ class EvoluGrid implements HtmlElementInterface{
 			</script> 
 		';
 	}
+
+	/**
+     * return bool
+	 */
+    public function getPaginationTop()
+    {
+        return $this->paginationTop;
+    }
+
+    /**
+     * If is the pagination is displayed to the top of the evolugrid
+     * @param bool $paginationTop
+     */
+    public function setPaginationTop($paginationTop)
+    {
+        $this->paginationTop = $paginationTop;
+        return $this;
+    }
 	
 }
