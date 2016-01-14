@@ -584,7 +584,12 @@
 		    		}
 	    		}
 
-	    		$this.append(pager);
+	    		if(descriptor.paginationTop) {
+	    			$this.prepend(pager);
+	    		}
+	    		else {
+	    			$this.append(pager);
+	    		}
 	    		
 	    		// Finally, let's enable buttons again:
 		    	if (descriptor.filterFormSubmitButton) {
