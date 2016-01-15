@@ -489,7 +489,7 @@ class EvoluGrid implements HtmlElementInterface{
             }
             if($this->paginationTop !== null) {
                 echo '
-                        descriptor.paginationTop = '.$this->paginationTop.';
+                        descriptor.paginationTop = '.($this->paginationTop?'true':'false').';
                     ';
             }
             echo '
