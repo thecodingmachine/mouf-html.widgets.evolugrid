@@ -23,7 +23,7 @@
 	"require" : {
 		"mouf/javascript.jquery.jquery" : ">=1.11",
 		"mouf/database.querywriter" : "~4.0",
-		"mouf/mvc.splash-common" : ">=4.0, <6.0",
+		"mouf/mvc.splash-common" : "~7.0",
 		"mouf/utils.common.sortable-interface" : "~1.0",
 		"mouf/html.utils.weblibrarymanager" : ">=2.0, <4.0",
 		"mouf/utils.common.paginable-interface" : "~1.0",
