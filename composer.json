@@ -29,7 +29,7 @@
 		"mouf/utils.common.paginable-interface" : "~1.0",
 		"mouf/utils.common.conditioninterface" : "2.*",
 		"twig/twig" : "1.*@stable",
-		"php" : ">=5.4.0",
+		"php" : ">=7.0",
 		"mouf/javascript.historyjs" : "~1.8",
 		"mouf/html.htmlelement" : ">=2.0-dev,<3.0",
 		"mouf/utils.common.formatters" : "~3.0",

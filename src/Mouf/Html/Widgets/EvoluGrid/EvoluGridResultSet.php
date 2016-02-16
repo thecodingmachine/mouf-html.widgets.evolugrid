@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Mouf\Html\Widgets\EvoluGrid;
 
 use Mouf\Utils\Value\ValueUtils;
@@ -21,6 +23,8 @@ use Mouf\Database\QueryWriter\QueryResult;
 
 use Mouf\Utils\Action\ActionInterface;
 use Mouf\Utils\Common\SortableInterface;
+use Zend\Diactoros\Response;
+use Zend\Diactoros\Stream;
 
 /**
  * This class represents the JSON result that can be sent to an evolugrid to display results.
@@ -196,8 +200,11 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 		if ($this->sortOrder == null && isset($_GET['sort_order']) && !empty($_GET['sort_order'])) {
 			$this->sortOrder = $_GET['sort_order'];
 		}
+		if ($this->format == null && isset($_GET['output']) && !empty($_GET['output'])) {
+			$this->format = $_GET['output'];
+		}
 		
-		$this->output($this->format, $this->csvFilename);
+		return $this->getResponse($this->format, $this->csvFilename);
 	}
 
 	/**
@@ -208,7 +215,8 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 	 * @param string $filename
 	 * @throws \Exception
 	 */
-	public function output($format = null, $filename = "data.csv") {
+	public function getResponse($format = null, $filename = "data.csv") : Response
+	{
 		if ($format == null) {
 			$format = $this->format;
 			if ($format == null) {
@@ -304,17 +312,24 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 
 			$jsonMessage['descriptor'] = $descriptor;
             $jsonMessage['additionnalData'] = $this->additionnalData;
-			echo json_encode($jsonMessage);
+			return new Response\JsonResponse($jsonMessage);
 		} elseif ($format == self::FORMAT_CSV) {
 
-			header("Cache-Control: public");
-			header("Content-Description: File Transfer");
-			header("Content-Disposition: attachment; filename=$filename");
-			header("Content-Type: mime/type");
-			header("Content-Transfer-Encoding: binary");
-			$fp = fopen("php://output", "w");
+			$fp = fopen("php://temp", "w");
 
 			$this->outputCsv($fp);
+			rewind($fp);
+			$content = stream_get_contents($fp);
+
+			fclose($fp);
+
+			return new Response\HtmlResponse($content, 200, [
+				"Cache-Control" => "public",
+				"Content-Description" => "File Transfer",
+				"Content-Disposition" => "attachment; filename=$filename",
+				"Content-Type" => "mime/type",
+				"Content-Transfer-Encoding" => "binary"
+			]);
 		} else {
 			throw new \Exception(
 					"The output format '" . $format . "' is not supported");
@@ -324,6 +339,7 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 	public function saveCsv($filePath) {
 		$fp = fopen($filePath, "w");
 		$this->outputCsv($fp);
+		fclose($fp);
 	}
 
 	private function outputCsv($fp) {
@@ -380,7 +396,6 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 			fputcsv($fp, $columns, ";");
 		}
 
-		fclose($fp);
 	}
 
 	/**
@@ -397,7 +412,7 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 	 *
 	 * @return array<SplashRoute>
 	 */
-	public function getUrlsList() {	
+	public function getUrlsList($instanceName) {
 		if ($this->url != null) {
 			$instanceName = MoufManager::getMoufManager()->findInstanceName($this);
 			$route = new SplashRoute($this->url, $instanceName, "run", null, "Ajax call by Evolugrid.");
