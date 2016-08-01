@@ -414,11 +414,24 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 	 */
 	public function getUrlsList($instanceName) {
 		if ($this->url != null) {
-			$instanceName = MoufManager::getMoufManager()->findInstanceName($this);
 			$route = new SplashRoute($this->url, $instanceName, "run", null, "Ajax call by Evolugrid.");
 			return array($route);
 		} else {
 			return array();
 		}
 	}
+
+	/**
+	 * Returns a unique tag representing the list of SplashRoutes returned.
+	 * If the tag changes, the cache is flushed by Splash.
+	 *
+	 * Important! This must be quick to compute.
+	 *
+	 * @return mixed
+	 */
+	public function getExpirationTag() : string
+	{
+		return md5($this->url);
+	}
+
 }
