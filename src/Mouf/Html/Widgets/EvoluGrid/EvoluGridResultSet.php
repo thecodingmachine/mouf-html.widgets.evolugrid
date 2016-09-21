@@ -380,14 +380,14 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 							$key = $elem->getKey();
 							if (property_exists($row, $key)) {
 								return ($row->$key == "") ? " "
-										: iconv("UTF-8", $this->csvEncoding, strip_tags($row->$key));
+										: iconv("UTF-8", $this->csvEncoding, strip_tags((string)$row->$key));
 							} else {
 								return " ";
 							}
 						} else {
 							if (isset($row[$elem->getKey()])) {
 								return ($row[$elem->getKey()] == "") ? " "
-										: iconv("UTF-8", $this->csvEncoding, strip_tags($row[$elem->getKey()]));
+										: iconv("UTF-8", $this->csvEncoding, strip_tags((string)$row[$elem->getKey()]));
 							} else {
 								return " ";
 							}
