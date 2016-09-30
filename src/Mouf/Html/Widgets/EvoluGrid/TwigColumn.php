@@ -12,7 +12,7 @@ use \Twig_Environment;
  * 
  * @author David Negrier
  */
-class TwigColumn extends EvoluGridColumn implements EvoluColumnKeyInterface, EvoluColumnRowFormatterInterface {
+class TwigColumn extends EvoluGridColumn implements EvoluColumnInterface  {
 
     use CssClassTrait;
 
@@ -135,7 +135,7 @@ class TwigColumn extends EvoluGridColumn implements EvoluColumnKeyInterface, Evo
 	/**
 	 * Returns true if the column escapes HTML, and false otherwise.
 	 */
-	public function isEscapeHTML() {
+	public function isEscapeHTML() : bool {
 		return false;
 	}
 	

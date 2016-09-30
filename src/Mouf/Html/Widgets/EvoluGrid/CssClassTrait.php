@@ -1,12 +1,7 @@
 <?php
 namespace Mouf\Html\Widgets\EvoluGrid;
-/**
- * Created by PhpStorm.
- * User: Kevin
- * Date: 28/05/14
- * Time: 13:45
- */
-Trait CssClassTrait {
+
+trait CssClassTrait {
 
     private $cssClass;
 

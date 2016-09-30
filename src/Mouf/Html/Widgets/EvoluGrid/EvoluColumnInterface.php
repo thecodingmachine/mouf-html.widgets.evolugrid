@@ -51,5 +51,17 @@ interface EvoluColumnInterface {
      * @return string
      */
     public function getClass();
-	
+
+    /**
+     * Returns a (HTML) representation of the row.
+     * @return string
+     */
+    public function render($row);
+
+    /**
+     * Returns true if the column escapes HTML, and false otherwise.
+     *
+     * @return bool
+     */
+    public function isEscapeHTML() : bool;
 }

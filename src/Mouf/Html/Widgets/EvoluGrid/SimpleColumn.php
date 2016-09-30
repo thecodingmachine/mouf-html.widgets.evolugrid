@@ -12,7 +12,7 @@ use Mouf\Utils\Common\ConditionInterface\ConditionInterface;
  * 
  * @author David Negrier
  */
-class SimpleColumn extends EvoluGridColumn implements EvoluColumnKeyInterface, EvoluColumnFormatterInterface {
+class SimpleColumn extends EvoluGridColumn implements EvoluColumnInterface {
 
     use CssClassTrait;
 
@@ -170,4 +170,12 @@ class SimpleColumn extends EvoluGridColumn implements EvoluColumnKeyInterface, E
 		}
 	}
 
+    /**
+     * Returns a (HTML) representation of the row.
+     * @return string
+     */
+    public function render($row)
+    {
+        return $row['']
+    }
 }

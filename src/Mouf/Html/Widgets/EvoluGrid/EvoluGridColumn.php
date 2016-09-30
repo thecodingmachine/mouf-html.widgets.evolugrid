@@ -25,7 +25,7 @@ class EvoluGridColumn{
 	
 	/**
 	 * Tells if the column should be added to the Grid's export, default is TRUE
-	 * @Important
+	 * @Important IfSet
 	 * @param bool $display
 	 */
 	public function setDisplay($display){
@@ -34,7 +34,7 @@ class EvoluGridColumn{
 
 	/**
 	 * Tells if the column should be added to the Grid's export, default is TRUE
-	 * @Important
+	 * @Important IfSet
 	 * @param bool $export
 	 */
 	public function setExport($export){

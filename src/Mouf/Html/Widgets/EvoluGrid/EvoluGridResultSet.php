@@ -23,6 +23,8 @@ use Mouf\Database\QueryWriter\QueryResult;
 
 use Mouf\Utils\Action\ActionInterface;
 use Mouf\Utils\Common\SortableInterface;
+use Porpaginas\Page;
+use Porpaginas\Result;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Stream;
 
@@ -48,7 +50,7 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 	private $url;
 
 	/**
-	 * @var array<EvoluColumnInterface>
+	 * @var EvoluColumnInterface[]
 	 */
 	private $columns = array();
 
@@ -112,6 +114,22 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 	public function setTotalRowsCount($count) {
 		$this->count = $count;
 	}
+
+    /**
+     * Returns the total number of records
+     *
+     * @return int
+     */
+	private function getTotalRowsCount() : int
+    {
+        if ($this->results instanceof Result) {
+            return $this->results->count();
+        } elseif ($this->results instanceof Page) {
+            return $this->results->totalCount();
+        } else {
+            return ValueUtils::val($this->count);
+        }
+    }
 	
 	/**
 	 * URL that exposes this result set.
@@ -214,6 +232,7 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 	 * @param string $format
 	 * @param string $filename
 	 * @throws \Exception
+     * @return Response
 	 */
 	public function getResponse($format = null, $filename = "data.csv") : Response
 	{
@@ -235,44 +254,51 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 			$jsonMessage = array();
 
 			$descriptor = array();
-			if ($this->count !== null) {
-				$jsonMessage['count'] = ValueUtils::val($this->count);
+            $count = $this->getTotalRowsCount();
+			if ($count !== null) {
+				$jsonMessage['count'] = $count;
 			}
 
-			if ($this->results instanceof PaginableInterface) {
-				$this->results->paginate($this->limit, $this->offset);
+			$results = $this->results;
+
+            if ($results instanceof Result) {
+                $results = $results->take($this->offset, $this->limit);
+            }
+
+			if ($results instanceof PaginableInterface) {
+				$results->paginate($this->limit, $this->offset);
 			}
-			if ($this->results instanceof SortableInterface && !empty($this->sortKey)) {
-				$this->results->sort($this->sortKey, $this->sortOrder);
+			if ($results instanceof SortableInterface && !empty($this->sortKey)) {
+				$results->sort($this->sortKey, $this->sortOrder);
 			}
 			
-			$resultArray = ValueUtils::val($this->results);
+			$resultArray = ValueUtils::val($results);
 
 			$resultData = array();
 			$columns = $this->columns;
-			foreach ($resultArray as $rowArray) {
-				if ($autoBuildColumns) {
-					foreach ($rowArray as $key => $cell) {
-						if (!isset($columnsByKey[$key])) {
-							$columnsByKey[$key] = true;
-							// Let's create a column whose title is the key.
-							$columns[] = new SimpleColumn($key, $key, true);
-						}
-					}
-				}
-				if ($rowArray instanceof \Iterator) {
-					$tmpArray = array();
-					foreach ($rowArray as $key => $value) {
-						$tmpArray[$key] = $value;
-					}
-					$resultData[] = $tmpArray;
-				} else {
-					$resultData[] = (array) $rowArray;
-				}
-			}
+            if ($autoBuildColumns) {
+			    foreach ($resultArray as $rowArray) {
+                    foreach ($rowArray as $key => $cell) {
+                        if (!isset($columnsByKey[$key])) {
+                            $columnsByKey[$key] = true;
+                            // Let's create a column whose title is the key.
+                            $columns[] = new SimpleColumn($key, $key, true);
+                        }
+                    }
+                }
+            }
+
+            $resultData = [];
+            foreach ($resultArray as $rowArray) {
+                $row = [];
+                foreach ($columns as $key => $column) {
+                    $row[$key] = $column->render($rowArray);
+                }
+                $resultData[] = $row;
+            }
 
 			$columnsArr = array();
-			foreach ($columns as $column) {
+			foreach ($columns as $key=>$column) {
 				if (!$column->isHidden() && $column->doDisplay()) {
 					/* @var $column EvoluColumnInterface */
 					$columnArr = array("title" => $column->getTitle());
@@ -283,13 +309,9 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 					if ($width) {
 						$columnArr['width'] = $width;
 					}
-					if ($column instanceof EvoluColumnJsInterface) {
-						$columnArr['jsdisplay'] = $column->getJsRenderer();
-					}
-					if ($column instanceof EvoluColumnKeyInterface) {
-						$columnArr['display'] = $column->getKey();
-						$columnArr['escapeHTML'] = $column->isEscapeHTML();
-					}
+                    $columnArr['display'] = $key();
+                    $columnArr['escapeHTML'] = $column->isEscapeHTML();
+
 					$columnsArr[] = $columnArr;
 					
 					if (($column instanceof EvoluColumnFormatterInterface) && ($column->getFormatter() != null)) {
