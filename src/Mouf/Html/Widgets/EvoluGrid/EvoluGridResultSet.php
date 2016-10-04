@@ -123,11 +123,11 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 	private function getTotalRowsCount() : int
     {
         if ($this->results instanceof Result) {
-            return $this->results->count();
+            return (int) $this->results->count();
         } elseif ($this->results instanceof Page) {
-            return $this->results->totalCount();
+            return (int) $this->results->totalCount();
         } else {
-            return ValueUtils::val($this->count);
+            return (int) ValueUtils::val($this->count);
         }
     }
 	
@@ -274,7 +274,6 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 			
 			$resultArray = ValueUtils::val($results);
 
-			$resultData = array();
 			$columns = $this->columns;
             if ($autoBuildColumns) {
 			    foreach ($resultArray as $rowArray) {
@@ -297,7 +296,7 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
                 $resultData[] = $row;
             }
 
-			$columnsArr = array();
+			$columnsArr = [];
 			foreach ($columns as $key=>$column) {
 				if (!$column->isHidden() && $column->doDisplay()) {
 					/* @var $column EvoluColumnInterface */

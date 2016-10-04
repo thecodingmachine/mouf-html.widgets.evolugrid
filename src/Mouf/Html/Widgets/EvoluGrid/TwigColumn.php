@@ -160,17 +160,15 @@ class TwigColumn extends EvoluGridColumn implements EvoluColumnInterface  {
 		}
 		return !$this->displayCondition->isOk();
 	}
-	
-	/**
-	 * Format the row passed in parameter
-	 * 
-	 * @param array $row
-	 * @return array
-	 */
-	public function formatRow($row) {
-		$cell = $this->twigEnvironment->render($this->twig, $row);
-		$row["twig_".$this->columnNumber] = $cell;
-		return $row;
-	}
 
+    /**
+     * Returns a (HTML) representation of the row.
+     * @return string
+     */
+    public function render($row)
+    {
+        return $this->twigEnvironment->render($this->twig, $row);
+    }
+
+    // TODO: make this column not CSV exportable by default
 }
