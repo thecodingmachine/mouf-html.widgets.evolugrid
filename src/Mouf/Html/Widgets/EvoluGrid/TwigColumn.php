@@ -1,6 +1,7 @@
 <?php
 namespace Mouf\Html\Widgets\EvoluGrid;
 
+use Mouf\Html\Widgets\EvoluGrid\Utils\ObjectToArrayCaster;
 use Mouf\Utils\Common\Formatters\FormatterInterface;
 use Mouf\Utils\Common\ConditionInterface\ConditionInterface;
 use Mouf\Utils\Value\ValueInterface;
@@ -12,7 +13,7 @@ use \Twig_Environment;
  * 
  * @author David Negrier
  */
-class TwigColumn extends EvoluGridColumn implements EvoluColumnInterface  {
+class TwigColumn extends EvoluGridColumn implements EvoluColumnInterface {
 
     use CssClassTrait;
 
@@ -105,7 +106,8 @@ class TwigColumn extends EvoluGridColumn implements EvoluColumnInterface  {
 	 * (non-PHPdoc)
 	 * @see \Mouf\Html\Widgets\EvoluGrid\EvoluColumnInterface::getTitle()
 	 */
-	public function getTitle() {
+	public function getTitle() : string
+    {
 		return ValueUtils::val($this->title);
 	}
 	
@@ -128,7 +130,7 @@ class TwigColumn extends EvoluGridColumn implements EvoluColumnInterface  {
 	/**
 	 * Returns true if the column is sortable, and false otherwise.
 	 */
-	public function isSortable() {
+	public function isSortable() : bool {
 		return $this->sortable;
 	}
 
@@ -161,14 +163,41 @@ class TwigColumn extends EvoluGridColumn implements EvoluColumnInterface  {
 		return !$this->displayCondition->isOk();
 	}
 
+	private static $lastRowSerialized;
+    private static $lastArray;
+
     /**
      * Returns a (HTML) representation of the row.
      * @return string
      */
     public function render($row)
     {
+        if (is_object($row)) {
+            // Object to array serialisation is costly. Let's call it only one for each column by saving the last value dealt with.
+            if (self::$lastRowSerialized === $row) {
+                $row = self::$lastArray;
+            } else {
+                // If this is an object, let's build an array out if its getters and setters and issers.
+                $row = (new ObjectToArrayCaster(get_class($row)))->cast($row);
+                self::$lastRowSerialized = $row;
+                self::$lastArray = $row;
+            }
+        }
+
         return $this->twigEnvironment->render($this->twig, $row);
     }
 
-    // TODO: make this column not CSV exportable by default
+    /**
+     * Returns true if the column should be exported in CSV.
+     * Note: if not set, the column is not exported.
+     *
+     * @return bool
+     */
+    public function isExported() : bool
+    {
+        if ($this->export === null) {
+            return false;
+        }
+        return $this->export;
+    }
 }

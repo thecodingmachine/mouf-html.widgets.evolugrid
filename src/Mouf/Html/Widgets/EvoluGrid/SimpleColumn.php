@@ -1,12 +1,12 @@
 <?php
 namespace Mouf\Html\Widgets\EvoluGrid;
 
-use Mouf\Html\Widgets\EvoluGrid\Utils\ObjectToArrayAdapter;
 use Mouf\Utils\Value\ValueUtils;
 use Mouf\Utils\Value\ValueInterface;
 use Mouf\Utils\Common\Formatters\FormatterInterface;
 use Mouf\Utils\Common\ConditionInterface\ConditionInterface;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 
 /**
@@ -82,7 +82,7 @@ class SimpleColumn extends EvoluGridColumn implements EvoluColumnInterface {
     /**
      * @var PropertyAccessor
      */
-    private $proprertyAccessor;
+    private static $proprertyAccessor;
 
 	/**
 	 * @Important $title
@@ -93,7 +93,7 @@ class SimpleColumn extends EvoluGridColumn implements EvoluColumnInterface {
 	 * @Important $displayCondition
 	 * @Important $formatter
 	 * @param string|ValueInterface $title The title of the column to display
-	 * @param string $key Get the key to map to in the result set (or an expression in the symfony/expression-language).
+	 * @param string $key Get the key to map to in the result set (you can put a public property, a property accessible via getter or isser, thanks to symfony/property-access).
 	 * @param bool $sortable True if the column is sortable, false otherwise.
 	 * @param int $width Returns the width of the column. Just like the CSS width property, you can express it in %, px, em, etc... This is optional. Leave empty to let the browser decide.
 	 * @param ConditionInterface $displayCondition
@@ -111,14 +111,14 @@ class SimpleColumn extends EvoluGridColumn implements EvoluColumnInterface {
 		$this->displayCondition = $displayCondition;
 		$this->formatter = $formatter;
         $this->sortKey = $sortKey;
-        $this->expressionLanguage = $expressionLanguage ?: new ExpressionLanguage();
+        self::$proprertyAccessor = self::$proprertyAccessor ?: PropertyAccess::createPropertyAccessor();
 	}
 
 	/**
 	 * (non-PHPdoc)
 	 * @see \Mouf\Html\Widgets\EvoluGrid\EvoluColumnInterface::getTitle()
 	 */
-	public function getTitle() {
+	public function getTitle() : string {
 		return ValueUtils::val($this->title);
 	}
 	
@@ -133,7 +133,7 @@ class SimpleColumn extends EvoluGridColumn implements EvoluColumnInterface {
 	/**
 	 * Returns true if the column is sortable, and false otherwise.
 	 */
-	public function isSortable() {
+	public function isSortable() : bool {
 		return $this->sortable;
 	}
 	
@@ -181,23 +181,25 @@ class SimpleColumn extends EvoluGridColumn implements EvoluColumnInterface {
      */
     public function render($row)
     {
-        if (is_object($row)) {
-            $row = new ObjectToArrayAdapter($row);
-        }
-        // TODO: if $row is an object, we must wrap it in an object that allows accessing public properties or getters.... class ObjectAsArray implements ArrayAccess
-        // TODO: if $row is an object, we must wrap it in an object that allows accessing public properties or getters.... class ObjectAsArray implements ArrayAccess
-        // TODO: if $row is an object, we must wrap it in an object that allows accessing public properties or getters.... class ObjectAsArray implements ArrayAccess
-        // TODO: if $row is an object, we must wrap it in an object that allows accessing public properties or getters.... class ObjectAsArray implements ArrayAccess
-        // TODO: if $row is an object, we must wrap it in an object that allows accessing public properties or getters.... class ObjectAsArray implements ArrayAccess
-        // TODO: if $row is an object, we must wrap it in an object that allows accessing public properties or getters.... class ObjectAsArray implements ArrayAccess
-        // TODO: if $row is an object, we must wrap it in an object that allows accessing public properties or getters.... class ObjectAsArray implements ArrayAccess
-        // TODO: if $row is an object, we must wrap it in an object that allows accessing public properties or getters.... class ObjectAsArray implements ArrayAccess
-
-        $value = $this->expressionLanguage->evaluate($this->key, $row);
+        $value = self::$proprertyAccessor->getValue($row, $this->key);
         if ($this->formatter !== null) {
             return $this->formatter->format($value);
         } else {
             return $value;
         }
+    }
+
+    /**
+     * Returns true if the column should be exported in CSV.
+     * Note: if not set, the column is exported only if it is HTML escaped.
+     *
+     * @return bool
+     */
+    public function isExported() : bool
+    {
+        if ($this->export !== null) {
+            return $this->export;
+        }
+        return $this->isEscapeHTML();
     }
 }

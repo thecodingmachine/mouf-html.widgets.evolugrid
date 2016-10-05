@@ -291,14 +291,14 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
             foreach ($resultArray as $rowArray) {
                 $row = [];
                 foreach ($columns as $key => $column) {
-                    $row[$key] = $column->render($rowArray);
+                    $row['col'.$key] = $column->render($rowArray);
                 }
                 $resultData[] = $row;
             }
 
 			$columnsArr = [];
 			foreach ($columns as $key=>$column) {
-				if (!$column->isHidden() && $column->doDisplay()) {
+				if (!$column->isHidden() && $column->isDisplayed()) {
 					/* @var $column EvoluColumnInterface */
 					$columnArr = array("title" => $column->getTitle());
 					$columnArr['sortable'] = $column->isSortable();
@@ -308,7 +308,7 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 					if ($width) {
 						$columnArr['width'] = $width;
 					}
-                    $columnArr['display'] = $key();
+                    $columnArr['display'] = 'col'.$key;
                     $columnArr['escapeHTML'] = $column->isEscapeHTML();
 
 					$columnsArr[] = $columnArr;
@@ -366,7 +366,7 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 	private function outputCsv($fp) {
         foreach($this->columns as $key => $column) {
         	/* @var $column EvoluGridColumn */
-            if (!($column instanceof EvoluColumnKeyInterface) || !$column->doExport()){
+            if (!($column instanceof EvoluColumnKeyInterface) || !$column->isExported()){
                 unset($this->columns[$key]);
             }
         }
