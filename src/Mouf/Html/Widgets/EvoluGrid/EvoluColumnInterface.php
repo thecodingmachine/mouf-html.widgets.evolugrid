@@ -15,14 +15,14 @@ interface EvoluColumnInterface {
 	 * 
 	 * @return string
 	 */
-	public function getTitle();
+	public function getTitle() : string;
 	
 	/**
 	 * Returns true if the column is sortable, and false otherwise.
 	 * 
 	 * @return bool
 	 */
-	public function isSortable();
+	public function isSortable() : bool;
 	
 	/**
 	 * Returns the key to sort upon in the datagrid.
@@ -51,5 +51,31 @@ interface EvoluColumnInterface {
      * @return string
      */
     public function getClass();
-	
+
+    /**
+     * Returns a (HTML) representation of the row.
+     * @return string
+     */
+    public function render($row);
+
+    /**
+     * Returns true if the column escapes HTML, and false otherwise.
+     *
+     * @return bool
+     */
+    public function isEscapeHTML() : bool;
+
+    /**
+     * Returns true if the column should be displayed in HTML pages
+     *
+     * @return bool
+     */
+    public function isDisplayed() : bool;
+
+    /**
+     * Returns true if the column should be exported in CSV
+     *
+     * @return bool
+     */
+    public function isExported() : bool;
 }

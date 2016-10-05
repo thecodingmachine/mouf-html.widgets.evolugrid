@@ -54,14 +54,11 @@ $evoluGridRs = new EvoluGridResultSet();
 // Let's add simple columns
 $evoluGridRs->addColumn(new SimpleColumn("Name", "name"));
 $evoluGridRs->addColumn(new SimpleColumn("Date", "date"));
+// You can put advanced expressions in the key column.
+// Thanks to the symfony/property-access component bundled with Evolugrid, you can
+// access properties via getters
+$evoluGridRs->addColumn(new SimpleColumn("Country", "country.name")); // can actually run .getCountry().getName() if the result set contains objects.
 
-// Let's add a column with Javascript rendering
-$nameCol = new JsColumn("First name", 'function(row) { return $("<a/>").text(row["first_name"]).attr("href", "'.ROOT_URL.'admin/client/edition.php?id="+row.id) }');
-$evoluGridRs->addColumn($nameCol);
-$evoluGridRs->setClass("js-col");//You can set a CSS class on any column type in order to add it on the column's cells
-
-// Let's add a column with Html rendering
-$htmlCol = new HtmlColumn("Edit", "<a href='/edit?id={id}'>Edit</a>");
 
 // Need more power? A Twig renderer is available!
 // Let's add a column with Twig rendering (http://twig.sensiolabs.org)

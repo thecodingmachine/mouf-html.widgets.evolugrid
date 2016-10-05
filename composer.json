@@ -21,6 +21,7 @@
 		"MIT"
 	],
 	"require" : {
+		"php" : ">=7.0",
 		"mouf/javascript.jquery.jquery" : ">=1.11",
 		"mouf/database.querywriter" : "~4.0",
 		"mouf/mvc.splash-common" : "~7.0 | ~8.0",
@@ -29,13 +30,14 @@
 		"mouf/utils.common.paginable-interface" : "~1.0",
 		"mouf/utils.common.conditioninterface" : "2.*",
 		"twig/twig" : "1.*@stable",
-		"php" : ">=7.0",
 		"mouf/javascript.historyjs" : "~1.8",
-		"mouf/html.htmlelement" : ">=2.0-dev,<3.0",
+		"mouf/html.htmlelement" : "^2.0",
 		"mouf/utils.common.formatters" : "~3.0",
 		"mouf/utils.value.common-value" : "~1.0",
         "mouf/utils.value.value-interface" : "~1.0",
-		"mouf/utils.common.url-interface" : "~1.0"
+		"mouf/utils.common.url-interface" : "~1.0",
+		"beberlei/porpaginas" : "^1.0",
+		"symfony/property-access": "^3.0"
 	},
 	"autoload" : {
 		"psr-0" : {

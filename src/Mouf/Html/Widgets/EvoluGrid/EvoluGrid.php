@@ -513,5 +513,4 @@ class EvoluGrid implements HtmlElementInterface{
 			</script> 
 		';
 	}
-
 }
