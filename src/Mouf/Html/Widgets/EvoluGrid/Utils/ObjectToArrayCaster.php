@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Mouf\Html\Widgets\EvoluGrid\Utils;
 
 /**
@@ -13,7 +12,6 @@ namespace Mouf\Html\Widgets\EvoluGrid\Utils;
  *  $arr = (new ObjectToArrayCaster(get_class($obj)))->cast($obj);
  *
  *  $arr['foo'] // will return $obj->foo, or $obj->getFoo() or $obj->isFoo()
- *
  */
 class ObjectToArrayCaster
 {

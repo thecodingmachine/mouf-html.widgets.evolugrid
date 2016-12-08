@@ -1,4 +1,5 @@
 <?php
+
 namespace Mouf\Html\Widgets\EvoluGrid;
 
 /**
@@ -7,20 +8,20 @@ namespace Mouf\Html\Widgets\EvoluGrid;
  * Typically, this could be a row that slides down, a simple title attriute, a modal window etc.
  * 
  * @author Kevin Nguyen
- *
  */
-interface RowEventListernerInterface {
-	
-	/**
-	 * Returns the event that will be called from the row element and will trigger the listener's callback
-	 * @return string
-	 */
-	public function getEventName();
+interface RowEventListernerInterface
+{
+    /**
+     * Returns the event that will be called from the row element and will trigger the listener's callback.
+     *
+     * @return string
+     */
+    public function getEventName();
 
-	/**
-	 * Returns the callback function that takes the row variable as parameter
-	 * @return string
-	 */
-	public function getCallback();
-	
+    /**
+     * Returns the callback function that takes the row variable as parameter.
+     *
+     * @return string
+     */
+    public function getCallback();
 }
