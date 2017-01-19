@@ -64,11 +64,7 @@ class ObjectToArrayCaster
             throw new \InvalidArgumentException('Argument passed to cast must be an array or an object.');
         }
 
-        $arr = [];
-
-        foreach ($this->refClass->getProperties(\ReflectionProperty::IS_PUBLIC) as $property) {
-            $arr[$property->getName()] = $property->getValue($object);
-        }
+        $arr = get_object_vars($object);
 
         foreach ($this->getters as $propertyName => $method) {
             $arr[$propertyName] = $method->invoke($object);
