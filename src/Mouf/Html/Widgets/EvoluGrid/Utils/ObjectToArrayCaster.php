@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Mouf\Html\Widgets\EvoluGrid\Utils;
 
 /**
@@ -13,7 +12,6 @@ namespace Mouf\Html\Widgets\EvoluGrid\Utils;
  *  $arr = (new ObjectToArrayCaster(get_class($obj)))->cast($obj);
  *
  *  $arr['foo'] // will return $obj->foo, or $obj->getFoo() or $obj->isFoo()
- *
  */
 class ObjectToArrayCaster
 {
@@ -66,11 +64,7 @@ class ObjectToArrayCaster
             throw new \InvalidArgumentException('Argument passed to cast must be an array or an object.');
         }
 
-        $arr = [];
-
-        foreach ($this->refClass->getProperties(\ReflectionProperty::IS_PUBLIC) as $property) {
-            $arr[$property->getName()] = $property->getValue($object);
-        }
+        $arr = get_object_vars($object);
 
         foreach ($this->getters as $propertyName => $method) {
             $arr[$propertyName] = $method->invoke($object);
