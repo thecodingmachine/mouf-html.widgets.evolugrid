@@ -216,9 +216,7 @@
 	    	var descriptor = $.extend(true, {}, defaultOptions, options);
 	    	return this.each(function(){
                 $(this).data('descriptor', descriptor);
-                
                 var $this = $(this);
-                
                 if (descriptor.infiniteScroll) {               	
                 	// We initialise the infinite scroll
                 	scrollReady = true;
@@ -355,6 +353,7 @@
             	   }
 			   } else {
 				   $this.next('div.ajaxLoader').hide();
+
 			   }
  	        });
 	    },
@@ -594,7 +593,6 @@
 		    		$(descriptor.filterForm).find("button").attr("disabled", false);
 		    		$(descriptor.filterForm).find("input[type=button]").attr("disabled", false);
 		    	}
-		    	
 		    	//We hide the ajax loader
 		    	$this.next('div.ajaxLoader').hide();
 		    	
@@ -766,7 +764,7 @@
 
                     //set additionnal data
                     additionnalData = data.additionnalData;
-			    	
+
 			    	//We hide the ajax loader
 			    	$this.next('div.ajaxLoader').hide();
 			    	
