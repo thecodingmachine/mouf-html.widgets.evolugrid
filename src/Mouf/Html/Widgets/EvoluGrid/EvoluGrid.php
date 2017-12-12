@@ -405,16 +405,6 @@ class EvoluGrid implements HtmlElementInterface
         return $this;
     }
 	
-	/**
-	 * A set of RowEventListernerInterface that will associate mouseevents ans associated callbacks to each row item
-	 *
-	 * @param RowEventListernerInterface[] $rowEventListeners
-	 */
-	public function setRowEventListeners($rowEventListeners) {
-		$this->rowEventListeners = $rowEventListeners;
-		return $this;
-	}
-
     /**
      * @param string $onResultShown
      */
