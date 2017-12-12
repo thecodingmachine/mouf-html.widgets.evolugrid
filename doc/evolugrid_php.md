@@ -37,6 +37,7 @@ $evoluGrid->setId('myGridId'); // Set the HTML ID of the grid
 $evoluGrid->setClass('table'); // Set the CSS class of the grid
 $evoluGrid->setExportCSV(true); // Whether CSV export is available
 $evoluGrid->setInfiniteScroll(true); // Whether to use infinite scroll or pagination
+$evoluGrid->setCustomLoader(new HtmlString('<div class="my_loader"></div>')); // Set a custom loader
 
 // Outputs the HTML and Javascript to display the grid.
 $evoluGrid->toHtml();

@@ -142,6 +142,13 @@ class EvoluGrid implements HtmlElementInterface
     private $chevronDownClass;
 
     /**
+     * If the customLoader is set, this property allows setting a custom loader
+     *
+     * @var HtmlElementInterface
+     */
+    private $customLoader;
+
+    /**
      * Message to display if no results are shown.
      *
      * @var ValueInterface|string
@@ -386,6 +393,19 @@ class EvoluGrid implements HtmlElementInterface
     }
 
     /**
+     * An object generating HTML for the loader.
+     *
+     * The generated HTML MUST use
+     *
+     * @param HtmlElementInterface $customLoader
+     * @return $this
+     */
+    public function setCustomLoader($customLoader) {
+        $this->customLoader = $customLoader;
+        return $this;
+    }
+	
+    /**
      * @param string $onResultShown
      */
     public function setOnResultShown($onResultShown)
@@ -512,12 +532,20 @@ class EvoluGrid implements HtmlElementInterface
         }
         echo '
 				<div id="'.$id.'"></div>';
-        if ($this->infiniteScroll) {
-            echo '<div class="ajaxLoader" style="text-align: center; margin-top: 20px; margin-bottom: 20px; display: none;"><img src="'.ROOT_URL.'vendor/mouf/html.widgets.evolugrid/img/ajax-loader.gif" alt="ajax-loader"></div>';
+
+        /** if the customLoader is set we use it instead of the default one **/
+        if ($this->customLoader) {
+            echo '<div class="ajaxLoader">';
+            $this->customLoader->toHtml();
+            echo '</div>';
         } else {
-            echo '<div class="ajaxLoader" style="text-align: center; background-color: black; width: 100%; height: 100%; position: absolute; top: 0; opacity: 0.3"><img src="'.ROOT_URL.'vendor/mouf/html.widgets.evolugrid/img/ajax-loader.gif" alt="ajax-loader" style="margin-top: -20px; position: absolute; top: 50%;"></div>';
+            if ($this->infiniteScroll) {
+                echo '<div class="ajaxLoader" style="text-align: center; margin-top: 20px; margin-bottom: 20px; display: none;"><img src="'.ROOT_URL.'vendor/mouf/html.widgets.evolugrid/img/ajax-loader.gif" alt="ajax-loader"></div>';
+            } else {
+                echo '<div class="ajaxLoader" style="text-align: center; background-color: black; width: 100%; height: 100%; position: absolute; top: 0; opacity: 0.3"><img src="'.ROOT_URL.'vendor/mouf/html.widgets.evolugrid/img/ajax-loader.gif" alt="ajax-loader" style="margin-top: -20px; position: absolute; top: 50%;"></div>';
+            }
         }
-        echo '</div>
+		echo '</div>
 			<script type="text/javascript">
                 (function($) {
                     $(document).ready(function() {
