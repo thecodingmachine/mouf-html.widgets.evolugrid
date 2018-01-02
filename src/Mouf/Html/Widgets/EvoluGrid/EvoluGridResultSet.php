@@ -318,18 +318,6 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
                     $columnArr['escapeHTML'] = $column->isEscapeHTML();
 
                     $columnsArr[] = $columnArr;
-
-                    if (($column instanceof EvoluColumnFormatterInterface) && ($column->getFormatter() != null)) {
-                        foreach ($resultData as $key => $row) {
-                            $formatter = $column->getFormatter();
-                            $resultData[$key][$column->getKey()] = $formatter->format($row[$column->getKey()]);
-                        }
-                    }
-                    if ($column instanceof EvoluColumnRowFormatterInterface) {
-                        foreach ($resultData as $key => $row) {
-                            $resultData[$key] = $column->formatRow($row);
-                        }
-                    }
                 }
             }
 
@@ -372,57 +360,25 @@ class EvoluGridResultSet implements ActionInterface, UrlProviderInterface,
 
     private function outputCsv($fp)
     {
-        foreach ($this->columns as $key => $column) {
-            /* @var $column EvoluGridColumn */
-            if (!($column instanceof EvoluColumnKeyInterface) || !$column->isExported()) {
-                unset($this->columns[$key]);
-            }
-        }
-
-        // Let's only keep the columns that are tied to keys (we cannot render JS in CSV exports)
-        $keyColumns = array_filter($this->columns, function (EvoluColumnInterface $column) {
-            return $column instanceof EvoluColumnKeyInterface;
+        $columns = array_filter($this->columns, function (EvoluColumnInterface $column) {
+            return $column->isExported();
         });
 
         // TODO: enable autoBuildColumns on CSV
         $columnsTitles = array_map(
-                function (EvoluColumnKeyInterface $column) {
-                    return iconv('UTF-8', $this->csvEncoding, $column->getTitle());
-                }, $keyColumns);
+            function (EvoluColumnInterface $column) {
+                return iconv('UTF-8', $this->csvEncoding, (string) $column->getTitle());
+            }, $columns);
         fputcsv($fp, $columnsTitles, ';');
 
         $resultArray = ValueUtils::val($this->results);
 
         foreach ($resultArray as $row) {
-            $columns = array_map(
-                    function (EvoluColumnKeyInterface $elem) use ($row) {
-                        if (($elem instanceof EvoluColumnFormatterInterface) && ($elem->getFormatter() != null)) {
-                            $formatter = $elem->getFormatter();
-                            $row[$elem->getKey()] = $formatter->format($row[$elem->getKey()]);
-                        }
-                        if ($elem instanceof EvoluColumnRowFormatterInterface) {
-                            if (is_array($row)) {
-                                $row = $elem->formatRow($row);
-                            }
-                        }
-                        if (is_object($row)) {
-                            $key = $elem->getKey();
-                            if (property_exists($row, $key)) {
-                                return ($row->$key == '') ? ' '
-                                        : iconv('UTF-8', $this->csvEncoding, strip_tags((string) $row->$key));
-                            } else {
-                                return ' ';
-                            }
-                        } else {
-                            if (isset($row[$elem->getKey()])) {
-                                return ($row[$elem->getKey()] == '') ? ' '
-                                        : iconv('UTF-8', $this->csvEncoding, strip_tags((string) $row[$elem->getKey()]));
-                            } else {
-                                return ' ';
-                            }
-                        }
-                    }, $keyColumns);
-            fputcsv($fp, $columns, ';');
+            $results = array_map(
+                function (EvoluColumnInterface $column) use ($row) {
+                    return iconv('UTF-8', $this->csvEncoding, (string) $column->render($row));
+                }, $columns);
+            fputcsv($fp, $results, ';');
         }
     }
 
