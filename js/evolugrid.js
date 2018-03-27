@@ -40,7 +40,8 @@
 			"rowClick": false,
             "noResultsMessage": "> No results are available <",
             "chevronUpClass" : "icon-chevron-up glyphicon glyphicon-chevron-up",
-            "chevronDownClass" : "icon-chevron-down glyphicon glyphicon-chevron-down"
+            "chevronDownClass" : "icon-chevron-down glyphicon glyphicon-chevron-down",
+			"loadOnInitPage":0
 	}
 
 	var sortKey;
@@ -348,7 +349,7 @@
             			   scrollReady = false;
             			   $this.evolugrid('scroll', true);
             		   } else {
-   							$this.evolugrid('refresh', 0);
+   							$this.evolugrid('refresh', descriptor.loadOnInitPage);
             		   }
             	   }
 			   } else {

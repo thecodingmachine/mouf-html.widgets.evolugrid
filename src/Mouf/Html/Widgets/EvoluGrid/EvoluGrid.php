@@ -170,6 +170,13 @@ class EvoluGrid implements HtmlElementInterface
     private $loadOnInit = true;
 
     /**
+     * Init the evolugrid on a specific page on load
+     *
+     * @var int
+     */
+    private $loadOnInitPage;
+
+    /**
      * URL that will be called in Ajax and return the data to display.
      *
      * @Property
@@ -467,6 +474,15 @@ class EvoluGrid implements HtmlElementInterface
     }
 
     /**
+     * Init the evolugrid on a page on load
+     *
+     * @param $page
+     */
+    public function setloadOnInitPage($page) {
+        $this->loadOnInitPage = $page;
+    }
+
+    /**
      * Renders the object in HTML.
      * The Html is echoed directly into the output.
      */
@@ -518,6 +534,10 @@ class EvoluGrid implements HtmlElementInterface
             $descriptor->filterForm = $this->formSelector;
         } elseif ($this->searchForm) {
             $descriptor->filterForm = '#'.$id.'__searchform form';
+        }
+
+        if (isset($this->loadOnInitPage)) {
+            $descriptor->loadOnInitPage = $this->loadOnInitPage;
         }
 
         $descriptorJSON = json_encode($descriptor);
