@@ -590,7 +590,13 @@
 	    		else {
 	    			$this.append(pager);
 	    		}
-	    		
+
+	    		if (data.count == 0){
+                    pager.addClass('no-results');
+                }else{
+                    pager.removeClass('no-results');
+				}
+
 	    		// Finally, let's enable buttons again:
 		    	if (descriptor.filterFormSubmitButton) {
 		    		$(descriptor.filterFormSubmitButton).attr("disabled", false);
