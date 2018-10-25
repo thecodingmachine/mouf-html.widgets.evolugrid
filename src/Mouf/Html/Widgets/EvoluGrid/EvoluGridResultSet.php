@@ -7,14 +7,14 @@ namespace Mouf\Html\Widgets\EvoluGrid;
 use Mouf\Utils\Value\ValueUtils;
 use Mouf\Utils\Value\IntValueInterface;
 use Mouf\Utils\Common\PaginableInterface;
-use Mouf\Mvc\Splash\Services\SplashRoute;
-use Mouf\Mvc\Splash\Services\UrlProviderInterface;
 use Mouf\Utils\Common\UrlInterface;
 use Mouf\Utils\Value\ArrayValueInterface;
 use Mouf\Utils\Action\ActionInterface;
 use Mouf\Utils\Common\SortableInterface;
 use Porpaginas\Page;
 use Porpaginas\Result;
+use TheCodingMachine\Splash\Services\SplashRoute;
+use TheCodingMachine\Splash\Services\UrlProviderInterface;
 use Zend\Diactoros\Response;
 
 /**
