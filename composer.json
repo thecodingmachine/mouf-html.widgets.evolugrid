@@ -44,12 +44,6 @@
 			"Mouf" : "src/"
 		}
 	},
-	"repositories": [
-		{
-			"type": "vcs",
-			"url": "https://github.com/marcteyssier/database.querywriter.git"
-		}
-	],
 	"minimum-stability" : "dev",
 	"extra" : {
 		"mouf" : {
