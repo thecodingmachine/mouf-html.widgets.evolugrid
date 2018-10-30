@@ -156,6 +156,13 @@ class EvoluGrid implements HtmlElementInterface
     private $noResultsMessage;
 
     /**
+     * Message to display if no more results are shown.
+     *
+     * @var ValueInterface|string
+     */
+    private $noMoreResultsMessage = "> No more results <";
+
+    /**
      * The selector name for the DOM element that will receive the number of results.
      *
      * @var string
@@ -455,6 +462,24 @@ class EvoluGrid implements HtmlElementInterface
     }
 
     /**
+     * @return ValueInterface|string
+     */
+    public function getNoMoreResultsMessage()
+    {
+        return $this->noMoreResultsMessage;
+    }
+
+    /**
+     * If not set, message to display if no more results are shown will be '> No more results <'
+     *
+     * @param ValueInterface|string $noMoreResultsMessage
+     */
+    public function setNoMoreResultsMessage($noMoreResultsMessage): void
+    {
+        $this->noMoreResultsMessage = $noMoreResultsMessage;
+    }
+
+    /**
      * @return bool
      */
     public function isLoadOnInit()
@@ -514,6 +539,7 @@ class EvoluGrid implements HtmlElementInterface
         $descriptor->searchHistoryAutoFillForm = $this->searchHistoryAutoFillForm;
         $descriptor->rowCssClass = $this->rowCssClass;
         $descriptor->noResultsMessage = ValueUtils::val($this->noResultsMessage);
+        $descriptor->noMoreResultsMessage = ValueUtils::val($this->noMoreResultsMessage);
         $descriptor->countTarget = $this->countTarget;
         if ($this->chevronUpClass) {
             $descriptor->chevronUpClass = $this->chevronUpClass;
