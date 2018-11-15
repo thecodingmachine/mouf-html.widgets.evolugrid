@@ -62,7 +62,7 @@ class EvoluGrid implements HtmlElementInterface
 
     /**
      * Replaces the pagination by an infinite scroll.
-     * 
+     *
      * @var bool
      */
     private $infiniteScroll = false;
@@ -77,7 +77,7 @@ class EvoluGrid implements HtmlElementInterface
 
     /**
      * Fixed the header of the evolugrid table.
-     * 
+     *
      * @var bool
      */
     private $fixedHeader = false;
@@ -93,8 +93,8 @@ class EvoluGrid implements HtmlElementInterface
     /**
      * The search form that will be displayed just before the grid.
      * If you want to put the search form somewhere else, you do not have to use this property.
-     * You can instead use the formSelector to point to a form anywhere on your page. 
-     * 
+     * You can instead use the formSelector to point to a form anywhere on your page.
+     *
      * @var HtmlElementInterface
      */
     private $searchForm;
@@ -226,7 +226,7 @@ class EvoluGrid implements HtmlElementInterface
 
     /**
      * The id of the evolugrid.
-     * 
+     *
      * @param string $id
      */
     public function setId($id)
@@ -236,7 +236,7 @@ class EvoluGrid implements HtmlElementInterface
 
     /**
      * The class of the evolugrid.
-     * 
+     *
      * @param string $class
      */
     public function setClass($class)
@@ -246,7 +246,7 @@ class EvoluGrid implements HtmlElementInterface
 
     /**
      * Export the grid to CSV format.
-     * 
+     *
      * @param bool $exportCSV
      */
     public function setExportCSV($exportCSV)
@@ -267,7 +267,7 @@ class EvoluGrid implements HtmlElementInterface
     /**
      * The position of the row which will launch the ajax call for infinite scroll when scrolling (start by the end).
      * if empty, the default value is 5.
-     * 
+     *
      * @param int $infiniteScroll_ElementPosition
      */
     public function setInfiniteScrollElementPosition($infiniteScroll_ElementPosition)
@@ -288,7 +288,7 @@ class EvoluGrid implements HtmlElementInterface
     /**
      * CSS selector of the nav bar (to fix the evolugrid header just below).
      * If empty, the header is fixed to the top of the window.
-     * 
+     *
      * @param string $fixedHeader_NavBarSelector
      */
     public function setFixedHeaderNavBarSelector($fixedHeader_NavBarSelector)
@@ -317,7 +317,7 @@ class EvoluGrid implements HtmlElementInterface
 
     /**
      * Enable the search history when the user click on the previous page button.
-     * 
+     *
      * @param bool $searchHistory
      */
     public function setSearchHistory($searchHistory)
@@ -418,7 +418,7 @@ class EvoluGrid implements HtmlElementInterface
         $this->customLoader = $customLoader;
         return $this;
     }
-	
+
     /**
      * @param string $onResultShown
      */
@@ -591,7 +591,7 @@ class EvoluGrid implements HtmlElementInterface
                 echo '<div class="ajaxLoader" style="text-align: center; background-color: black; width: 100%; height: 100%; position: absolute; top: 0; opacity: 0.3"><img src="'.ROOT_URL.'vendor/mouf/html.widgets.evolugrid/img/ajax-loader.gif" alt="ajax-loader" style="margin-top: -20px; position: absolute; top: 50%;"></div>';
             }
         }
-		echo '</div>
+        echo '</div>
 			<script type="text/javascript">
                 (function($) {
                     $(document).ready(function() {
@@ -617,6 +617,7 @@ class EvoluGrid implements HtmlElementInterface
                     });
                 })(jQuery);
 			</script> 
+			<link rel="stylesheet" href="'.ROOT_URL.'vendor/mouf/html.widgets.evolugrid/css/evolugrid.css" />
 		';
     }
 }
