@@ -747,7 +747,7 @@
 		    		
 		    		if (init) {
 		    			//construct no more results
-		    			var noMoreResultsDiv = $('<div>').html(descriptor.noMoreResultsMessage).addClass("noMoreResults").css({'display':'none', 'font-style':'italic', 'text-align':'center', 'margin-top':20, 'margin-bottom':20});
+		    			var noMoreResultsDiv = $('<div>').html(descriptor.noMoreResultsMessage).addClass("noMoreResults");
 		    			$this.append(noMoreResultsDiv);
 		    					    			
 		    			if (descriptor.fixedHeader) {
