@@ -153,7 +153,7 @@ class SimpleColumn extends EvoluGridColumn implements EvoluColumnInterface
      */
     public function getSortKey()
     {
-        return $this->key;
+        return $this->sortKey;
     }
 
     /**
