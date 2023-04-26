@@ -3,14 +3,15 @@
 namespace Mouf\Html\Widgets\EvoluGrid;
 
 use Mouf\Html\Widgets\EvoluGrid\Utils\ObjectToArrayCaster;
+use Mouf\Html\Widgets\EvoluGrid\Utils\TwigStringLoader;
 use Mouf\Utils\Common\ConditionInterface\ConditionInterface;
 use Mouf\Utils\Value\ValueInterface;
 use Mouf\Utils\Value\ValueUtils;
-use Twig_Environment;
+use Twig\Environment;
 
 /**
  * A column of an EvoluGrid that renders a key of the resultset.
- * 
+ *
  * @author David Negrier
  */
 class TwigColumn extends EvoluGridColumn implements EvoluColumnInterface
@@ -28,28 +29,28 @@ class TwigColumn extends EvoluGridColumn implements EvoluColumnInterface
 
     /**
      * The twig code to render the column.
-     * 
+     *
      * @var string
      */
     private $twig;
 
     /**
      * True if the column is sortable, false otherwise.
-     * 
+     *
      * @var bool
      */
     private $sortable;
 
     /**
      * Get the key to sort upon.
-     * 
+     *
      * @var string
      */
     private $sortKey;
 
     /**
      * The width of the column.
-     * 
+     *
      * @var int|string
      */
     private $width;
@@ -82,9 +83,9 @@ class TwigColumn extends EvoluGridColumn implements EvoluColumnInterface
      * @param bool                  $sortable         True if the column is sortable, false otherwise.
      * @param int|string            $width            Returns the width of the column. Just like the CSS width property, you can express it in %, px, em, etc... This is optional. Leave empty to let the browser decide.
      * @param ConditionInterface    $displayCondition
-     * @param Twig_Environment      $twigEnvironment
+     * @param Environment      $twigEnvironment
      */
-    public function __construct($title, $twig, $sortKey = null, $sortable = false, $width = null, $displayCondition = null, Twig_Environment $twigEnvironment = null)
+    public function __construct($title, $twig, $sortKey = null, $sortable = false, $width = null, $displayCondition = null, Environment $twigEnvironment = null)
     {
         $this->title = $title;
         $this->twig = $twig;
@@ -97,8 +98,8 @@ class TwigColumn extends EvoluGridColumn implements EvoluColumnInterface
         $this->columnNumber = self::$COLUMN_NUMBER;
 
         if (null === $twigEnvironment) {
-            $loader = new \Twig_Loader_String();
-            $this->twigEnvironment = new \Twig_Environment($loader);
+            $loader = new TwigStringLoader();
+            $this->twigEnvironment = new Environment($loader);
         } else {
             $this->twigEnvironment = $twigEnvironment;
         }

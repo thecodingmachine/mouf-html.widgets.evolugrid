@@ -21,16 +21,16 @@
 		"MIT"
 	],
 	"require" : {
-		"php" : ">=7.0",
-		"mouf/javascript.jquery.jquery" : ">=1.11",
+		"php" : "^8.0",
+		"mouf/javascript.jquery.jquery" : "^2.1",
 		"mouf/database.querywriter" : "~4.0",
 		"mouf/mvc.splash-common" : "~10.0",
 		"mouf/utils.common.sortable-interface" : "~1.0",
 		"mouf/html.utils.weblibrarymanager" : ">=2.0, <4.0",
 		"mouf/utils.common.paginable-interface" : "~1.0",
 		"mouf/utils.common.conditioninterface" : "2.*",
-		"twig/twig" : "1.*@stable",
-		"mouf/javascript.historyjs" : "~1.8",
+		"twig/twig" : "^2",
+		"mouf/javascript.historyjs" : "^1.8",
 		"mouf/html.htmlelement" : "^2.0",
 		"mouf/utils.common.formatters" : "~3.0",
 		"mouf/utils.value.common-value" : "~1.0",
@@ -45,6 +45,7 @@
 		}
 	},
 	"minimum-stability" : "dev",
+	"prefer-stable" : true,
 	"extra" : {
 		"mouf" : {
 			"install" : [{
@@ -72,6 +73,12 @@
 			"require-admin" : [
 				"src/EvolugridAdmin.php"
 			]
+		}
+	},
+	"config": {
+		"allow-plugins": {
+			"mouf/mouf-installer": true,
+			"mouf/html.utils.weblibrarymanager.component-installer": true
 		}
 	}
 }
